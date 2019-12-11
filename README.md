@@ -28,3 +28,9 @@ On peut faire quelques observations:
 - Dans la troisième figure "Départ à 61 ans et cotisations adaptées", on peut mesurer ce que coûterait collectivement le fait de permettre aux français de partir (effectivement) à la retraite à 61 ans (ce qui correspond à une hypothèse d'un départ possible à 60%). Il faudrait alors porter l'effort de cotisations de 31% à 39% dans le pire cas conjoncturel, soit une augmentation moyenne par an de +0.46% des cotisations.
 
 Les hausses de cotisation des deux derniers cas sont modérées: en guise de comparaison, l'augmentation de cotisation actuelle dans le public pour cause de rattrapage des cotisations du privé est de l'ordre de +2.8% par an [(passage de 9.14% à 11,10% en 6 ans)](https://infos.emploipublic.fr/article/convergence-des-taux-des-cotisations-retraite-entre-le-public-et-le-prive-eea-2282). Le dernier scenario, le plus ambitieux socialement (retraite à 60 ans, équilibre financier, niveau de vie conservé) représenterait un effort cinq fois moindre que celui actuel des agents du public. 
+
+## Hypothèses macroeconomiques du COR
+
+Les projections ci-dessus sont basées sur celles d'un certain nombre d'indicateurs macroscopiques fournis par le COR (voir la documentation technique mentionnée ci-dessus pour les détails), par exemple sur le fait qu'en 2070, un retraité moyen qui aurait une pension d'environ la moitié du salarié moyen aurait sensiblement le même niveau de vie. Voir la [documentation technique fournie par le COR](https://www.cor-retraites.fr/simulateur/img/pdf/Documentation_technique_vf.pdf) pour plus de détails sur ces indicateurs.
+
+![conjoncture](./conjoncture.jpg)
