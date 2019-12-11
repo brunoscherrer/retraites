@@ -33,4 +33,4 @@ Les hausses de cotisation des deux derniers cas sont modérées: en guise de com
 
 Les projections ci-dessus sont basées sur celles d'un certain nombre d'indicateurs macroscopiques fournis par le COR (voir la documentation technique mentionnée ci-dessus pour les détails), par exemple sur le fait qu'en 2070, un retraité moyen qui aurait une pension d'environ la moitié du salarié moyen aurait sensiblement le même niveau de vie. Voir la [documentation technique fournie par le COR](https://www.cor-retraites.fr/simulateur/img/pdf/Documentation_technique_vf.pdf) pour plus de détails sur ces indicateurs.
 
-![conjoncture](./conjoncture.jpg)
+![conjoncture](./fig/conjoncture.jpg)
