@@ -15,21 +15,21 @@ def graphique(v,t,rg=[],an=annees):
     
 def graphiques(T, P, A, S, RNV, REV, B):
     subplot(3,2,1)
-    graphique(S,"Situation financiere du systeme de retraites",[-0.02,0.02] )
+    graphique(S,"Situation financiere du systeme de retraites")#,[-0.02,0.02] )
     subplot(3,2,2)
-    graphique(RNV,"Niveau de vie relatif des retraites", [0.6,1.1])
+    graphique(RNV,"Niveau de vie relatif des retraites", [0.6,1.2])
     subplot(3,2,3)
-    graphique(REV,"Proportion de la vie passee a la retraite", [0.28,0.4])
+    graphique(REV,"Proportion de la vie passee a la retraite", [0.2,0.4])
     subplot(3,2,4)
     graphique(T,"Taux de cotisation de retraite", [0.25,0.4] )
     subplot(3,2,5)
-    graphique(A,"Age de depart effectif a la retraite", [60,65])
+    graphique(A,"Age de depart effectif a la retraite")#, [60,65])
     subplot(3,2,6)
     graphique(P,"Pension moyenne / salaire moyen", [.25,.55] )
+    tight_layout(rect=[0, 0.03, 1, 0.95])
 
     
 ##############################################################################
-
 
 # génération des graphes pour le statu quo (COR)
 
@@ -43,7 +43,6 @@ def simu0():
 
     graphiques(T,P,A, S,RNV,REV, get('B'))
 
-    tight_layout(rect=[0, 0.03, 1, 0.95])
     savefig("cor.jpg")
 
 
@@ -73,8 +72,8 @@ def simu1():
     graphique(CNV,"CNV:(niveau de vie)/(pension/salaire)")        
     subplot(3,3,9)
     graphique(EV, "Esperance de vie a 60 ans",[],annees_EV)
-    
     tight_layout(rect=[0, 0.03, 1, 0.95])
+    
     savefig("conjoncture.jpg")
 
     
@@ -90,19 +89,51 @@ def simu2(ages=[61,0]):
         else:
             suptitle('Cotisations adaptees',fontsize=15)
                 
-        T,P,A = calcule_T_P_A(d)
-        S,RNV,REV = calcule_S_RNV_REV(T,P,A)
+        Ts,Ps,As = calcule_Ts_Ps_As_fixant_As_RNV_S(d)
+        S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
         
-        graphiques(T,P,A, S,RNV,REV, get('B'))
+        graphiques(Ts,Ps,As, S,RNV,REV, get('B'))
         
-        tight_layout(rect=[0, 0.03, 1, 0.95])
         if d!=0:
             savefig("%dans.jpg"%(d))
         else:
             savefig("cotisations.jpg")
 
+            
+# génération des graphes pour la réforme Macron avec maintien du niveau de vie
 
-simu0()
-simu1()
-simu2()
+def simu3(Ts=0):
+    
+    figure(figsize=(6,8))
+    suptitle('Reforme Macron, maintien du niveau de vie',fontsize=15)
+                
+    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(Ts)
+    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
+        
+    graphiques(Ts,Ps,As, S,RNV,REV, get('B'))
+
+    savefig("macron_niveau_de_vie.jpg")
+
+    
+# génération des graphes pour la réforme Macron avec point indexé sur le salaire moyen
+
+def simu4(Ps=0):
+    
+    figure(figsize=(6,8))
+    suptitle('Reforme Macron, point indexe sur le salaire moyen',fontsize=15)
+                
+    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ps_S(Ps)
+    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
+        
+    graphiques(Ts,Ps,As, S,RNV,REV, get('B'))
+
+    savefig("macron_point_indexe.jpg")
+
+    
+            
+#simu0()
+#simu1()
+#simu2()
+simu3()
+simu4()
 show()

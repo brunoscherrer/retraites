@@ -39,29 +39,88 @@ def get(var):
 
 # Calculs
 
-def calcule_T_P_A(Age=62, RNV=1.0, S=0.0):
+def calcule_Ts_Ps_As_fixant_As_RNV_S(Age=0, RNV=1.0, S=0.0):
+    # Si Age==0 utilise l'age de la projection COR
 
     T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B')
 
-    As=deepcopy(A)
-    
+    Ts,Ps,As = deepcopy(T), deepcopy(P), deepcopy(A)
+
+    if Age!=0:
+        for s in scenarios:
+            for a in annees_futures:
+                As[s][a] = Age
+        
     for s in scenarios:
 
         for a in annees_futures:
-
-            if Age!=0:
-                As[s][a] = Age
-            
+             
             GdA = G[s][a] * ( As[s][a] - A[s][a] )
             K = ( NR[s][a] - GdA ) / ( NC[s][a] + 0.5*GdA )
             Z = ( 1.0 - TCR[s][a] ) * CNV[s][a] / RNV 
             U = 1.0 - ( TCS[s][a] - T[s][a] )
             L = S / B[s][a]
 
-            P[s][a] = ( U - L - K*dP[s][a] ) / ( Z + K )
-            T[s][a] = U - P[s][a] * Z 
+            Ps[s][a] = ( U - L - K*dP[s][a] ) / ( Z + K )
+            Ts[s][a] = U - Ps[s][a] * Z 
+            
+    return Ts,Ps,As
 
-    return T,P,As
+
+
+
+def calcule_Ts_Ps_As_fixant_Ts_RNV_S(Tcible=0, RNV=1.0, S=0.0):
+    
+    # Si Tcible==0, utilise le taux fixé par le COR
+    
+    T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B')
+
+    Ts = deepcopy(T)
+    if Tcible!=0:
+        for s in scenarios:
+            for a in annees_futures:
+                Ts[s][a] = Tcible
+        
+    Ps, As = deepcopy(P), deepcopy(A)
+
+    for s in scenarios:
+
+        for a in annees_futures:
+
+            Ps[s][a] = RNV * (1-(TCS[s][a] + Ts[s][a]-T[s][a])) / CNV[s][a] / (1-TCR[s][a])
+            K = (Ts[s][a] - S / B[s][a]) / (Ps[s][a]+dP[s][a])
+            As[s][a] = A[s][a] + ( NR[s][a] - K*NC[s][a] ) / (0.5*K + 1.0) / G[s][a]
+            
+    return Ts,Ps,As
+
+
+def calcule_Ts_Ps_As_fixant_Ps_S(Pcible=0, S=0.0):
+    
+    # Si Pcible==0, utilise le taux du COR en 2020
+    
+    T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B')
+
+        
+    Ps = deepcopy(P)
+    for s in scenarios:
+        if Pcible==0:
+            p = P[s][2020]
+        else:
+            p = Pcible
+        for a in annees_futures:
+            Ps[s][a] = p
+    
+    Ts, As = deepcopy(T), deepcopy(A)
+
+    for s in scenarios:
+
+        for a in annees_futures:
+
+            K = (Ts[s][a] - S / B[s][a]) / (Ps[s][a]+dP[s][a])
+            As[s][a] = A[s][a] + ( NR[s][a] - K*NC[s][a] ) / (0.5*K + 1.0) / G[s][a]
+            
+    return Ts,Ps,As
+    
 
 
 def calcule_S_RNV_REV(Ts,Ps,As):
