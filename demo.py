@@ -131,9 +131,9 @@ def simu4(Ps=0):
 
     
             
-#simu0()
-#simu1()
-#simu2()
+simu0()
+simu1()
+simu2()
 simu3()
 simu4()
 show()
