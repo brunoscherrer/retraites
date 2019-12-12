@@ -3,98 +3,88 @@
 
 import json
 from pylab import *
+from copy import deepcopy
 
 
 # initialisations diverses
 # chargement des donnees du COR pour les 6 scenarios
 
-annees=range(2005,2071)
-annees2=range(2020,2071)   # annees sur lesquelles on peut changer qqch
+horizon=2070
+annees=range(2005, horizon+1)    # annees sur lesquelles on fait les calculs
+annees_futures=range(2020, horizon+1)   # annees sur lesquelles on peut changer qqch
+annees_EV=range(1930,2011)         # annees sur lesquelles on a l'espérance de vie
+scenarios=range(1,7)             # scenarios consideres
 
 json_file=open('fileProjection.json')
 data = json.load(json_file)
 
+# fonction pour récupérer les données du COR
 
-def get(var,s,a): # variable, scenario, annee
-    return data[var][str(s)][str(a)]
-
-def get2(var,s): # variable scenario
+def get(var):
+    
+    if var=='EV':
+        an=annees_EV
+    else:
+        an=annees
     v=dict()
-    for a in annees:
-        v[a]=get(var,s,a)
+    
+    for s in scenarios:
+        v[s]=dict()
+        for a in an:
+            v[s][a]=data[var][str(s)][str(a)]
+            
     return v
 
+#############################################################################
 
-def recupere_TPA(sc=1):
+# Calculs
+
+def calcule_T_P_A(Age=62, RNV=1.0, S=0.0):
+
+    T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B')
+
+    As=deepcopy(A)
     
-    T, P, A = dict(),dict(),dict()
+    for s in scenarios:
+
+        for a in annees_futures:
+
+            if Age!=0:
+                As[s][a] = Age
+            
+            GdA = G[s][a] * ( As[s][a] - A[s][a] )
+            K = ( NR[s][a] - GdA ) / ( NC[s][a] + 0.5*GdA )
+            Z = ( 1.0 - TCR[s][a] ) * CNV[s][a] / RNV 
+            U = 1.0 - ( TCS[s][a] - T[s][a] )
+            L = S / B[s][a]
+
+            P[s][a] = ( U - L - K*dP[s][a] ) / ( Z + K )
+            T[s][a] = U - P[s][a] * Z 
+
+    return T,P,As
+
+
+def calcule_S_RNV_REV(Ts,Ps,As):
+
+    T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B,EV = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B'),get('EV')
     
-    for a in annees:
-        A[a] = get('A',sc,a) 
-        P[a] = get('P',sc,a)
-        T[a] = get('T',sc,a)
-
-    return T, P, A
-
-
-def reforme(sc=1, age=0, niveau=1.0, equil=0.0):
-
-    Ts,Ps,As = recupere_TPA(sc)
-    
-    ###  Objectifs
-
-    RNVs,Ss = dict(),dict()
-
-    for a in annees2:
-
-        if age!=0:
-            As[a] = age    # année de départ effective
-        RNVs[a] = niveau   # egalite du niveau de vie entre retraités et actifs
-        Ss[a] = equil      # situation financière du système équilibrée
-
-
-    ### Calcul des cotisations et des pensions relatives
-
-    for a in annees2:
-
-        var = dict()
-
-        for s in ['G','A','B','NR','NC','dP','TCR','TCS','T','CNV']:
-            var[s] = get(s,sc,a)
-
-        GdA = var['G'] * ( As[a]- var['A'] )
-        K = ( var['NR'] - GdA ) / ( var['NC'] + 0.5*GdA )
-        Z = ( 1.0 - var['TCR'] ) * var['CNV'] / RNVs[a] 
-        U = 1.0 - ( var['TCS'] - var['T'] )
-        L = Ss[a] / var['B']
-
-        Ps[a] = ( U - L - K*var['dP'] ) / ( Z + K )
-        Ts[a] = U - Ps[a] * Z 
-
-    return Ts,Ps,As
-        
-
-def simule(Ts,Ps,As,sc=1):
-
     S,RNV,REV = dict(), dict(), dict()
 
-    for a in annees:
+    for s in scenarios:
 
-        var = dict()
+        S[s], RNV[s], REV[s] = dict(), dict(), dict()
 
-        for s in ['G','A','B','NR','NC','dP','TCR','TCS','T','CNV']:
-            var[s]=get(s,sc,a)
+        for a in annees:
 
-        GdA = var['G'] * ( As[a]-var['A'] )
-        K = ( var['NR'] - GdA ) / ( var['NC'] + 0.5*GdA )
-        U = 1.0 - ( var['TCS'] - var['T'] )
-        S[a] = var['B'] * ( Ts[a] -  K * ( Ps[a] + var['dP'] ) ) 
-        RNV[a] =  Ps[a] * ( 1.0 - var['TCR'] ) / (U - Ts[a]) * var['CNV']
+            GdA = G[s][a] * ( As[s][a]-A[s][a] )
+            K = ( NR[s][a] - GdA ) / ( NC[s][a] + 0.5*GdA )
+            U = 1.0 - ( TCS[s][a] - T[s][a] )
 
+            S[s][a] = B[s][a] * ( Ts[s][a] -  K * ( Ps[s][a] + dP[s][a] ) ) 
+            RNV[s][a] =  Ps[s][a] * ( 1.0 - TCR[s][a] ) / (U - Ts[s][a]) * CNV[s][a]
 
-        var['EV'] = get('EV',sc,int(a+.5-As[a]))
-        tmp = 60.0 + var['EV']
-        REV[a] = ( tmp - As[a] ) / tmp  
+            tmp = 60.0 + EV[s][ int(a+.5-As[s][a]) ]
+            REV[s][a] = ( tmp - As[s][a] ) / tmp
 
     return S, RNV, REV
 
