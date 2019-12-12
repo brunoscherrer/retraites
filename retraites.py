@@ -94,12 +94,12 @@ def calcule_Ts_Ps_As_fixant_Ts_RNV_S(Tcible=0, RNV=1.0, S=0.0):
     return Ts,Ps,As
 
 
-def calcule_Ts_Ps_As_fixant_Ps_S(Pcible=0, S=0.0):
+def calcule_Ts_Ps_As_fixant_Ps_Ts_S(Pcible=0, Tcible=0, S=0.0):
     
     # Si Pcible==0, utilise le taux du COR en 2020
+    # Si Tcible==0, utilise le taux fixé par le COR
     
     T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B')
-
         
     Ps = deepcopy(P)
     for s in scenarios:
@@ -110,7 +110,13 @@ def calcule_Ts_Ps_As_fixant_Ps_S(Pcible=0, S=0.0):
         for a in annees_futures:
             Ps[s][a] = p
     
-    Ts, As = deepcopy(T), deepcopy(A)
+    Ts = deepcopy(T)
+    if Tcible!=0:
+        for s in scenarios:
+            for a in annees_futures:
+                Ts[s][a] = Tcible
+
+    As = deepcopy(A)
 
     for s in scenarios:
 
