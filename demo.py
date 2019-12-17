@@ -4,17 +4,18 @@
 from pylab import *
 from retraites import *
 
+ext_image=".jpg"
+
 ### fonctions pour tracer des graphiques
 
 def graphique(v,t,rg=[],an=annees):
     for s in scenarios:
-        plot(an, [ v[s][a] for a in an ])#, label="%d"%s)
+        plot(an, [ v[s][a] for a in an ], label="%d"%s)
     title(t.decode("utf-8"),fontsize=8)
     if rg!=[]:
-        ylim(bottom=rg[0],top=rg[1])
+        ylim(bottom=rg[0],top=rg[1])    
     
-    
-def graphiques(T, P, A, S, RNV, REV, B):
+def graphiques(T, P, A, S, RNV, REV):
     subplot(3,2,1)
     graphique(S,"Situation financière du système (part du PIB)")#,[-0.02,0.02] )
     subplot(3,2,2)
@@ -27,7 +28,7 @@ def graphiques(T, P, A, S, RNV, REV, B):
     graphique(A,"Age de départ effectif à la retraite")#, [60,65])
     subplot(3,2,6)
     graphique(P,"Ratio (pension moyenne)/(salaire moyen)", [.25,.55] )
-    #legend(loc='best')
+    legend(loc='best')
     tight_layout(rect=[0, 0.03, 1, 0.95])
 
     
@@ -57,9 +58,9 @@ def simu0():
     T,P,A = get('T'), get('P'), get('A')
     S,RNV,REV = calcule_S_RNV_REV(T,P,A)
 
-    graphiques(T,P,A, S,RNV,REV, get('B'))
+    graphiques(T,P,A, S,RNV,REV)
 
-    savefig("cor.jpg")
+    savefig("cor"+ext_image)
 
 
 # génération des graphes sur la conjoncture
@@ -90,7 +91,7 @@ def simu1():
     graphique(EV, "EV: Espérance de vie à 60 ans",[],annees_EV)
     tight_layout(rect=[0, 0.03, 1, 0.95])
     
-    savefig("conjoncture.jpg")
+    savefig("conjoncture"+ext_image)
 
     
 # génération des graphes pour des réformes à prestation garantie
@@ -108,30 +109,49 @@ def simu2(ages=[61,0]):
         Ts,Ps,As = calcule_Ts_Ps_As_fixant_As_RNV_S(d)
         S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
         
-        graphiques(Ts,Ps,As, S,RNV,REV, get('B'))
+        graphiques(Ts,Ps,As, S,RNV,REV)
         
         if d!=0:
-            savefig("%dans.jpg"%(d))
+            savefig( ("%dans"%(d))+ext_image)
         else:
-            savefig("cotisations.jpg")
+            savefig("cotisations"+ext_image)
 
             
 # génération des graphes pour la réforme Macron avec maintien du niveau de vie
 
 def simu3(Ts=0):
     
-    figure(figsize=(6,8))
-    suptitle('Réforme Macron, maintien du niveau de vie'.decode("utf-8"),fontsize=15)
+    #figure(figsize=(6,8))
+    #suptitle('Réforme Macron, maintien du niveau de vie'.decode("utf-8"),fontsize=15)
                 
     Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(Ts)
     S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
         
-    graphiques(Ts,Ps,As, S,RNV,REV, get('B'))
+    #graphiques(Ts,Ps,As, S,RNV,REV)
+    figure(figsize=(11,3))
+    subplot(1,3,1)
+    graphique(As,"Age de départ effectif à la retraite")
+    subplot(1,3,2)
+    graphique(REV,"Proportion de la vie passée à la retraite",[0.2,0.4])
+    subplot(1,3,3)
+    graphique(Ps,"Ratio (pension moyenne)/(salaire moyen)",[.25,.55])
+    tight_layout()
+    savefig("macron1"+ext_image)
 
+    figure(figsize=(11,3))
+    subplot(1,3,1)
+    graphique(Ts,"Taux de cotisation de retraite (part du PIB)")
+    subplot(1,3,2)
+    graphique(S,"Situation financière du système (part du PIB)")
+    subplot(1,3,3)
+    graphique(RNV,"Niveau de vie des retraités p/r aux actifs",[0.6,1.2])        
+    tight_layout()
+    savefig("macron2"+ext_image)
+    
     print "Maintien du niveau de vie"
     affiche_solutions(Ts,Ps,As)
     
-    savefig("macron_niveau_de_vie.jpg")
+    #savefig("macron_niveau_de_vie"+ext_image)
 
     
         
@@ -140,24 +160,24 @@ def simu3(Ts=0):
 # génération des graphes pour la réforme Macron avec point indexé sur le salaire moyen
 
 def simu4(Ps=0,Ts=0):
-    
-    figure(figsize=(6,8))
+        
     suptitle('Réforme Macron, indexation (pension moy)/(salaire moy) fixe'.decode("utf-8"),fontsize=13)
                 
     Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ps_Ts_S(Ps,Ts)
     S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
         
-    graphiques(Ts,Ps,As, S,RNV,REV, get('B'))
-
+    graphiques(Ts,Ps,As, S,RNV,REV)
+    
     print "Maintien du rapport pension moyenne / salaire moyen"
     affiche_solutions(Ts,Ps,As)
     
-    savefig("macron_point_indexe.jpg")
+    savefig("macron_point_indexe"+ext_image)
 
           
-simu0()
-simu1()
+#simu0()
+#simu1()
 simu2()
-simu3(0.2812)
-simu4(0,0.2812)
+#simu3(0.2812)
+#simu4(0,0.2812)
+
 show()
