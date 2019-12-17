@@ -34,20 +34,32 @@ def graphiques(T, P, A, S, RNV, REV):
     
 ##############################################################################
 
-def affiche_solutions(As,Ts,Ps):
+def affiche_solutions_simulateur_COR(Ts,Ps,As):
 
     print "Valeur à rentrer sur le simulateur officiel du COR"
     
     ans=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
     for s in scenarios:
         print
-        print "Scenario",s 
-        print "Age:        ", [ As[s][a] for a in ans ]
-        print "Cotisation: ", [ Ts[s][a] for a in ans ]
-        print "Pension:    ", [ Ps[s][a] for a in ans ]
+        print "Scenario",s,": ",scenarios_text[s-1] 
+        print "Age:        ",
+        for a in ans:
+            print "%.1f"%(As[s][a]),
+        print
+        print "Cotisation: ",
+        for a in ans:
+            print "%.1f"%(100*Ts[s][a]),
+        print
+        print "Pension:    ",
+        for a in ans:
+            print "%.1f"%(100*Ps[s][a]),
+        print
 
     print
 
+##############################################################################
+# SIMULATION NUMERIQUES
+    
 # génération des graphes pour le statu quo (COR)
 
 def simu0():
@@ -149,7 +161,7 @@ def simu3(Ts=0):
     savefig("macron2"+ext_image)
     
     print "Maintien du niveau de vie"
-    affiche_solutions(Ts,Ps,As)
+    affiche_solutions_simulateur_COR(Ts,Ps,As)
     
     #savefig("macron_niveau_de_vie"+ext_image)
 
@@ -169,15 +181,15 @@ def simu4(Ps=0,Ts=0):
     graphiques(Ts,Ps,As, S,RNV,REV)
     
     print "Maintien du rapport pension moyenne / salaire moyen"
-    affiche_solutions(Ts,Ps,As)
+    affiche_solutions_simulateur_COR(Ts,Ps,As)
     
     savefig("macron_point_indexe"+ext_image)
 
           
 #simu0()
 #simu1()
-simu2()
-#simu3(0.2812)
+#simu2()
+simu3(0.2812)
 #simu4(0,0.2812)
 
 show()

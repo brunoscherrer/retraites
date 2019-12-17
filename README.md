@@ -13,6 +13,9 @@ Le script [demo.py](https://github.com/brunoscherrer/retraites/blob/master/demo.
 
 ## Exemples de simulations
 
+Cet [article](https://blogs.mediapart.fr/bruno-scherrer/blog/161219/dapres-le-cor-macronphilippe-veulent-vous-faire-travailler-jusqua-68-ans) sur le blog des abonnés de [Mediapart](https://blogs.mediapart.fr/) a été écrit avec l'aide numérique du simulateur.
+
+
 Ci-dessous, nous suivons une suggestion de Michaël Zemmour (Université de Lille) faite lors d'une [intervention d'une vingtaine de minutes](https://www.youtube.com/watch?v=f0EZ9KJmeLA&t=346s), c'est-à-dire d'expérimenter dans le même cadre macro-éconmique que le COR. 
 
 On peut utiliser le code pour reproduire exactement les prévisions macroscopiques du simulateur du COR avec notamment les valeurs par défaut (celles d'un statu quo du système).

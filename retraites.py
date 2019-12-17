@@ -14,6 +14,12 @@ annees=range(2005, horizon+1)    # annees sur lesquelles on fait les calculs
 annees_futures=range(2020, horizon+1)   # annees sur lesquelles on peut changer qqch
 annees_EV=range(1930,2011)         # annees sur lesquelles on a l'espérance de vie
 scenarios=range(1,7)             # scenarios consideres
+scenarios_text=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
+                "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
+                "Hausse des salaires: +1,3%/an, Taux de chômage: 7%",
+                "Hausse des salaires: +1%/an,   Taux de chômage: 7%",
+                "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
+                "Hausse des salaires: +1%/an,   Taux de chômage: 10%"]
 
 json_file=open('fileProjection.json')
 data = json.load(json_file)
