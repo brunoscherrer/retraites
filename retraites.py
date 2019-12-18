@@ -14,12 +14,7 @@ annees=range(2005, horizon+1)    # annees sur lesquelles on fait les calculs
 annees_futures=range(2020, horizon+1)   # annees sur lesquelles on peut changer qqch
 annees_EV=range(1930,2011)         # annees sur lesquelles on a l'espérance de vie
 scenarios=range(1,7)             # scenarios consideres
-scenarios_text=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
-                "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
-                "Hausse des salaires: +1,3%/an, Taux de chômage: 7%",
-                "Hausse des salaires: +1%/an,   Taux de chômage: 7%",
-                "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
-                "Hausse des salaires: +1%/an,   Taux de chômage: 10%"]
+
 
 json_file=open('fileProjection.json')
 data = json.load(json_file)
@@ -46,6 +41,7 @@ def get(var):
 # Calculs
 
 def calcule_Ts_Ps_As_fixant_As_RNV_S(Age=0, RNV=1.0, S=0.0):
+
     # Si Age==0 utilise l'age de la projection COR
 
     T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B')
@@ -133,7 +129,38 @@ def calcule_Ts_Ps_As_fixant_Ps_Ts_S(Pcible=0, Tcible=0, S=0.0):
             
     return Ts,Ps,As
     
+def calcule_Ts_Ps_As_fixant_As_Ts_S(Acible=0, Tcible=0, S=0.0):
+    
+    # Si Pcible==0, utilise le taux du COR en 2020
+    # Si Tcible==0, utilise le taux fixé par le COR
+    
+    T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B')
+        
+    As = deepcopy(A)
+    for s in scenarios:
+        if Acible==0:
+            a = P[s][2020]
+        else:
+            a = Pcible
+        for a in annees_futures:
+            As[s][a] = a
+    
+    Ts = deepcopy(T)
+    if Tcible!=0:
+        for s in scenarios:
+            for a in annees_futures:
+                Ts[s][a] = Tcible
 
+    Ps = deepcopy(P)
+
+    for s in scenarios:
+
+        for a in annees_futures:
+
+            pass ### calcul à faire
+            
+    return Ts,Ps,As
+    
 
 def calcule_S_RNV_REV(Ts,Ps,As):
 
