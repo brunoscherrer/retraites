@@ -10,10 +10,10 @@ from copy import deepcopy
 # chargement des donnees du COR pour les 6 scenarios
 
 horizon=2070
-annees=range(2005, horizon+1)    # annees sur lesquelles on fait les calculs
+annees=range(2005, horizon+1)           # annees sur lesquelles on fait les calculs
 annees_futures=range(2020, horizon+1)   # annees sur lesquelles on peut changer qqch
-annees_EV=range(1930,2011)         # annees sur lesquelles on a l'espérance de vie
-scenarios=range(1,7)             # scenarios consideres
+annees_EV=range(1930,2011)              # annees sur lesquelles on a l'espérance de vie
+scenarios=range(1,7)                    # scenarios consideres
 
 
 json_file=open('fileProjection.json')
@@ -139,11 +139,11 @@ def calcule_Ts_Ps_As_fixant_As_Ts_S(Acible=0, Tcible=0, S=0.0):
     As = deepcopy(A)
     for s in scenarios:
         if Acible==0:
-            a = P[s][2020]
+            b = A[s][2020]
         else:
-            a = Pcible
+            b = Acible
         for a in annees_futures:
-            As[s][a] = a
+            As[s][a] = b
     
     Ts = deepcopy(T)
     if Tcible!=0:
@@ -153,11 +153,15 @@ def calcule_Ts_Ps_As_fixant_As_Ts_S(Acible=0, Tcible=0, S=0.0):
 
     Ps = deepcopy(P)
 
+
+    
     for s in scenarios:
 
         for a in annees_futures:
 
-            pass ### calcul à faire
+            GdA = G[s][a] * ( As[s][a]-A[s][a] )
+            K = ( NR[s][a] - GdA ) / ( NC[s][a] + 0.5 * GdA )
+            Ps[s][a] = (T[s][a]-S/B[s][a])/K - dP[s][a]
             
     return Ts,Ps,As
     

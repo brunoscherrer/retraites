@@ -4,7 +4,7 @@
 from pylab import *
 from retraites import *
 
-ext_image=".jpg"
+
 
 scenarios_labels=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
                   "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
@@ -13,22 +13,31 @@ scenarios_labels=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
                   "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
                   "Hausse des salaires: +1%/an, Taux de chômage: 10%"]
 
-### fonctions pour tracer des graphiques
 
-def graphique(v, nom, fs=8, rg=[], leg=False):
+### fonctions pour générer des graphiques
+
+
+dir_image="./fig/"        # répertoire pour les images
+ext_image=["jpg","pdf"]   # types de fichier à générer
+
+def mysavefig(f):
+    for ext in ext_image:
+        savefig(dir_image + f + "." + ext)
+
+def graphique(v, nom, fs=8, rg=[], leg=False, sc=scenarios):
 
     if nom=="EV":
         an=annees_EV
     else:
         an=annees
 
-    for s in scenarios:
+    for s in sc:
         plot(an, [ v[s][a] for a in an ], label=scenarios_labels[s-1].decode("utf-8") )
 
     # titres des figures
     
     t=["Situation financière du système (part du PIB)",
-       "Niveau de vie des retraités p/r aux actifs",
+       "Niveau de vie des retraités p/r à celui des actifs",
        "Proportion de la vie passée à la retraite",
        "Taux de cotisation de retraite (part du PIB)",
        "Age de départ effectif moyen à la retraite",
@@ -41,28 +50,26 @@ def graphique(v, nom, fs=8, rg=[], leg=False):
        "TPR: Taux de prélèvement sur les retraites",
        "TPS: Taux de prélèvement sur les salaires",
        "CNV: (niveau de vie)/[(pension moy))/(salaire moy)]",
-       "EV: Espérance de vie à 60 ans"][ ["S","RNV","REV","T","A","P","B","NR","NC","G","dP","TPR","TPS","CNV","EV"].index(nom) ]
+       "EV: Espérance de vie à 60 ans"
+    ][ ["S","RNV","REV","T","A","P","B","NR","NC","G","dP","TPR","TPS","CNV","EV"].index(nom) ]
        
     title(t.decode("utf-8"),fontsize=fs)
     if rg!=[]:
         ylim(bottom=rg[0],top=rg[1])
     if leg:
         legend(loc="best")
-    
+
 def graphiques(T, P, A, S, RNV, REV, fs=8):
 
-    subplot(3,2,1)
-    graphique(S,"S",fs ,[-0.02,0.02])
-    subplot(3,2,2)
-    graphique(RNV,"RNV",fs, [0.6,1.2])
-    subplot(3,2,3)
-    graphique(REV,"REV",fs, [0.2,0.4])
-    subplot(3,2,4)
-    graphique(T,"T",fs, [0.25,0.4] )
-    subplot(3,2,5)
-    graphique(A,"A",fs, [60,70])
-    subplot(3,2,6)
-    graphique(P,"P",fs, [.25,.55] )
+    for i in xrange(6):
+        subplot(3,2,i+1)
+        v,V,r = [ (S,"S" ,[-0.02,0.02]),
+                  (RNV,"RNV", [0.6,1.2]),
+                  (REV,"REV", [0.2,0.4]),
+                  (T,"T", [0.25,0.4] ),
+                  (A,"A", [60,70]),
+                  (P,"P", [.25,.55]) ][ i ]
+        graphique(v, V, fs ,r)
     tight_layout(rect=[0, 0.03, 1, 0.95])
 
     
@@ -106,7 +113,7 @@ def simu0():
 
     graphiques(T,P,A, S,RNV,REV)
 
-    savefig("cor"+ext_image)
+    mysavefig("cor")
 
 
 # génération des graphes sur la conjoncture
@@ -117,27 +124,13 @@ def simu1():
     
     figure(figsize=(10,8))
     suptitle("Projections du COR (hypothèses)".decode("utf-8"),fontsize=16)
-    subplot(3,3,1)
-    graphique(B,"B")
-    subplot(3,3,2)
-    graphique(NR,"NR")
-    subplot(3,3,3)
-    graphique(NC,"NC")
-    subplot(3,3,4)
-    graphique(G,"G")
-    subplot(3,3,5)
-    graphique(dP,"dP")
-    subplot(3,3,6)
-    graphique(TPR,"TPR")
-    subplot(3,3,7)
-    graphique(TPS,"TPS")
-    subplot(3,3,8)
-    graphique(CNV,"CNV")        
-    subplot(3,3,9)
-    graphique(EV, "EV")
+    for c in xrange(9):
+        subplot(3,3,c+1)
+        v,V = [ (B,'B'), (NR,'NR'), (NC,'NC'), (G,'G'), (dP,'dP'), (TPR,'TPR'), (TPS,'TPS'), (CNV,'CNV'), (EV,'EV') ][c]
+        graphique(v,V)
     tight_layout(rect=[0, 0.03, 1, 0.95])
     
-    savefig("conjoncture"+ext_image)
+    mysavefig("conjoncture")
 
     
 # génération des graphes pour des réformes à prestation garantie
@@ -158,9 +151,9 @@ def simu2(ages=[61,0]):
         graphiques(Ts,Ps,As, S,RNV,REV)
         
         if d!=0:
-            savefig( ("%dans"%(d))+ext_image)
+            mysavefig( ("%dans"%(d)))
         else:
-            savefig("cotisations"+ext_image)
+            mysavefig("cotisations")
 
             
 # génération des graphes pour la réforme Macron avec maintien du niveau de vie
@@ -178,7 +171,7 @@ def simu3(Ts=0):
     print "Maintien du niveau de vie"
     affiche_solutions_simulateur_COR(Ts,Ps,As)
     
-    #savefig("macron_niveau_de_vie"+ext_image)
+    #mysavefig("macron_niveau_de_vie")
 
         
 # génération des graphes pour la réforme Macron avec point indexé sur le salaire moyen (rapport (pension moyenne/)(salaire moyen) constant égal à celui de 2020)
@@ -192,41 +185,77 @@ def simu4(Ps=0,Ts=0):
     S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
         
     graphiques(Ts,Ps,As, S,RNV,REV)
+    mysavefig("macron_point_indexe")
     
     print "Maintien du rapport pension moyenne / salaire moyen"
     affiche_solutions_simulateur_COR(Ts,Ps,As)
+
     
-    savefig("macron_point_indexe"+ext_image)
 
 
 ############################################################################
 # génération des figures pour les articles mediapart
 
-def figure_pour_article_2():
+def pour_article_2():
+
+    print "Données et figure pour article 2"
     
     Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(0)
     S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
         
     figure(figsize=(9,6))
+    graphique(As,"A",14,[],True,range(1,5))
+    suptitle("Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)".decode("utf-8"),fontsize=14)
+    legend(loc="best")
+    mysavefig("macron_68_ans")
+
+    figure(figsize=(9,6))
     graphique(As,"A",14,[],True)
     suptitle("Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)".decode("utf-8"),fontsize=14)
     legend(loc="best")
-
-    savefig("macron_68_ans"+ext_image)
-
-    print "Maintien du niveau de vie (article 2)"
+    mysavefig("macron_68_ans_tout")
+    
+    print "Maintien du niveau de vie"
     affiche_solutions_simulateur_COR(Ts,Ps,As)
 
 
+
+def pour_article_3():
+
+    print "Données et figures pour article 3"
+    
+    Ts,Ps,As = calcule_Ts_Ps_As_fixant_As_Ts_S(62) 
+    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
+
+    titre="Modèle du COR: Réforme Macron (éq. financier & départ à 62 ans)".decode("utf-8")
+    
+    figure(figsize=(9,6))
+    graphique(RNV,"RNV",14,[],True,range(1,5))
+    suptitle(titre,fontsize=14)
+    legend(loc="best")
+    mysavefig("macron_62_ans_nv")
+    
+    figure(figsize=(9,6))
+    graphique(Ps,"P",14,[],True,range(1,5))
+    suptitle(titre,fontsize=14)
+    legend(loc="best")
+    mysavefig("macron_62_ans_p")
+    
+    print "Départ à 62 ans"
+    affiche_solutions_simulateur_COR(Ts,Ps,As)
+    
+    
 #####################
 
-    
+
+
 simu0()
 simu1()
 simu2()
 simu3()
 simu4()
 
-figure_pour_article_2()
+pour_article_2()
+pour_article_3()
 
 show()
