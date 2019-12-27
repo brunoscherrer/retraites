@@ -1,5 +1,7 @@
 # Simulateur macroscopique du système de retraites
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/brunoscherrer/retraites/master?filepath=index.ipynb)
+
 Le COR (conseil d'orientation des retraites) a mis en ligne un simulateur pour permettre aux citoyens de simuler les effets macroscopiques des grandes lignes d'une réforme des retraites.
 Ce projet vise a reproduire les résultats et à ajouter un certain nombre de fonctionnalités utiles, comme celui de proposer de concevoir une réforme à prestation définie (ex: calcul automatique des cotisations sociales pour avoir un système équilibré financièrement avec un certain niveau de vie pour les retraités et un age de départ fixé a priori).
 
