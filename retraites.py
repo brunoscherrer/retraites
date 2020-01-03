@@ -79,9 +79,12 @@ def calcule_Ts_Ps_As_fixant_Ts_RNV_S(Tcible=0, RNV=1.0, S=0.0):
 
     Ts = deepcopy(T)
     if Tcible!=0:
-        for s in scenarios:
-            for a in annees_futures:
-                Ts[s][a] = Tcible
+        if type(Tcible)==float:
+            for s in scenarios:
+                for a in annees_futures:
+                    Ts[s][a] = Tcible
+        else:
+            Ts=Tcible
         
     Ps, As = deepcopy(P), deepcopy(A)
 

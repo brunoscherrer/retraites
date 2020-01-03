@@ -75,6 +75,17 @@ def graphiques(T, P, A, S, RNV, REV, fs=8):
     
 ##############################################################################
 
+def affiche_variable(v):
+
+    ans=[2019, 2020, 2025, 2030, 2040, 2050, 2060, 2070]
+    for s in scenarios:
+        print
+        print "Scenario",s,": ",scenarios_labels[s-1]
+        for a in ans:
+            print "%.2f"%(v[s][a]),
+        print
+        
+        
 def affiche_solutions_simulateur_COR(Ts,Ps,As):
 
     print "Valeur à rentrer sur le simulateur officiel du COR:"
@@ -98,6 +109,8 @@ def affiche_solutions_simulateur_COR(Ts,Ps,As):
 
     print
 
+
+    
 ##############################################################################
 # SIMULATION NUMERIQUES
     
@@ -135,7 +148,7 @@ def simu1():
     
 # génération des graphes pour des réformes à prestation garantie
 
-def simu2(ages=[61,0]):
+def simu2(ages=[61,0],S=0.0):
     
     for d in ages:
 
@@ -145,7 +158,7 @@ def simu2(ages=[61,0]):
         else:
             suptitle("Cotisations adaptées (équilibre financier & maintien du niveau de vie)".decode("utf-8"),fontsize=10)
                 
-        Ts,Ps,As = calcule_Ts_Ps_As_fixant_As_RNV_S(d)
+        Ts,Ps,As = calcule_Ts_Ps_As_fixant_As_RNV_S(d, 1.0, S)
         S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
         
         graphiques(Ts,Ps,As, S,RNV,REV)
@@ -158,12 +171,12 @@ def simu2(ages=[61,0]):
             
 # génération des graphes pour la réforme Macron avec maintien du niveau de vie
 
-def simu3(Ts=0):
+def simu3(Ts=0,RNV=1.0):
     
     figure(figsize=(6,8))
     suptitle('Réforme Macron (équilibre financier & maintien du niveau de vie)'.decode("utf-8"),fontsize=12)
                 
-    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(Ts)
+    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(Ts,RNV)
     S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
         
     graphiques(Ts,Ps,As, S,RNV,REV)
@@ -215,7 +228,7 @@ def pour_article_2():
     legend(loc="best")
     mysavefig("macron_68_ans_tout")
     
-    print "Maintien du niveau de vie"
+    print "Réforme Macron, Maintien du niveau de vie"
     affiche_solutions_simulateur_COR(Ts,Ps,As)
 
 
@@ -241,21 +254,51 @@ def pour_article_3():
     legend(loc="best")
     mysavefig("macron_62_ans_p")
     
-    print "Départ à 62 ans"
+    print "Réforme Macron, Départ à 62 ans"
     affiche_solutions_simulateur_COR(Ts,Ps,As)
-    
+    print "\nEvolution du niveau de vie:"
+    affiche_variable(RNV)
+    print "\nEvolution du ratio pension/salaire:"
+    affiche_variable(Ps)
     
 #####################
 
+def pour_t():
+
+    figure(figsize=(9,6))
+    suptitle("Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)".decode("utf-8"),fontsize=14)
+    
+    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(0)
+    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
+    
+    graphique(As,"A",14,[],True,range(1,5))
+    affiche_solutions_simulateur_COR(Ts,Ps,As)
+    
+    #for s in scenarios:
+    #    for a in annees_futures:
+    #        Ts[s][a] *= 1.011
+    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(0,1.0,-0.011*.14)
+    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
+    
+    graphique(As,"A",14,[],True,range(1,5))
+    affiche_solutions_simulateur_COR(Ts,Ps,As)
+    
+    legend(loc="best")
+    mysavefig("t")
 
 
-simu0()
-simu1()
-simu2()
-simu3()
-simu4()
 
-pour_article_2()
-pour_article_3()
+#simu0()
+#simu1()
+#simu2()
+#simu3()
+#simu4()
+
+#pour_article_2()
+#pour_article_3()
+
+#pour_t()
+
+simu2([62],-0.01)
 
 show()
