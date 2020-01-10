@@ -13,10 +13,14 @@ Le script [demo.py](https://github.com/brunoscherrer/retraites/blob/master/demo.
 
 ---
 
+Ce simulateur a été utile pour l'écriture de ces articles sur la réforme des retraites:
+
+- [D'après le COR, Macron & Philippe veulent vous faire travailler jusqu'à 68 ans, partie 1](https://blogs.mediapart.fr/bruno-scherrer/blog/161219/dapres-le-cor-macron-philippe-veulent-vous-faire-travailler-jusqua-68-ans) et [partie 2](https://blogs.mediapart.fr/bruno-scherrer/blog/181219/dapres-le-cor-macron-philippe-veulent-vous-faire-travailler-jusqua-68-ans-2)
+- [D'après le COR, Philippe vous donne la "liberté" de partir à 62 ans et d'être pauvre](https://blogs.mediapart.fr/bruno-scherrer/blog/201219/dapres-le-cor-philippe-vous-donne-la-liberte-de-partir-62-ans-et-detre-pauvre)
+- [D'après le COR, la réforme Philippe/Macron ne sera pas équilibrée financièrement](https://blogs.mediapart.fr/bruno-scherrer/blog/030120/dapres-le-cor-la-reforme-philippemacron-ne-sera-pas-equilibree-financierement)
+
+
 ## Exemples de simulations
-
-Cet [article](https://blogs.mediapart.fr/bruno-scherrer/blog/161219/dapres-le-cor-macronphilippe-veulent-vous-faire-travailler-jusqua-68-ans) sur le blog des abonnés de [Mediapart](https://blogs.mediapart.fr/) a été écrit avec l'aide numérique du simulateur.
-
 
 Ci-dessous, nous suivons une suggestion de Michaël Zemmour (Université de Lille) faite lors d'une [intervention d'une vingtaine de minutes](https://www.youtube.com/watch?v=f0EZ9KJmeLA&t=346s), c'est-à-dire d'expérimenter dans le même cadre macro-éconmique que le COR. 
 

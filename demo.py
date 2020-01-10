@@ -263,42 +263,15 @@ def pour_article_3():
     
 #####################
 
-def pour_t():
-
-    figure(figsize=(9,6))
-    suptitle("Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)".decode("utf-8"),fontsize=14)
-    
-    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(0)
-    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
-    
-    graphique(As,"A",14,[],True,range(1,5))
-    affiche_solutions_simulateur_COR(Ts,Ps,As)
-    
-    #for s in scenarios:
-    #    for a in annees_futures:
-    #        Ts[s][a] *= 1.011
-    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(0,1.0,-0.011*.14)
-    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
-    
-    graphique(As,"A",14,[],True,range(1,5))
-    affiche_solutions_simulateur_COR(Ts,Ps,As)
-    
-    legend(loc="best")
-    mysavefig("t")
-
-
-
 #simu0()
 #simu1()
 #simu2()
 #simu3()
-#simu4()
+#simu4(0,0.311)
 
 #pour_article_2()
 #pour_article_3()
 
-#pour_t()
-
-simu2([62],-0.01)
+#simu2([62],-0.01)
 
 show()
