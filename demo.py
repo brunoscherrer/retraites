@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # coding:utf-8
 
-from pylab import *
-from retraites import *
+from __future__ import print_function
+import pylab as pl
+import retraites
 
 
 
@@ -18,51 +19,51 @@ scenarios_labels=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
 
 
 dir_image="./fig/"        # répertoire pour les images
-ext_image=["jpg","pdf"]   # types de fichier à générer
+ext_image=["png","pdf"]   # types de fichier à générer
 
 def mysavefig(f):
     for ext in ext_image:
-        savefig(dir_image + f + "." + ext)
+        pl.savefig(dir_image + f + "." + ext)
 
-def graphique(v, nom, fs=8, rg=[], leg=False, sc=scenarios):
+def graphique(v, nom, fs=8, rg=[], leg=False, sc=retraites.scenarios):
 
     if nom=="EV":
-        an=annees_EV
+        an=retraites.annees_EV
     else:
-        an=annees
+        an=retraites.annees
 
     for s in sc:
-        plot(an, [ v[s][a] for a in an ], label=scenarios_labels[s-1].decode("utf-8") )
+        pl.plot(an, [ v[s][a] for a in an ], label=scenarios_labels[s-1] )
 
     # titres des figures
     
-    t=["Situation financière du système (part du PIB)",
-       "Niveau de vie des retraités p/r à celui des actifs",
-       "Proportion de la vie passée à la retraite",
-       "Taux de cotisation de retraite (part du PIB)",
-       "Age de départ effectif moyen à la retraite",
-       "Ratio (pension moyenne)/(salaire moyen)",
-       "B: Part des revenus d'activité bruts dans le PIB",
-       "NR: Nombre de retraités",
-       "NC: Nombre de cotisants",
-       "G: Effectif d'une generation arrivant à l'âge de la retraite",
-       "dP: Autres dépenses de retraites",
-       "TPR: Taux de prélèvement sur les retraites",
-       "TPS: Taux de prélèvement sur les salaires",
-       "CNV: (niveau de vie)/[(pension moy))/(salaire moy)]",
-       "EV: Espérance de vie à 60 ans"
+    t=[u"Situation financière du système (part du PIB)",
+       u"Niveau de vie des retraités p/r à celui des actifs",
+       u"Proportion de la vie passée à la retraite",
+       u"Taux de cotisation de retraite (part du PIB)",
+       u"Age de départ effectif moyen à la retraite",
+       u"Ratio (pension moyenne)/(salaire moyen)",
+       u"B: Part des revenus d'activité bruts dans le PIB",
+       u"NR: Nombre de retraités",
+       u"NC: Nombre de cotisants",
+       u"G: Effectif d'une generation arrivant à l'âge de la retraite",
+       u"dP: Autres dépenses de retraites",
+       u"TPR: Taux de prélèvement sur les retraites",
+       u"TPS: Taux de prélèvement sur les salaires",
+       u"CNV: (niveau de vie)/[(pension moy))/(salaire moy)]",
+       u"EV: Espérance de vie à 60 ans"
     ][ ["S","RNV","REV","T","A","P","B","NR","NC","G","dP","TPR","TPS","CNV","EV"].index(nom) ]
        
-    title(t.decode("utf-8"),fontsize=fs)
+    pl.title(t,fontsize=fs)
     if rg!=[]:
-        ylim(bottom=rg[0],top=rg[1])
+        pl.ylim(bottom=rg[0],top=rg[1])
     if leg:
-        legend(loc="best")
+        pl.legend(loc="best")
 
 def graphiques(T, P, A, S, RNV, REV, fs=8):
 
-    for i in xrange(6):
-        subplot(3,2,i+1)
+    for i in range(6):
+        pl.subplot(3,2,i+1)
         v,V,r = [ (S,"S" ,[-0.02,0.02]),
                   (RNV,"RNV", [0.6,1.2]),
                   (REV,"REV", [0.2,0.4]),
@@ -70,7 +71,7 @@ def graphiques(T, P, A, S, RNV, REV, fs=8):
                   (A,"A", [60,70]),
                   (P,"P", [.25,.55]) ][ i ]
         graphique(v, V, fs ,r)
-    tight_layout(rect=[0, 0.03, 1, 0.95])
+    pl.tight_layout(rect=[0, 0.03, 1, 0.95])
 
     
 ##############################################################################
@@ -78,36 +79,36 @@ def graphiques(T, P, A, S, RNV, REV, fs=8):
 def affiche_variable(v):
 
     ans=[2019, 2020, 2025, 2030, 2040, 2050, 2060, 2070]
-    for s in scenarios:
-        print
-        print "Scenario",s,": ",scenarios_labels[s-1]
+    for s in retraites.scenarios:
+        print()
+        print("Scenario",s,": ",scenarios_labels[s-1])
         for a in ans:
-            print "%.2f"%(v[s][a]),
-        print
+            print("%.2f"%(v[s][a]),)
+        print("")
         
         
 def affiche_solutions_simulateur_COR(Ts,Ps,As):
 
-    print "Valeur à rentrer sur le simulateur officiel du COR:"
+    print("Valeur à rentrer sur le simulateur officiel du COR:")
     
     ans=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
-    for s in scenarios:
-        print
-        print "Scenario",s,": ",scenarios_labels[s-1] 
-        print "Age:        ",
+    for s in retraites.scenarios:
+        print("")
+        print("Scenario",s,": ",scenarios_labels[s-1] )
+        print("Age:        ",)
         for a in ans:
-            print "%.1f"%(As[s][a]),
-        print
-        print "Cotisation: ",
+            print("%.1f"%(As[s][a]),)
+        print("")
+        print("Cotisation: ",)
         for a in ans:
-            print "%.1f"%(100*Ts[s][a]),
-        print
-        print "Pension:    ",
+            print("%.1f"%(100*Ts[s][a]),)
+        print("")
+        print("Pension:    ",)
         for a in ans:
-            print "%.1f"%(100*Ps[s][a]),
-        print
+            print("%.1f"%(100*Ps[s][a]),)
+        print("")
 
-    print
+        print("")
 
 
     
@@ -118,11 +119,11 @@ def affiche_solutions_simulateur_COR(Ts,Ps,As):
 
 def simu0():
 
-    figure(figsize=(6,8))
-    suptitle('Projections du COR',fontsize=16)
+    pl.figure(figsize=(6,8))
+    pl.suptitle('Projections du COR',fontsize=16)
     
-    T,P,A = get('T'), get('P'), get('A')
-    S,RNV,REV = calcule_S_RNV_REV(T,P,A)
+    T,P,A = retraites.get('T'), retraites.retraites.get('P'), retraites.get('A')
+    S,RNV,REV = retraites.calcule_S_RNV_REV(T,P,A)
 
     graphiques(T,P,A, S,RNV,REV)
 
@@ -133,55 +134,55 @@ def simu0():
 
 def simu1():
 
-    B,NR,NC,G,dP,TPR,TPS,CNV,EV=get('B'),get('NR'),get('NC'),get('G'),get('dP'),get('TCR'),get('TCS'),get('CNV'),get('EV')
+    B,NR,NC,G,dP,TPR,TPS,CNV,EV=retraites.get('B'),retraites.get('NR'),retraites.get('NC'),retraites.get('G'),retraites.get('dP'),retraites.get('TCR'),retraites.get('TCS'),retraites.get('CNV'),retraites.get('EV')
     
-    figure(figsize=(10,8))
-    suptitle("Projections du COR (hypothèses)".decode("utf-8"),fontsize=16)
-    for c in xrange(9):
-        subplot(3,3,c+1)
+    pl.figure(figsize=(10,8))
+    pl.suptitle(u"Projections du COR (hypothèses)",fontsize=16)
+    for c in range(9):
+        pl.subplot(3,3,c+1)
         v,V = [ (B,'B'), (NR,'NR'), (NC,'NC'), (G,'G'), (dP,'dP'), (TPR,'TPR'), (TPS,'TPS'), (CNV,'CNV'), (EV,'EV') ][c]
         graphique(v,V)
-    tight_layout(rect=[0, 0.03, 1, 0.95])
+    pl.tight_layout(rect=[0, 0.03, 1, 0.95])
     
     mysavefig("conjoncture")
 
     
 # génération des graphes pour des réformes à prestation garantie
 
-def simu2(ages=[61,0],S=0.0):
+def simu2(ages=61.0,S=0.0):
     
-    for d in ages:
+    d = ages
 
-        figure(figsize=(6,8))
-        if d!=0:
-            suptitle( ("Cotisations adaptées (eq. financier, maintien du niveau de vie & départ à %d ans"%(d)).decode("utf-8"),fontsize=10)
-        else:
-            suptitle("Cotisations adaptées (équilibre financier & maintien du niveau de vie)".decode("utf-8"),fontsize=10)
-                
-        Ts,Ps,As = calcule_Ts_Ps_As_fixant_As_RNV_S(d, 1.0, S)
-        S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
-        
-        graphiques(Ts,Ps,As, S,RNV,REV)
-        
-        if d!=0:
-            mysavefig( ("%dans"%(d)))
-        else:
-            mysavefig("cotisations")
+    pl.figure(figsize=(6,8))
+    if d!=0:
+        pl.suptitle( (u"Cotisations adaptées (eq. financier, maintien du niveau de vie & départ à %d ans"%(d)),fontsize=10)
+    else:
+        pl.suptitle(u"Cotisations adaptées (équilibre financier & maintien du niveau de vie)",fontsize=10)
+            
+    Ts,Ps,As = retraites.calcule_Ts_Ps_As_fixant_As_RNV_S(d, 1.0, S)
+    S,RNV,REV = retraites.calcule_S_RNV_REV(Ts,Ps,As)
+    
+    graphiques(Ts,Ps,As, S,RNV,REV)
+    
+    if d!=0:
+        mysavefig( ("%dans"%(d)))
+    else:
+        mysavefig("cotisations")
 
             
 # génération des graphes pour la réforme Macron avec maintien du niveau de vie
 
 def simu3(Ts=0,RNV=1.0):
     
-    figure(figsize=(6,8))
-    suptitle('Réforme Macron (équilibre financier & maintien du niveau de vie)'.decode("utf-8"),fontsize=12)
+    pl.figure(figsize=(6,8))
+    pl.suptitle(u'Réforme Macron (équilibre financier & maintien du niveau de vie)',fontsize=12)
                 
-    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(Ts,RNV)
-    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
+    Ts,Ps,As = retraites.calcule_Ts_Ps_As_fixant_Ts_RNV_S(Ts,RNV)
+    S,RNV,REV = retraites.calcule_S_RNV_REV(Ts,Ps,As)
         
     graphiques(Ts,Ps,As, S,RNV,REV)
     
-    print "Maintien du niveau de vie"
+    print("Maintien du niveau de vie")
     affiche_solutions_simulateur_COR(Ts,Ps,As)
     
     #mysavefig("macron_niveau_de_vie")
@@ -191,16 +192,16 @@ def simu3(Ts=0,RNV=1.0):
 
 def simu4(Ps=0,Ts=0):
 
-    figure(figsize=(6,8))
-    suptitle('Réforme Macron (équilibre financier & ratio pension/salaire fixe)'.decode("utf-8"),fontsize=12)
+    pl.figure(figsize=(6,8))
+    pl.suptitle(u'Réforme Macron (équilibre financier & ratio pension/salaire fixe)',fontsize=12)
                 
-    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ps_Ts_S(Ps,Ts)
-    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
+    Ts,Ps,As = retraites.calcule_Ts_Ps_As_fixant_Ps_Ts_S(Ps,Ts)
+    S,RNV,REV = retraites.calcule_S_RNV_REV(Ts,Ps,As)
         
     graphiques(Ts,Ps,As, S,RNV,REV)
     mysavefig("macron_point_indexe")
     
-    print "Maintien du rapport pension moyenne / salaire moyen"
+    print("Maintien du rapport pension moyenne / salaire moyen")
     affiche_solutions_simulateur_COR(Ts,Ps,As)
 
     
@@ -211,54 +212,54 @@ def simu4(Ps=0,Ts=0):
 
 def pour_article_2():
 
-    print "Données et figure pour article 2"
+    print("Données et figure pour article 2")
     
-    Ts,Ps,As = calcule_Ts_Ps_As_fixant_Ts_RNV_S(0)
-    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
+    Ts,Ps,As = retraites.calcule_Ts_Ps_As_fixant_Ts_RNV_S(0)
+    S,RNV,REV = retraites.calcule_S_RNV_REV(Ts,Ps,As)
         
-    figure(figsize=(9,6))
+    pl.figure(figsize=(9,6))
     graphique(As,"A",14,[],True,range(1,5))
-    suptitle("Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)".decode("utf-8"),fontsize=14)
-    legend(loc="best")
+    pl.suptitle(u"Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)",fontsize=14)
+    pl.legend(loc="best")
     mysavefig("macron_68_ans")
 
-    figure(figsize=(9,6))
+    pl.figure(figsize=(9,6))
     graphique(As,"A",14,[],True)
-    suptitle("Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)".decode("utf-8"),fontsize=14)
-    legend(loc="best")
+    pl.suptitle(u"Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)",fontsize=14)
+    pl.legend(loc="best")
     mysavefig("macron_68_ans_tout")
     
-    print "Réforme Macron, Maintien du niveau de vie"
+    print("Réforme Macron, Maintien du niveau de vie")
     affiche_solutions_simulateur_COR(Ts,Ps,As)
 
 
 
 def pour_article_3():
 
-    print "Données et figures pour article 3"
+    print("Données et figures pour article 3")
     
-    Ts,Ps,As = calcule_Ts_Ps_As_fixant_As_Ts_S(62) 
-    S,RNV,REV = calcule_S_RNV_REV(Ts,Ps,As)
+    Ts,Ps,As = retraites.calcule_Ts_Ps_As_fixant_As_Ts_S(62) 
+    S,RNV,REV = retraites.calcule_S_RNV_REV(Ts,Ps,As)
 
-    titre="Modèle du COR: Réforme Macron (éq. financier & départ à 62 ans)".decode("utf-8")
+    titre=u"Modèle du COR: Réforme Macron (éq. financier & départ à 62 ans)"
     
-    figure(figsize=(9,6))
+    pl.figure(figsize=(9,6))
     graphique(RNV,"RNV",14,[],True,range(1,5))
-    suptitle(titre,fontsize=14)
-    legend(loc="best")
+    pl.suptitle(titre,fontsize=14)
+    pl.legend(loc="best")
     mysavefig("macron_62_ans_nv")
     
-    figure(figsize=(9,6))
+    pl.figure(figsize=(9,6))
     graphique(Ps,"P",14,[],True,range(1,5))
-    suptitle(titre,fontsize=14)
-    legend(loc="best")
+    pl.suptitle(titre,fontsize=14)
+    pl.legend(loc="best")
     mysavefig("macron_62_ans_p")
     
-    print "Réforme Macron, Départ à 62 ans"
+    print("Réforme Macron, Départ à 62 ans")
     affiche_solutions_simulateur_COR(Ts,Ps,As)
-    print "\nEvolution du niveau de vie:"
+    print("\nEvolution du niveau de vie:")
     affiche_variable(RNV)
-    print "\nEvolution du ratio pension/salaire:"
+    print("\nEvolution du ratio pension/salaire:")
     affiche_variable(Ps)
     
 #####################
@@ -272,6 +273,6 @@ def pour_article_3():
 #pour_article_2()
 #pour_article_3()
 
-#simu2([62],-0.01)
+simu2(62.0,-0.01)
 
-show()
+pl.show()

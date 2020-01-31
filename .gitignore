@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# LaTeX
+*.log
+*.aux
+*.out
+*.blg
+*.bbl
+*.toc
+*.idx
+*.nav
+*.snm
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Figures
+/fig/*

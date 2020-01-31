@@ -2,7 +2,6 @@
 # coding:utf-8
 
 import json
-from pylab import *
 from copy import deepcopy
 
 
@@ -104,7 +103,7 @@ def calcule_Ts_Ps_As_fixant_Ps_Ts_S(Pcible=0, Tcible=0, S=0.0):
     # Si Pcible==0, utilise le taux du COR en 2020
     # Si Tcible==0, utilise le taux fixé par le COR
     
-    T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B')
+    T,P,A,G,NR,NC,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('dP'),get('B')
         
     Ps = deepcopy(P)
     for s in scenarios:
@@ -137,7 +136,7 @@ def calcule_Ts_Ps_As_fixant_As_Ts_S(Acible=0, Tcible=0, S=0.0):
     # Si Pcible==0, utilise le taux du COR en 2020
     # Si Tcible==0, utilise le taux fixé par le COR
     
-    T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B')
+    T,P,A,G,NR,NC,dP,B = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('dP'),get('B')
         
     As = deepcopy(A)
     for s in scenarios:
@@ -155,8 +154,6 @@ def calcule_Ts_Ps_As_fixant_As_Ts_S(Acible=0, Tcible=0, S=0.0):
                 Ts[s][a] = Tcible
 
     Ps = deepcopy(P)
-
-
     
     for s in scenarios:
 
@@ -171,7 +168,7 @@ def calcule_Ts_Ps_As_fixant_As_Ts_S(Acible=0, Tcible=0, S=0.0):
 
 def calcule_S_RNV_REV(Ts,Ps,As):
 
-    T,P,A,G,NR,NC,TCR,TCS,CNV,dP,B,EV = get('T'),get('P'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B'),get('EV')
+    T,A,G,NR,NC,TCR,TCS,CNV,dP,B,EV = get('T'),get('A'),get('G'),get('NR'),get('NC'),get('TCR'),get('TCS'),get('CNV'),get('dP'),get('B'),get('EV')
     
     S,RNV,REV = dict(), dict(), dict()
 
@@ -192,5 +189,3 @@ def calcule_S_RNV_REV(Ts,Ps,As):
             REV[s][a] = ( tmp - As[s][a] ) / tmp
 
     return S, RNV, REV
-
-
