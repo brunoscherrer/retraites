@@ -19,4 +19,6 @@ __pycache__/
 .ipynb_checkpoints
 
 # Figures
-/fig/*
+fig/*.pdf
+fig/*.png
+
