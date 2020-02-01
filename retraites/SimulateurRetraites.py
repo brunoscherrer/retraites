@@ -6,6 +6,14 @@ import json
 
 class SimulateurRetraites:
     def __init__(self, json_filename):
+        """
+        Crée un simulateur à partir d'un fichier d'hypothèses JSON.
+        
+        json_filename : une chaîne de caractère, le nom du fichier JSON contenant les hypothèses
+        
+        Exemple :
+        simulateur = SimulateurRetraites('fileProjection.json')
+        """
         # initialisations diverses
         # chargement des donnees du COR pour les 6 scenarios
         
@@ -37,12 +45,21 @@ class SimulateurRetraites:
         return None
 
     def get(self, var):
-        # fonction pour récupérer les données du COR
+        """
+        Retourne une donnée du COR correspondant à un nom donné.
         
+        var : une chaîne de caractère, la variable à extraire
+        v : un dictionnaire, v[s][a] est la valeur de la variable 
+        pour le scénario s à l'année a
+        
+        Exemple :
+        T = simulateur.get("T")
+        """
         if var=='EV':
             an=self.annees_EV
         else:
             an=self.annees
+
         v=dict()
         
         for s in self.scenarios:
@@ -53,8 +70,11 @@ class SimulateurRetraites:
         return v
     
     def calcule_Ts_Ps_As_fixant_As_RNV_S(self, Age=0, RNV=1.0, S=0.0):
+        """
+        Pilotage 1 : calcul à âge et niveau de vie défini
     
-        # Si Age==0 utilise l'age de la projection COR
+        Si Age==0 utilise l'age de la projection COR
+        """
         
         Ts,Ps,As = deepcopy(self.T), deepcopy(self.P), deepcopy(self.A)
     
@@ -79,8 +99,11 @@ class SimulateurRetraites:
         return Ts,Ps,As
     
     def calcule_Ts_Ps_As_fixant_Ts_RNV_S(self, Tcible=0, RNV=1.0, S=0.0):
+        """
+        Pilotage 3 : calcul à cotisations et niveau de vie défini
         
-        # Si Tcible==0, utilise le taux fixé par le COR
+        Si Tcible==0, utilise le taux fixé par le COR
+        """
     
         Ts = deepcopy(self.T)
         if Tcible!=0:
@@ -105,9 +128,12 @@ class SimulateurRetraites:
     
     
     def calcule_Ts_Ps_As_fixant_Ps_Ts_S(self, Pcible=0, Tcible=0, S=0.0):
+        """
+        Pilotage 2 : calcul à cotisations et pensions définies
         
-        # Si Pcible==0, utilise le taux du COR en 2020
-        # Si Tcible==0, utilise le taux fixé par le COR
+        Si Pcible==0, utilise le taux du COR en 2020
+        Si Tcible==0, utilise le taux fixé par le COR
+        """
         
         Ps = deepcopy(self.P)
         for s in self.scenarios:
@@ -136,9 +162,12 @@ class SimulateurRetraites:
         return Ts,Ps,As
         
     def calcule_Ts_Ps_As_fixant_As_Ts_S(self, Acible=0, Tcible=0, S=0.0):
+        """
+        Pilotage 4 : calcul à cotisations et âge définis
         
-        # Si Pcible==0, utilise le taux du COR en 2020
-        # Si Tcible==0, utilise le taux fixé par le COR
+        Si Acible==0, utilise l'âge du COR en 2020
+        Si Tcible==0, utilise le taux fixé par le COR
+        """
         
         As = deepcopy(self.A)
         for s in self.scenarios:
@@ -168,6 +197,13 @@ class SimulateurRetraites:
         return Ts,Ps,As
         
     def calcule_S_RNV_REV(self, Ts,Ps,As):
+        """
+        Calcule les sorties du modèle de retraite en fonction des leviers.
+        
+        Ts : le taux de cotisations
+        P : le niveau des pensions par rapport aux salaires
+        A : âge moyen de départ à la retraite
+        """
     
         S,RNV,REV = dict(), dict(), dict()
     

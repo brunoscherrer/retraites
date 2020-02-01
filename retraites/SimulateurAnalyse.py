@@ -46,10 +46,10 @@ class SimulateurAnalyse:
     
         # titres des figures
         
-        t=[u"Situation financière du système (part du PIB)",
-           u"Niveau de vie des retraités p/r à celui des actifs",
+        t=[u"Situation financière du système (% PIB)",
+           u"Niveau de vie des retraités p/r à l'ensemble",
            u"Proportion de la vie passée à la retraite",
-           u"Taux de cotisation de retraite (part du PIB)",
+           u"Taux de cotisation de retraite (% PIB)",
            u"Age de départ effectif moyen à la retraite",
            u"Ratio (pension moyenne)/(salaire moyen)",
            u"B: Part des revenus d'activité bruts dans le PIB",
