@@ -10,6 +10,7 @@ class SimulateurRetraites:
         """
         Crée un simulateur à partir d'un fichier d'hypothèses JSON.
         
+        Paramètres
         json_filename : une chaîne de caractère, le nom du fichier JSON contenant les hypothèses
         pilotage : un entier, la stratégie de pilotage (par défaut, celle du COR)
         
@@ -61,8 +62,8 @@ class SimulateurRetraites:
         pilotage 0 : statu quo du COR
         Retourne un objet de type SimulateurAnalyse.
         """
-        S, RNV, REV = self.calcule_S_RNV_REV(self.T, self.P, self.A)
-        resultat = SimulateurAnalyse(self.T, self.P, self.A, S, RNV, REV, \
+        S, RNV, REV, Depenses = self.calcule_S_RNV_REV(self.T, self.P, self.A)
+        resultat = SimulateurAnalyse(self.T, self.P, self.A, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
     
@@ -81,8 +82,8 @@ class SimulateurRetraites:
         Si Age==0 utilise l'age de la projection COR
         """
         Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_As_RNV_S(Age, RNV, S)
-        S, RNV, REV = self.calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, \
+        S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
 
@@ -102,9 +103,9 @@ class SimulateurRetraites:
         Si Pcible==0, utilise le taux du COR en 2020
         Si Tcible==0, utilise le taux fixé par le COR
         """
-        Ts,Ps,As = self.calcule_Ts_Ps_As_fixant_Ps_Ts_S(Pcible, Tcible, S)
-        S,RNV,REV = self.calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, \
+        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_Ps_Ts_S(Pcible, Tcible, S)
+        S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
     
@@ -122,9 +123,9 @@ class SimulateurRetraites:
         Description
         Si Tcible==0, utilise le taux fixé par le COR
         """
-        Ts,Ps,As = self.calcule_Ts_Ps_As_fixant_Ts_RNV_S(Tcible, RNV, S)
-        S,RNV,REV = self.calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, \
+        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_Ts_RNV_S(Tcible, RNV, S)
+        S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
     
@@ -144,9 +145,9 @@ class SimulateurRetraites:
         Si Acible==0, utilise l'âge du COR en 2020
         Si Tcible==0, utilise le taux fixé par le COR
         """
-        Ts,Ps,As = self.calcule_Ts_Ps_As_fixant_As_Ts_S(Acible, Tcible, S) 
-        S,RNV,REV = self.calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, \
+        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_As_Ts_S(Acible, Tcible, S) 
+        S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
 
@@ -311,21 +312,22 @@ class SimulateurRetraites:
         A : âge moyen de départ à la retraite
         """
     
-        S,RNV,REV = dict(), dict(), dict()
+        S,RNV,REV, Depenses = dict(), dict(), dict(), dict()
     
         for s in self.scenarios:
     
-            S[s], RNV[s], REV[s] = dict(), dict(), dict()
+            S[s], RNV[s], REV[s], Depenses[s] = dict(), dict(), dict(), dict()
     
             for a in self.annees:
     
                 GdA = self.G[s][a] * ( As[s][a]-self.A[s][a] )
                 K = ( self.NR[s][a] - GdA ) / ( self.NC[s][a] + 0.5*GdA )
                 U = 1.0 - ( self.TCS[s][a] - self.T[s][a] )
+                Depenses[s][a] = self.B[s][a] * K * ( Ps[s][a] + self.dP[s][a] )
                 S[s][a] = self.B[s][a] * ( Ts[s][a] -  K * ( Ps[s][a] + self.dP[s][a] ) ) 
                 RNV[s][a] =  Ps[s][a] * ( 1.0 - self.TCR[s][a] ) / (U - Ts[s][a]) * self.CNV[s][a]
     
                 tmp = 60.0 + self.EV[s][ int(a+.5-As[s][a]) ]
                 REV[s][a] = ( tmp - As[s][a] ) / tmp
     
-        return S, RNV, REV
+        return S, RNV, REV, Depenses
