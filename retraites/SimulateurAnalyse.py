@@ -6,10 +6,11 @@ Created on Fri Jan 31 21:37:59 2020
 @author: osboxes
 """
 import pylab as pl
+import os
 
 class SimulateurAnalyse:
     ### fonctions pour générer des graphiques
-    def __init__(self, T, P, A, S, RNV, REV, scenarios, annees_EV, annees, dir_image):
+    def __init__(self, T, P, A, S, RNV, REV, scenarios, annees_EV, annees):
         self.scenarios = scenarios
         self.annees_EV = annees_EV
         self.annees = annees
@@ -30,15 +31,61 @@ class SimulateurAnalyse:
                               "Hausse des salaires: +1%/an, Taux de chômage: 7%",
                               "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
                               "Hausse des salaires: +1%/an, Taux de chômage: 10%"]
-        self.dir_image=dir_image        # répertoire pour les images
+        self.dir_image="." # répertoire pour les images
+
+        self.ext_image=["png","pdf"]   # types de fichier à générer
 
         return None
     
+    def setImageFormats(self, ext_image):
+        """
+        Configure le format de sauvegarde des images
+        
+        ext_image : une liste de chaînes de caractères (par defaut, ext_image=["png","pdf"])
+        """
+        self.ext_image = ext_image
+        return None
+
+    def getImageFormats(self):
+        """
+        Retourne le répertoire contenant les images
+        """
+        return self.ext_image 
+
+    def setDirectoryImage(self, dir_image):
+        """
+        Configure le répertoire contenant les images
+        
+        dir_image : une chaîne de caractères, le répertoire contenant les images 
+        (par défaut, dir_image="fig")
+        exportées par mysavefig.
+        """
+        self.dir_image = dir_image
+        return None
+
+    def getDirectoryImage(self):
+        """
+        Retourne le répertoire contenant les images
+        """
+        return self.dir_image
+
     def mysavefig(self, f):
-        ext_image=["png","pdf"]   # types de fichier à générer
+        """
+        Sauvegarde l'image dans le répertoire
+        
+        f : une chaîne de caractères, le nom des fichiers à sauver
+        
+        Description
+        Sauvegarde l'image dans les formats définis. 
+        
+        Exemple:
+        analyse.mysavefig("conjoncture")
+        """
     
-        for ext in ext_image:
-            pl.savefig(self.dir_image + f + "." + ext)
+        for ext in self.ext_image:
+            basefilename = f + "." + ext
+            filename = os.path.join(self.dir_image,basefilename)
+            pl.savefig(filename)
         return None
     
     def graphique(self, v, nom, fs=8, rg=[], leg=False, sc=None):
@@ -96,6 +143,14 @@ class SimulateurAnalyse:
     ##############################################################################
     
     def affiche_variable(self, v):
+        """
+        Affiche les valeurs d'une variable. 
+        
+        v : une variable
+        
+        Exemple
+        analyse.affiche_variable(RNV)
+        """
     
         ans=[2019, 2020, 2025, 2030, 2040, 2050, 2060, 2070]
         for s in self.scenarios:
@@ -107,6 +162,9 @@ class SimulateurAnalyse:
         return None
             
     def affiche_solutions_simulateur_COR(self):
+        """
+        Affiche les paramètres du simulateur. 
+        """
     
         print("Valeur à rentrer sur le simulateur officiel du COR:")
         

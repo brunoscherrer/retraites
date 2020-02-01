@@ -59,59 +59,95 @@ class SimulateurRetraites:
     def pilotageCOR(self):
         """
         pilotage 0 : statu quo du COR
+        Retourne un objet de type SimulateurAnalyse.
         """
         S, RNV, REV = self.calcule_S_RNV_REV(self.T, self.P, self.A)
         resultat = SimulateurAnalyse(self.T, self.P, self.A, S, RNV, REV, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     "fig")
+                                     self.scenarios, self.annees_EV, self.annees)
         return resultat
     
     def pilotageParAgeEtNiveauDeVie(self, Age=0, RNV=1.0, S=0.0):
         """
         pilotage 1 : imposer l'âge de départ à la retraite et 
         le niveau de vie
+        
+        Paramètres
+        Age : un flottant, l'âge de départ imposé
+        RNV : un flottant positif, le niveau de vie des retraités par rapport à l’ensemble de la population
+        S : la situation financière en % de PIB
+        Retourne un objet de type SimulateurAnalyse.
+        
+        Description
+        Si Age==0 utilise l'age de la projection COR
         """
         Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_As_RNV_S(Age, RNV, S)
         S, RNV, REV = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     "fig")
+                                     self.scenarios, self.annees_EV, self.annees)
         return resultat
 
     def pilotageParCotisationsEtPensions(self, Pcible=0, Tcible=0, S=0.0):
         """
         pilotage 2 : imposer le taux de cotisations et le niveau 
         pensions par rapport aux salaires
+        
+        Paramètres
+        Pcible : le niveau de pension des retraites par rapport aux actifs
+        Tcible : le taux de cotisations
+        S : la situation financière en % de PIB
+        Retourne un objet de type SimulateurAnalyse.
+        
+        
+        Description
+        Si Pcible==0, utilise le taux du COR en 2020
+        Si Tcible==0, utilise le taux fixé par le COR
         """
         Ts,Ps,As = self.calcule_Ts_Ps_As_fixant_Ps_Ts_S(Pcible, Tcible, S)
         S,RNV,REV = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     "fig")
+                                     self.scenarios, self.annees_EV, self.annees)
         return resultat
     
     def pilotageParNiveauDeVieEtCotisations(self, Tcible=0, RNV=1.0, S=0.0):
         """
         pilotage 3 : imposer le niveau de vie par rapport à 
-        l'ensemble de la population et le taux de cotisations,
+        l'ensemble de la population et le taux de cotisations
+        
+        Paramètres
+        Tcible : le taux de cotisations
+        RNV : un flottant positif, le niveau de vie des retraités par rapport à l’ensemble de la population
+        S : la situation financière en % de PIB
+        Retourne un objet de type SimulateurAnalyse.
+        
+        Description
+        Si Tcible==0, utilise le taux fixé par le COR
         """
         Ts,Ps,As = self.calcule_Ts_Ps_As_fixant_Ts_RNV_S(Tcible, RNV, S)
         S,RNV,REV = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     "fig")
+                                     self.scenarios, self.annees_EV, self.annees)
         return resultat
     
     def pilotageParCotisationsEtAge(self, Acible=0, Tcible=0, S=0.0):
         """
         pilotage 4 : imposer le taux de cotisations et 
         l'âge de départ à la retraite.
+        
+        Paramètres
+        Acible : l'âge de départ à la retraite
+        Tcible : le taux de cotisations
+        S : la situation financière en % de PIB
+        
+        Retourne un objet de type SimulateurAnalyse.
+
+        Description
+        Si Acible==0, utilise l'âge du COR en 2020
+        Si Tcible==0, utilise le taux fixé par le COR
         """
         Ts,Ps,As = self.calcule_Ts_Ps_As_fixant_As_Ts_S(Acible, Tcible, S) 
         S,RNV,REV = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     "fig")
+                                     self.scenarios, self.annees_EV, self.annees)
         return resultat
 
     def get(self, var):

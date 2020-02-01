@@ -47,21 +47,22 @@ class CheckSimulateur(unittest.TestCase):
         # génération des graphes pour des réformes à prestation garantie
 
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
-        Age=61.0
         S=0.0
-        analyse = simulateur.pilotageParAgeEtNiveauDeVie(Age, 1.0, S)
+        age=61.0
+        RNV = 1.0
+        analyse = simulateur.pilotageParAgeEtNiveauDeVie(age, RNV, S)
     
         pl.figure(figsize=(6,8))
-        if Age!=0:
-            pl.suptitle( (u"Cotisations adaptées (eq. financier, maintien du niveau de vie & départ à %d ans"%(Age)),fontsize=10)
+        if age!=0:
+            pl.suptitle( (u"Cotisations adaptées (eq. financier, maintien du niveau de vie & départ à %d ans"%(age)),fontsize=10)
         else:
             pl.suptitle(u"Cotisations adaptées (équilibre financier & maintien du niveau de vie)",fontsize=10)
                 
         
         analyse.graphiques()
         
-        if Age!=0:
-            analyse.mysavefig( ("%dans"%(Age)))
+        if age!=0:
+            analyse.mysavefig( ("%dans"%(age)))
         else:
             analyse.mysavefig("cotisations")
 
@@ -133,7 +134,7 @@ class CheckSimulateur(unittest.TestCase):
         analyse.affiche_solutions_simulateur_COR()
         return None
     
-    def test_article3():
+    def test_article3(self):
         # Pilotage 4 : calcul à cotisations et âge définis
     
         print("Données et figures pour article 3")
