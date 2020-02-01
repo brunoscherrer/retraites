@@ -66,6 +66,7 @@ class SimulateurAnalyse:
         self.yaxis_lim["T"] = [0.25,0.4]
         self.yaxis_lim["A"] = [60,70]
         self.yaxis_lim["P"] = [.25,.55]
+        self.yaxis_lim["Depenses"] = [.11,.15]
         
         # Liste des années dans le simulateur du COR
         self.liste_annees=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
