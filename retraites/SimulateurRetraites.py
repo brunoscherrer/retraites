@@ -5,7 +5,7 @@ from copy import deepcopy
 import json
 
 class SimulateurRetraites:
-    def __init__(self, json_file):
+    def __init__(self, json_filename):
         # initialisations diverses
         # chargement des donnees du COR pour les 6 scenarios
         
@@ -14,9 +14,13 @@ class SimulateurRetraites:
         self.annees_futures=range(2020, self.horizon+1)   # annees sur lesquelles on peut changer qqch
         self.annees_EV=range(1930,2011)              # annees sur lesquelles on a l'espérance de vie
         self.scenarios=range(1,7)                    # scenarios consideres
-    
-        fd = open(json_file)
-        self.data = json.load(fd)
+
+        # Lit les hypothèses de calcul dans le fichier JSON
+        json_file = open(json_filename)
+        self.data = json.load(json_file)
+        json_file.close()
+        
+        # Extrait les variables depuis les données
         self.T = self.get('T')
         self.P = self.get('P')
         self.A = self.get('A')

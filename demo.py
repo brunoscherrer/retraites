@@ -173,9 +173,9 @@ def pour_article_3():
 
 #####################
 
-#simu0()
+simu0()
 #simu1()
-simu2()
+#simu2()
 #simu3()
 #simu4(0,0.311)
 
@@ -184,4 +184,4 @@ simu2()
 
 #simu2(62.0,-0.01)
 
-pl.show()
+
