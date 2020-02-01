@@ -235,7 +235,7 @@ class SimulateurAnalyse:
             print()
             print("Scenario",s,": ",self.scenarios_labels[s-1])
             for a in self.liste_annees:
-                print("%.2f"%(v[s][a]),)
+                print("%d : %.3f"%(a, v[s][a]))
             print("")
         return None
             
@@ -251,15 +251,15 @@ class SimulateurAnalyse:
             print("Scenario",s,": ",self.scenarios_labels[s-1] )
             print("Age:        ",)
             for a in self.liste_annees:
-                print("%.1f"%(self.A[s][a]),)
+                print("%d : %.1f ans"%(a, self.A[s][a]),)
             print("")
             print("Cotisation: ",)
             for a in self.liste_annees:
-                print("%.1f"%(100*self.T[s][a]),)
+                print("%d : %.1f %%"%(a, 100*self.T[s][a]),)
             print("")
             print("Pension:    ",)
             for a in self.liste_annees:
-                print("%.1f"%(100*self.P[s][a]),)
+                print("%d : %.1f %%"%(a, 100*self.P[s][a]),)
             print("")
             print("")
         return None
