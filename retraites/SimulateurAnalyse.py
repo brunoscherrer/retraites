@@ -9,11 +9,20 @@ import pylab as pl
 
 class SimulateurAnalyse:
     ### fonctions pour générer des graphiques
-    def __init__(self, simulateur, dir_image):
+    def __init__(self, T, P, A, S, RNV, REV, scenarios, annees_EV, annees, dir_image):
+        self.scenarios = scenarios
+        self.annees_EV = annees_EV
+        self.annees = annees
+
         # initialisations diverses
         # chargement des donnees du COR pour les 6 scenarios
         
-        self.simulateur = simulateur
+        self.T = T
+        self.P = P
+        self.A = A
+        self.S = S
+        self.RNV = RNV
+        self.REV = REV
 
         self.scenarios_labels=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
                               "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
@@ -34,12 +43,12 @@ class SimulateurAnalyse:
     
     def graphique(self, v, nom, fs=8, rg=[], leg=False, sc=None):
         if sc==None:
-            sc = self.simulateur.scenarios
+            sc = self.scenarios
             
         if nom=="EV":
-            an=self.simulateur.annees_EV
+            an=self.annees_EV
         else:
-            an=self.simulateur.annees
+            an=self.annees
     
         for s in sc:
             pl.plot(an, [ v[s][a] for a in an ], label=self.scenarios_labels[s-1] )
@@ -70,16 +79,16 @@ class SimulateurAnalyse:
             pl.legend(loc="best")
         return None
     
-    def graphiques(self, T, P, A, S, RNV, REV, fs=8):
+    def graphiques(self, fs=8):
     
         for i in range(6):
             pl.subplot(3,2,i+1)
-            v,V,r = [ (S,"S" ,[-0.02,0.02]),
-                      (RNV,"RNV", [0.6,1.2]),
-                      (REV,"REV", [0.2,0.4]),
-                      (T,"T", [0.25,0.4] ),
-                      (A,"A", [60,70]),
-                      (P,"P", [.25,.55]) ][ i ]
+            v,V,r = [ (self.S,"S" ,[-0.02,0.02]),
+                      (self.RNV,"RNV", [0.6,1.2]),
+                      (self.REV,"REV", [0.2,0.4]),
+                      (self.T,"T", [0.25,0.4] ),
+                      (self.A,"A", [60,70]),
+                      (self.P,"P", [.25,.55]) ][ i ]
             self.graphique(v, V, fs ,r)
         pl.tight_layout(rect=[0, 0.03, 1, 0.95])
         return None
@@ -89,7 +98,7 @@ class SimulateurAnalyse:
     def affiche_variable(self, v):
     
         ans=[2019, 2020, 2025, 2030, 2040, 2050, 2060, 2070]
-        for s in self.simulateur.scenarios:
+        for s in self.scenarios:
             print()
             print("Scenario",s,": ",self.scenarios_labels[s-1])
             for a in ans:
@@ -97,25 +106,25 @@ class SimulateurAnalyse:
             print("")
         return None
             
-    def affiche_solutions_simulateur_COR(self, Ts,Ps,As):
+    def affiche_solutions_simulateur_COR(self):
     
         print("Valeur à rentrer sur le simulateur officiel du COR:")
         
         ans=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
-        for s in self.simulateur.scenarios:
+        for s in self.scenarios:
             print("")
             print("Scenario",s,": ",self.scenarios_labels[s-1] )
             print("Age:        ",)
             for a in ans:
-                print("%.1f"%(As[s][a]),)
+                print("%.1f"%(self.A[s][a]),)
             print("")
             print("Cotisation: ",)
             for a in ans:
-                print("%.1f"%(100*Ts[s][a]),)
+                print("%.1f"%(100*self.T[s][a]),)
             print("")
             print("Pension:    ",)
             for a in ans:
-                print("%.1f"%(100*Ps[s][a]),)
+                print("%.1f"%(100*self.P[s][a]),)
             print("")
             print("")
         return None
