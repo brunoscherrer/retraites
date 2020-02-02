@@ -277,17 +277,12 @@ class SimulateurAnalyse:
         for s in self.scenarios:
             print("")
             print("Scenario",s,": ",self.scenarios_labels[s-1] )
-            print("Age:        ",)
+            print("Annéee, Age,      Cotis., Pension:",)
             for a in self.liste_annees:
-                print("%d : %.1f ans"%(a, self.A[s][a]),)
-            print("")
-            print("Cotisation: ",)
-            for a in self.liste_annees:
-                print("%d : %.1f %%"%(a, 100*self.T[s][a]),)
-            print("")
-            print("Pension:    ",)
-            for a in self.liste_annees:
-                print("%d : %.1f %%"%(a, 100*self.P[s][a]),)
+                print("%5d : %.1f ans, %.1f %%, %.1f %%"%(a, \
+                                                         self.A[s][a], \
+                                                         100*self.T[s][a], \
+                                                         100*self.P[s][a]))
             print("")
             print("")
         return None

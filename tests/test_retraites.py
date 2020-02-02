@@ -21,6 +21,8 @@ class CheckSimulateur(unittest.TestCase):
         analyse.graphiques()
     
         analyse.mysavefig("cor")
+        
+        analyse.affiche_solutions_simulateur_COR()
 
         # Vérifie les ordres de grandeurs des calculs
         for s in simulateur.scenarios:

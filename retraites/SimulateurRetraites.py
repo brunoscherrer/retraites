@@ -331,7 +331,10 @@ class SimulateurRetraites:
     def calcule_fixant_As_Ds_S(self, Acible=0, Dcible=0.0, Ss=0.0):
         """
         Pilotage 5 : calcul à âge et dépenses définis
-        Ds : un dictionnaire, Ds[a] est le niveau de dépenses à l'année a
+        Acible : un dictionnaire, Acible[s][a] est l'âge de départ à la retraite 
+        du scénario s à l'année a
+        Dcible : un dictionnaire, Dcible[s][a] est le niveau de dépenses 
+        du scénario s à l'année a
         
         Si Acible==None, utilise l'âge du COR
         Si Ds==None, utilise les dépenses du COR
@@ -344,7 +347,7 @@ class SimulateurRetraites:
         else:
             for s in self.scenarios:
                 for a in self.annees_futures:
-                    As[s][a] = Acible[a]
+                    As[s][a] = Acible[s][a]
         
         # Définit les dépenses
         if Dcible==0.0:
@@ -357,7 +360,7 @@ class SimulateurRetraites:
             for s in self.scenarios:
                 Ds[s] = dict()
                 for a in self.annees_futures:
-                    Ds[s][a] = Dcible[a]
+                    Ds[s][a] = Dcible[s][a]
     
         # Calcule Ps et Ts
         Ps = deepcopy(self.P)
