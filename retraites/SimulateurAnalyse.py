@@ -53,6 +53,15 @@ class SimulateurAnalyse:
                               "Hausse des salaires: +1%/an, Taux de chômage: 7%",
                               "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
                               "Hausse des salaires: +1%/an, Taux de chômage: 10%"]
+        self.scenarios_labels_courts=["+1,8%/an, Taux de chômage: 7%",
+                              "+1,5%/an, Chômage: 7%",
+                              "+1,3%/an, Chômage: 7%",
+                              "+1%/an, Chômage: 7%",
+                              "+1,8%/an, Chômage: 4.5%",
+                              "+1%/an, Chômage: 10%"]
+
+        self.labels_is_long = True # True, si on utilise les labels longs
+        
         self.dir_image="." # répertoire pour les images
 
         self.ext_image=["png","pdf"]   # types de fichier à générer
@@ -87,6 +96,22 @@ class SimulateurAnalyse:
         Retourne le répertoire contenant les images
         """
         return self.ext_image 
+
+    
+    def setLabelLongs(self, labels_is_long):
+        """
+        Configure la longueur des étiquettes
+        
+        labels_is_long : un booléen, True si les labels longs sont utilisés (par défaut = True)
+        """
+        self.labels_is_long = labels_is_long
+        return None
+
+    def getLabelLongs(self):
+        """
+        Retourne le répertoire contenant les images
+        """
+        return self.labels_is_long 
 
     def setDirectoryImage(self, dir_image):
         """
@@ -154,7 +179,10 @@ class SimulateurAnalyse:
     
         for s in scenarios_indices:
             y = [ v[s][a] for a in an ]
-            label_variable = self.scenarios_labels[s-1]
+            if (self.labels_is_long):
+                label_variable = self.scenarios_labels[s-1]
+            else:
+                label_variable = self.scenarios_labels_courts[s-1]
             pl.plot(an, y, label=label_variable )
     
         # titres des figures
@@ -264,3 +292,16 @@ class SimulateurAnalyse:
             print("")
         return None
     
+    def plot_legend(self):
+        """
+        Affiche les légendes des graphiques.
+        """
+        # Juste les légendes
+        pl.figure(figsize=(6,2))
+        nb_scenarios = len(self.scenarios_labels)
+        for i in range(nb_scenarios):
+            pl.plot(0.,0.,label=self.scenarios_labels[i])
+        pl.legend(self.scenarios_labels, loc="center")
+        pl.ylim(bottom=0.0,top=0.7)
+        pl.axis('off')
+        return None

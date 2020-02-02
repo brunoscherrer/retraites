@@ -69,8 +69,9 @@ class SimulateurRetraites:
     
     def pilotageParAgeEtNiveauDeVie(self, Age=0, RNV=1.0, Ss=0.0):
         """
-        pilotage 1 : imposer l'âge de départ à la retraite et 
-        le niveau de vie
+        pilotage 1 : imposer 1) l'âge de départ à la retraite,  
+        2) le niveau de vie par rapport à l'ensemble de la population et 
+        3) le bilan financier
         
         Paramètres
         Age : un flottant, l'âge de départ imposé
@@ -81,7 +82,7 @@ class SimulateurRetraites:
         Description
         Si Age==0 utilise l'age de la projection COR
         """
-        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_As_RNV_S(Age, RNV, Ss)
+        Ts, Ps, As = self.calcule_fixant_As_RNV_S(Age, RNV, Ss)
         S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
@@ -89,8 +90,9 @@ class SimulateurRetraites:
 
     def pilotageParCotisationsEtPensions(self, Pcible=0, Tcible=0, Ss=0.0):
         """
-        pilotage 2 : imposer le taux de cotisations et le niveau 
-        pensions par rapport aux salaires
+        pilotage 2 : imposer 1) le taux de cotisations,  
+        2) le niveau de pensions par rapport aux salaires et 
+        3) le bilan financier
         
         Paramètres
         Pcible : le niveau de pension des retraites par rapport aux actifs
@@ -103,7 +105,7 @@ class SimulateurRetraites:
         Si Pcible==0, utilise le taux du COR en 2020
         Si Tcible==0, utilise le taux fixé par le COR
         """
-        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_Ps_Ts_S(Pcible, Tcible, Ss)
+        Ts, Ps, As = self.calcule_fixant_Ps_Ts_S(Pcible, Tcible, Ss)
         S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
@@ -111,8 +113,9 @@ class SimulateurRetraites:
     
     def pilotageParNiveauDeVieEtCotisations(self, Tcible=0, RNV=1.0, Ss=0.0):
         """
-        pilotage 3 : imposer le niveau de vie par rapport à 
-        l'ensemble de la population et le taux de cotisations
+        pilotage 3 : imposer 1) le taux de cotisations, 
+        2) le niveau de vie par rapport à l'ensemble de la population et 
+        3) le bilan financier
         
         Paramètres
         Tcible : le taux de cotisations
@@ -123,7 +126,7 @@ class SimulateurRetraites:
         Description
         Si Tcible==0, utilise le taux fixé par le COR
         """
-        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_Ts_RNV_S(Tcible, RNV, Ss)
+        Ts, Ps, As = self.calcule_fixant_Ts_RNV_S(Tcible, RNV, Ss)
         S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
@@ -131,8 +134,9 @@ class SimulateurRetraites:
     
     def pilotageParCotisationsEtAge(self, Acible=0, Tcible=0, Ss=0.0):
         """
-        pilotage 4 : imposer le taux de cotisations et 
-        l'âge de départ à la retraite.
+        pilotage 4 : imposer 1) le taux de cotisations, 
+        2) l'âge de départ à la retraite et 
+        3) le bilan financier. 
         
         Paramètres
         Acible : l'âge de départ à la retraite
@@ -145,7 +149,30 @@ class SimulateurRetraites:
         Si Acible==0, utilise l'âge du COR en 2020
         Si Tcible==0, utilise le taux fixé par le COR
         """
-        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_As_Ts_S(Acible, Tcible, Ss) 
+        Ts, Ps, As = self.calcule_fixant_As_Ts_S(Acible, Tcible, Ss) 
+        S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
+                                     self.scenarios, self.annees_EV, self.annees)
+        return resultat
+
+    def pilotageParAgeEtDepenses(self, Acible=0, Dcible=0.0, Ss=0.0):
+        """
+        pilotage 5 : imposer 1) l'âge de départ à la retraite, 
+        2) le niveau de dépenses Ds et 
+        3) le bilan financier. 
+        
+        Paramètres
+        Acible : l'âge de départ à la retraite
+        Dcible : le niveau de dépenses
+        Ss : la situation financière en % de PIB
+        
+        Retourne un objet de type SimulateurAnalyse.
+
+        Description
+        Si Acible==0, utilise l'âge du COR
+        Si Ds==0, utilise les dépenses du COR
+        """
+        Ts, Ps, As = self.calcule_fixant_As_Ds_S(Acible, Dcible, Ss)
         S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
@@ -176,36 +203,35 @@ class SimulateurRetraites:
                 
         return v
     
-    def calcule_Ts_Ps_As_fixant_As_RNV_S(self, Age_s=0, RNVs=1.0, Ss=0.0):
+    def calcule_fixant_As_RNV_S(self, Age_s=0, RNVs=1.0, Ss=0.0):
         """
         Pilotage 1 : calcul à âge et niveau de vie défini
     
-        Si Age==0 utilise l'age de la projection COR
+        Si Age_s==0 utilise l'age de la projection COR
         """
         
-        Ts,Ps,As = deepcopy(self.T), deepcopy(self.P), deepcopy(self.A)
-    
+        Ts, Ps, As = deepcopy(self.T), deepcopy(self.P), deepcopy(self.A)
+        
+        # Définit l'âge
         if Age_s!=0:
             for s in self.scenarios:
                 for a in self.annees_futures:
                     As[s][a] = Age_s
-            
-        for s in self.scenarios:
-    
-            for a in self.annees_futures:
-                 
+        
+        # Calcule Ps et Ts
+        for s in self.scenarios:    
+            for a in self.annees_futures:                 
                 GdA = self.G[s][a] * ( As[s][a] - self.A[s][a] )
                 K = ( self.NR[s][a] - GdA ) / ( self.NC[s][a] + 0.5*GdA )
                 Z = ( 1.0 - self.TCR[s][a] ) * self.CNV[s][a] / RNVs
                 U = 1.0 - ( self.TCS[s][a] - self.T[s][a] )
-                L = Ss / self.B[s][a]
-    
+                L = Ss / self.B[s][a]    
                 Ps[s][a] = ( U - L - K*self.dP[s][a] ) / ( Z + K )
                 Ts[s][a] = U - Ps[s][a] * Z 
                 
-        return Ts,Ps,As
+        return Ts, Ps, As
     
-    def calcule_Ts_Ps_As_fixant_Ps_Ts_S(self, Pcible=0, Tcible=0, Ss=0.0):
+    def calcule_fixant_Ps_Ts_S(self, Pcible=0, Tcible=0, Ss=0.0):
         """
         Pilotage 2 : calcul à cotisations et pensions définies
         
@@ -213,6 +239,7 @@ class SimulateurRetraites:
         Si Tcible==0, utilise le taux fixé par le COR
         """
         
+        # Définit Ps
         Ps = deepcopy(self.P)
         for s in self.scenarios:
             if Pcible==0:
@@ -222,30 +249,30 @@ class SimulateurRetraites:
             for a in self.annees_futures:
                 Ps[s][a] = p
         
+        # Définit Ts
         Ts = deepcopy(self.T)
         if Tcible!=0:
             for s in self.scenarios:
                 for a in self.annees_futures:
                     Ts[s][a] = Tcible
     
-        As = deepcopy(self.A)
-    
-        for s in self.scenarios:
-    
-            for a in self.annees_futures:
-    
+        # Calcule l'âge 
+        As = deepcopy(self.A)    
+        for s in self.scenarios:    
+            for a in self.annees_futures:    
                 K = (Ts[s][a] - Ss / self.B[s][a]) / (Ps[s][a]+self.dP[s][a])
                 As[s][a] = self.A[s][a] + ( self.NR[s][a] - K*self.NC[s][a] ) / (0.5*K + 1.0) / self.G[s][a]
                 
-        return Ts,Ps,As
+        return Ts, Ps, As
         
-    def calcule_Ts_Ps_As_fixant_Ts_RNV_S(self, Tcible=0, RNV=1.0, Ss=0.0):
+    def calcule_fixant_Ts_RNV_S(self, Tcible=0, RNV=1.0, Ss=0.0):
         """
         Pilotage 3 : calcul à cotisations et niveau de vie défini
         
         Si Tcible==0, utilise le taux fixé par le COR
         """
-    
+        
+        # Définit Ts
         Ts = deepcopy(self.T)
         if Tcible!=0:
             if type(Tcible)==float:
@@ -255,20 +282,18 @@ class SimulateurRetraites:
             else:
                 Ts=Tcible
             
-        Ps, As = deepcopy(self.P), deepcopy(self.A)
-    
-        for s in self.scenarios:
-    
-            for a in self.annees_futures:
-    
+        # Calcule Ps et As
+        Ps, As = deepcopy(self.P), deepcopy(self.A)    
+        for s in self.scenarios:    
+            for a in self.annees_futures:    
                 Ps[s][a] = RNV * (1-(self.TCS[s][a] + Ts[s][a]-self.T[s][a])) / self.CNV[s][a] / (1-self.TCR[s][a])
                 K = (Ts[s][a] - Ss / self.B[s][a]) / (Ps[s][a]+self.dP[s][a])
                 As[s][a] = self.A[s][a] + ( self.NR[s][a] - K*self.NC[s][a] ) / (0.5*K + 1.0) / self.G[s][a]
                 
-        return Ts,Ps,As
+        return Ts, Ps, As
     
     
-    def calcule_Ts_Ps_As_fixant_As_Ts_S(self, Acible=0, Tcible=0, Ss=0.0):
+    def calcule_fixant_As_Ts_S(self, Acible=0, Tcible=0, Ss=0.0):
         """
         Pilotage 4 : calcul à cotisations et âge définis
         
@@ -276,6 +301,7 @@ class SimulateurRetraites:
         Si Tcible==0, utilise le taux fixé par le COR
         """
         
+        # Définit As
         As = deepcopy(self.A)
         for s in self.scenarios:
             if Acible==0:
@@ -285,25 +311,67 @@ class SimulateurRetraites:
             for a in self.annees_futures:
                 As[s][a] = b
         
+        # Définit Ts
         Ts = deepcopy(self.T)
         if Tcible!=0:
             for s in self.scenarios:
                 for a in self.annees_futures:
                     Ts[s][a] = Tcible
-    
-        Ps = deepcopy(self.P)
-        
-        for s in self.scenarios:
-    
-            for a in self.annees_futures:
-    
+                    
+        # Calcule Ps
+        Ps = deepcopy(self.P)        
+        for s in self.scenarios:    
+            for a in self.annees_futures:    
                 GdA = self.G[s][a] * ( As[s][a]-self.A[s][a] )
                 K = ( self.NR[s][a] - GdA ) / ( self.NC[s][a] + 0.5 * GdA )
-                Ps[s][a] = (self.T[s][a]-Ss/self.B[s][a])/K - self.dP[s][a]
+                Ps[s][a] = (Ts[s][a]-Ss/self.B[s][a])/K - self.dP[s][a]
                 
-        return Ts,Ps,As
+        return Ts, Ps, As
         
-    def calcule_S_RNV_REV(self, Ts,Ps,As):
+    def calcule_fixant_As_Ds_S(self, Acible=0, Dcible=0.0, Ss=0.0):
+        """
+        Pilotage 5 : calcul à âge et dépenses définis
+        Ds : un dictionnaire, Ds[a] est le niveau de dépenses à l'année a
+        
+        Si Acible==None, utilise l'âge du COR
+        Si Ds==None, utilise les dépenses du COR
+        """
+        
+        # Définit l'âge
+        As = deepcopy(self.A)
+        if Acible==0:
+            print("Utilise l'âge du COR")
+        else:
+            for s in self.scenarios:
+                for a in self.annees_futures:
+                    As[s][a] = Acible[a]
+        
+        # Définit les dépenses
+        if Dcible==0.0:
+            # Utilise les dépenses du COR
+            print("Utilise les dépenses du COR")
+            S_COR, RNV_COR, REV_COR, Ds = self.calcule_S_RNV_REV(self.T, self.P, self.A)
+        else:
+            # Utilise les dépenses données à chaque année
+            Ds = dict()
+            for s in self.scenarios:
+                Ds[s] = dict()
+                for a in self.annees_futures:
+                    Ds[s][a] = Dcible[a]
+    
+        # Calcule Ps et Ts
+        Ps = deepcopy(self.P)
+        Ts = deepcopy(self.T)
+        for s in self.scenarios:
+            for a in self.annees_futures:
+                Ts[s][a] = (Ss + Ds[s][a])/self.B[s][a]
+                GdA = self.G[s][a] * ( As[s][a]-self.A[s][a] )
+                K = ( self.NR[s][a] - GdA ) / ( self.NC[s][a] + 0.5 * GdA )
+                Ps[s][a] = (Ts[s][a]-Ss/self.B[s][a])/K - self.dP[s][a]
+                
+        return Ts, Ps, As
+
+    def calcule_S_RNV_REV(self, Ts, Ps, As):
         """
         Calcule les sorties du modèle de retraite en fonction des leviers.
         

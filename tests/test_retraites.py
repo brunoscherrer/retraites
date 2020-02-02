@@ -6,6 +6,7 @@ Test for SimulateurRetraites class.
 import unittest
 from SimulateurRetraites import SimulateurRetraites
 import pylab as pl
+import numpy as np
 
 class CheckSimulateur(unittest.TestCase):
 
@@ -15,12 +16,22 @@ class CheckSimulateur(unittest.TestCase):
         
         pl.figure(figsize=(6,8))
         pl.suptitle('Projections du COR',fontsize=16)
-                
+        
         analyse = simulateur.pilotageCOR()
         analyse.graphiques()
     
         analyse.mysavefig("cor")
 
+        # Vérifie les ordres de grandeurs des calculs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                np.testing.assert_allclose(analyse.A[s][a], 64.0, atol=4.0)
+                np.testing.assert_allclose(analyse.RNV[s][a], 0.8, atol=0.3)
+                np.testing.assert_allclose(analyse.S[s][a], 0.0, atol=0.02)
+                np.testing.assert_allclose(analyse.REV[s][a], 0.3, atol=0.2)
+                np.testing.assert_allclose(analyse.T[s][a], 0.3, atol=0.3)
+                np.testing.assert_allclose(analyse.P[s][a], 0.5, atol=0.3)
         return None
     
     def test_1(self):
@@ -48,23 +59,36 @@ class CheckSimulateur(unittest.TestCase):
 
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
         S=0.0
-        age=61.0
+        Age=61.0
         RNV = 1.0
-        analyse = simulateur.pilotageParAgeEtNiveauDeVie(age, RNV, S)
+        analyse = simulateur.pilotageParAgeEtNiveauDeVie(Age, RNV, S)
     
         pl.figure(figsize=(6,8))
-        if age!=0:
-            pl.suptitle( (u"Eq. financier, maintien du niveau de vie & départ à %d ans"%(age)),fontsize=10)
+        if Age!=0:
+            pl.suptitle( (u"Eq. financier, maintien du niveau de vie & départ à %d ans"%(Age)),fontsize=10)
         else:
             pl.suptitle(u"Equilibre financier & maintien du niveau de vie",fontsize=10)
                 
         
         analyse.graphiques()
         
-        if age!=0:
-            analyse.mysavefig( ("%dans"%(age)))
+        if Age!=0:
+            analyse.mysavefig( ("%dans"%(Age)))
         else:
             analyse.mysavefig("cotisations")
+            
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.A[s][a], Age)
+                    np.testing.assert_allclose(analyse.RNV[s][a], RNV)
+                    np.testing.assert_allclose(analyse.S[s][a], S, atol=1.e-15)
 
         return None
 
@@ -86,6 +110,19 @@ class CheckSimulateur(unittest.TestCase):
         analyse.affiche_solutions_simulateur_COR()
         
         analyse.mysavefig("macron_niveau_de_vie")
+        
+        # Vérifie les valeurs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.T[s][a], 0.3, atol=0.3)
+                    np.testing.assert_allclose(analyse.RNV[s][a], RNV)
+                    np.testing.assert_allclose(analyse.S[s][a], 0.0, atol=1.e-15)
 
         return None
     
@@ -108,6 +145,18 @@ class CheckSimulateur(unittest.TestCase):
         print("Maintien du rapport pension moyenne / salaire moyen")
         analyse.affiche_solutions_simulateur_COR()
 
+        # Vérifie les valeurs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][2020])
+                    np.testing.assert_allclose(analyse.S[s][a], 0.0, atol=1.e-15)
         return None
 
     def test_article2(self):
@@ -132,6 +181,19 @@ class CheckSimulateur(unittest.TestCase):
         
         print("Réforme Macron, Maintien du niveau de vie")
         analyse.affiche_solutions_simulateur_COR()
+        
+        # Vérifie les valeurs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.RNV[s][a], 1.0)
+                    np.testing.assert_allclose(analyse.S[s][a], 0.0, atol=1.e-15)
         return None
     
     def test_article3(self):
@@ -140,8 +202,13 @@ class CheckSimulateur(unittest.TestCase):
         print("Données et figures pour article 3")
         
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
-        analyse = simulateur.pilotageParCotisationsEtAge(62) 
+        Age = 62
+        analyse = simulateur.pilotageParCotisationsEtAge(Age) 
     
+        pl.figure(figsize=(6,8))
+        pl.suptitle(u"Equilibre financier, cotisations et âge définis")
+        analyse.graphiques()
+
         titre=u"Modèle du COR: Réforme Macron (éq. financier & départ à 62 ans)"
         
         pl.figure(figsize=(9,6))
@@ -162,7 +229,52 @@ class CheckSimulateur(unittest.TestCase):
         analyse.affiche_variable(analyse.RNV)
         print("\nEvolution du ratio pension/salaire:")
         analyse.affiche_variable(analyse.P)
+        
+        # Vérifie les valeurs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], Age)
+                    np.testing.assert_allclose(analyse.S[s][a], 0.0, atol=1.e-15)
         return None
+
+    def test_pilotage5(self):
+        # Pilotage 5 : calcul à âge et dépenses définis
+
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        analyse = simulateur.pilotageParAgeEtDepenses()
+    
+        pl.figure(figsize=(8,10))
+        pl.suptitle(u"Equilibre financier, age et dépenses définies")
+        analyse.graphiques()
+        
+        pl.figure()
+        analyse.setLabelLongs(False)
+        analyse.graphique(analyse.Depenses,"Depenses")
+        
+        analyse.plot_legend()
+            
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                    #np.testing.assert_allclose(analyse.Ds[s][a], simulateur.Ds[s][a])
+                    np.testing.assert_allclose(analyse.S[s][a], 0., atol=1.e-15)
+
+        return None
+
 
 if __name__=="__main__":
     unittest.main()
