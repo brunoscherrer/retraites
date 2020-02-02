@@ -54,9 +54,9 @@ class CheckSimulateur(unittest.TestCase):
     
         pl.figure(figsize=(6,8))
         if age!=0:
-            pl.suptitle( (u"Cotisations adaptées (eq. financier, maintien du niveau de vie & départ à %d ans"%(age)),fontsize=10)
+            pl.suptitle( (u"Eq. financier, maintien du niveau de vie & départ à %d ans"%(age)),fontsize=10)
         else:
-            pl.suptitle(u"Cotisations adaptées (équilibre financier & maintien du niveau de vie)",fontsize=10)
+            pl.suptitle(u"Equilibre financier & maintien du niveau de vie",fontsize=10)
                 
         
         analyse.graphiques()
@@ -79,7 +79,7 @@ class CheckSimulateur(unittest.TestCase):
         analyse = simulateur.pilotageParNiveauDeVieEtCotisations(Ts,RNV)
         
         pl.figure(figsize=(6,8))
-        pl.suptitle(u'Réforme Macron (équilibre financier & maintien du niveau de vie)',fontsize=12)
+        pl.suptitle(u'Equilibre financier & maintien du niveau de vie',fontsize=12)
         analyse.graphiques()
         
         print("Maintien du niveau de vie")
@@ -98,7 +98,7 @@ class CheckSimulateur(unittest.TestCase):
         Ts=0
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
         pl.figure(figsize=(6,8))
-        pl.suptitle(u'Réforme Macron (équilibre financier & ratio pension/salaire fixe)',fontsize=12)
+        pl.suptitle(u'Equilibre financier & ratio pension/salaire fixe',fontsize=12)
         
         analyse = simulateur.pilotageParCotisationsEtPensions(Ps,Ts)
             

@@ -67,7 +67,7 @@ class SimulateurRetraites:
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
     
-    def pilotageParAgeEtNiveauDeVie(self, Age=0, RNV=1.0, S=0.0):
+    def pilotageParAgeEtNiveauDeVie(self, Age=0, RNV=1.0, Ss=0.0):
         """
         pilotage 1 : imposer l'âge de départ à la retraite et 
         le niveau de vie
@@ -75,19 +75,19 @@ class SimulateurRetraites:
         Paramètres
         Age : un flottant, l'âge de départ imposé
         RNV : un flottant positif, le niveau de vie des retraités par rapport à l’ensemble de la population
-        S : la situation financière en % de PIB
+        Ss : la situation financière en % de PIB
         Retourne un objet de type SimulateurAnalyse.
         
         Description
         Si Age==0 utilise l'age de la projection COR
         """
-        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_As_RNV_S(Age, RNV, S)
+        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_As_RNV_S(Age, RNV, Ss)
         S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
 
-    def pilotageParCotisationsEtPensions(self, Pcible=0, Tcible=0, S=0.0):
+    def pilotageParCotisationsEtPensions(self, Pcible=0, Tcible=0, Ss=0.0):
         """
         pilotage 2 : imposer le taux de cotisations et le niveau 
         pensions par rapport aux salaires
@@ -95,7 +95,7 @@ class SimulateurRetraites:
         Paramètres
         Pcible : le niveau de pension des retraites par rapport aux actifs
         Tcible : le taux de cotisations
-        S : la situation financière en % de PIB
+        Ss : la situation financière en % de PIB
         Retourne un objet de type SimulateurAnalyse.
         
         
@@ -103,13 +103,13 @@ class SimulateurRetraites:
         Si Pcible==0, utilise le taux du COR en 2020
         Si Tcible==0, utilise le taux fixé par le COR
         """
-        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_Ps_Ts_S(Pcible, Tcible, S)
+        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_Ps_Ts_S(Pcible, Tcible, Ss)
         S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
     
-    def pilotageParNiveauDeVieEtCotisations(self, Tcible=0, RNV=1.0, S=0.0):
+    def pilotageParNiveauDeVieEtCotisations(self, Tcible=0, RNV=1.0, Ss=0.0):
         """
         pilotage 3 : imposer le niveau de vie par rapport à 
         l'ensemble de la population et le taux de cotisations
@@ -117,19 +117,19 @@ class SimulateurRetraites:
         Paramètres
         Tcible : le taux de cotisations
         RNV : un flottant positif, le niveau de vie des retraités par rapport à l’ensemble de la population
-        S : la situation financière en % de PIB
+        Ss : la situation financière en % de PIB
         Retourne un objet de type SimulateurAnalyse.
         
         Description
         Si Tcible==0, utilise le taux fixé par le COR
         """
-        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_Ts_RNV_S(Tcible, RNV, S)
+        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_Ts_RNV_S(Tcible, RNV, Ss)
         S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
     
-    def pilotageParCotisationsEtAge(self, Acible=0, Tcible=0, S=0.0):
+    def pilotageParCotisationsEtAge(self, Acible=0, Tcible=0, Ss=0.0):
         """
         pilotage 4 : imposer le taux de cotisations et 
         l'âge de départ à la retraite.
@@ -137,7 +137,7 @@ class SimulateurRetraites:
         Paramètres
         Acible : l'âge de départ à la retraite
         Tcible : le taux de cotisations
-        S : la situation financière en % de PIB
+        Ss : la situation financière en % de PIB
         
         Retourne un objet de type SimulateurAnalyse.
 
@@ -145,7 +145,7 @@ class SimulateurRetraites:
         Si Acible==0, utilise l'âge du COR en 2020
         Si Tcible==0, utilise le taux fixé par le COR
         """
-        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_As_Ts_S(Acible, Tcible, S) 
+        Ts, Ps, As = self.calcule_Ts_Ps_As_fixant_As_Ts_S(Acible, Tcible, Ss) 
         S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
@@ -176,7 +176,7 @@ class SimulateurRetraites:
                 
         return v
     
-    def calcule_Ts_Ps_As_fixant_As_RNV_S(self, Age=0, RNV=1.0, S=0.0):
+    def calcule_Ts_Ps_As_fixant_As_RNV_S(self, Age_s=0, RNVs=1.0, Ss=0.0):
         """
         Pilotage 1 : calcul à âge et niveau de vie défini
     
@@ -185,10 +185,10 @@ class SimulateurRetraites:
         
         Ts,Ps,As = deepcopy(self.T), deepcopy(self.P), deepcopy(self.A)
     
-        if Age!=0:
+        if Age_s!=0:
             for s in self.scenarios:
                 for a in self.annees_futures:
-                    As[s][a] = Age
+                    As[s][a] = Age_s
             
         for s in self.scenarios:
     
@@ -196,16 +196,16 @@ class SimulateurRetraites:
                  
                 GdA = self.G[s][a] * ( As[s][a] - self.A[s][a] )
                 K = ( self.NR[s][a] - GdA ) / ( self.NC[s][a] + 0.5*GdA )
-                Z = ( 1.0 - self.TCR[s][a] ) * self.CNV[s][a] / RNV 
+                Z = ( 1.0 - self.TCR[s][a] ) * self.CNV[s][a] / RNVs
                 U = 1.0 - ( self.TCS[s][a] - self.T[s][a] )
-                L = S / self.B[s][a]
+                L = Ss / self.B[s][a]
     
                 Ps[s][a] = ( U - L - K*self.dP[s][a] ) / ( Z + K )
                 Ts[s][a] = U - Ps[s][a] * Z 
                 
         return Ts,Ps,As
     
-    def calcule_Ts_Ps_As_fixant_Ps_Ts_S(self, Pcible=0, Tcible=0, S=0.0):
+    def calcule_Ts_Ps_As_fixant_Ps_Ts_S(self, Pcible=0, Tcible=0, Ss=0.0):
         """
         Pilotage 2 : calcul à cotisations et pensions définies
         
@@ -234,12 +234,12 @@ class SimulateurRetraites:
     
             for a in self.annees_futures:
     
-                K = (Ts[s][a] - S / self.B[s][a]) / (Ps[s][a]+self.dP[s][a])
+                K = (Ts[s][a] - Ss / self.B[s][a]) / (Ps[s][a]+self.dP[s][a])
                 As[s][a] = self.A[s][a] + ( self.NR[s][a] - K*self.NC[s][a] ) / (0.5*K + 1.0) / self.G[s][a]
                 
         return Ts,Ps,As
         
-    def calcule_Ts_Ps_As_fixant_Ts_RNV_S(self, Tcible=0, RNV=1.0, S=0.0):
+    def calcule_Ts_Ps_As_fixant_Ts_RNV_S(self, Tcible=0, RNV=1.0, Ss=0.0):
         """
         Pilotage 3 : calcul à cotisations et niveau de vie défini
         
@@ -262,13 +262,13 @@ class SimulateurRetraites:
             for a in self.annees_futures:
     
                 Ps[s][a] = RNV * (1-(self.TCS[s][a] + Ts[s][a]-self.T[s][a])) / self.CNV[s][a] / (1-self.TCR[s][a])
-                K = (Ts[s][a] - S / self.B[s][a]) / (Ps[s][a]+self.dP[s][a])
+                K = (Ts[s][a] - Ss / self.B[s][a]) / (Ps[s][a]+self.dP[s][a])
                 As[s][a] = self.A[s][a] + ( self.NR[s][a] - K*self.NC[s][a] ) / (0.5*K + 1.0) / self.G[s][a]
                 
         return Ts,Ps,As
     
     
-    def calcule_Ts_Ps_As_fixant_As_Ts_S(self, Acible=0, Tcible=0, S=0.0):
+    def calcule_Ts_Ps_As_fixant_As_Ts_S(self, Acible=0, Tcible=0, Ss=0.0):
         """
         Pilotage 4 : calcul à cotisations et âge définis
         
@@ -299,7 +299,7 @@ class SimulateurRetraites:
     
                 GdA = self.G[s][a] * ( As[s][a]-self.A[s][a] )
                 K = ( self.NR[s][a] - GdA ) / ( self.NC[s][a] + 0.5 * GdA )
-                Ps[s][a] = (self.T[s][a]-S/self.B[s][a])/K - self.dP[s][a]
+                Ps[s][a] = (self.T[s][a]-Ss/self.B[s][a])/K - self.dP[s][a]
                 
         return Ts,Ps,As
         
