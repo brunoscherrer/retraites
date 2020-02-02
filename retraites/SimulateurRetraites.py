@@ -155,7 +155,7 @@ class SimulateurRetraites:
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
 
-    def pilotageParAgeEtDepenses(self, Acible=0, Dcible=0.0, Ss=0.0):
+    def pilotageParAgeEtDepenses(self, Acible=0, Dcible=0.0, Scible=0.0):
         """
         pilotage 5 : imposer 1) l'âge de départ à la retraite, 
         2) le niveau de dépenses Ds et 
@@ -164,7 +164,7 @@ class SimulateurRetraites:
         Paramètres
         Acible : l'âge de départ à la retraite
         Dcible : le niveau de dépenses
-        Ss : la situation financière en % de PIB
+        Scible : la situation financière en % de PIB
         
         Retourne un objet de type SimulateurAnalyse.
 
@@ -172,7 +172,7 @@ class SimulateurRetraites:
         Si Acible==0, utilise l'âge du COR
         Si Ds==0, utilise les dépenses du COR
         """
-        Ts, Ps, As = self.calcule_fixant_As_Ds_S(Acible, Dcible, Ss)
+        Ts, Ps, As = self.calcule_fixant_As_Ds_S(Acible, Dcible, Scible)
         S, RNV, REV, Depenses = self.calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
@@ -328,12 +328,14 @@ class SimulateurRetraites:
                 
         return Ts, Ps, As
         
-    def calcule_fixant_As_Ds_S(self, Acible=0, Dcible=0.0, Ss=0.0):
+    def calcule_fixant_As_Ds_S(self, Acible=0, Dcible=0.0, Scible=0.0):
         """
         Pilotage 5 : calcul à âge et dépenses définis
         Acible : un dictionnaire, Acible[s][a] est l'âge de départ à la retraite 
         du scénario s à l'année a
         Dcible : un dictionnaire, Dcible[s][a] est le niveau de dépenses 
+        du scénario s à l'année a
+        Scible : un dictionnaire, Scible[s][a] est le solde financier 
         du scénario s à l'année a
         
         Si Acible==None, utilise l'âge du COR
@@ -362,15 +364,27 @@ class SimulateurRetraites:
                 for a in self.annees_futures:
                     Ds[s][a] = Dcible[s][a]
     
+        # Définit le solde financier
+        if Scible==0.0:
+            # Utilise un solde nul
+            Ss = dict()
+            for s in self.scenarios:
+                Ss[s] = dict()
+                for a in self.annees_futures:
+                    Ss[s][a] = 0.0
+        else:
+            # Utilise le solde donné
+            Ss = Scible
+
         # Calcule Ps et Ts
         Ps = deepcopy(self.P)
         Ts = deepcopy(self.T)
         for s in self.scenarios:
             for a in self.annees_futures:
-                Ts[s][a] = (Ss + Ds[s][a])/self.B[s][a]
+                Ts[s][a] = (Ss[s][a] + Ds[s][a])/self.B[s][a]
                 GdA = self.G[s][a] * ( As[s][a]-self.A[s][a] )
                 K = ( self.NR[s][a] - GdA ) / ( self.NC[s][a] + 0.5 * GdA )
-                Ps[s][a] = (Ts[s][a]-Ss/self.B[s][a])/K - self.dP[s][a]
+                Ps[s][a] = (Ts[s][a]-Ss[s][a]/self.B[s][a])/K - self.dP[s][a]
                 
         return Ts, Ps, As
 

@@ -69,13 +69,13 @@ class SimulateurAnalyse:
         # Configure les plages min et max pour l'axe des ordonnées 
         # des variables standard en sortie du simulateur
         self.yaxis_lim = dict()
-        self.yaxis_lim["S"] = [-0.02,0.02]
-        self.yaxis_lim["RNV"] = [0.6,1.2]
-        self.yaxis_lim["REV"] = [0.2,0.4]
-        self.yaxis_lim["T"] = [0.25,0.4]
+        self.yaxis_lim["S"] = [-2.0,2.0]
+        self.yaxis_lim["RNV"] = [60.0,120.0]
+        self.yaxis_lim["REV"] = [20.0,40.0]
+        self.yaxis_lim["T"] = [25.0,40.0]
         self.yaxis_lim["A"] = [60,70]
-        self.yaxis_lim["P"] = [.25,.55]
-        self.yaxis_lim["Depenses"] = [.11,.15]
+        self.yaxis_lim["P"] = [25.0,55.0]
+        self.yaxis_lim["Depenses"] = [11.0,15.0]
         
         # Liste des années dans le simulateur du COR
         self.liste_annees=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
@@ -178,7 +178,11 @@ class SimulateurAnalyse:
             an=self.annees
     
         for s in scenarios_indices:
-            y = [ v[s][a] for a in an ]
+            if (nom=="S" or nom=="RNV" or nom=="T" or nom=="P" \
+                or nom=="REV" or nom=="Depenses"):
+                y = [ 100.0 * v[s][a] for a in an ]
+            else:
+                y = [ v[s][a] for a in an ]
             if (self.labels_is_long):
                 label_variable = self.scenarios_labels[s-1]
             else:
@@ -189,11 +193,11 @@ class SimulateurAnalyse:
         liste_variables = ["S","RNV","REV","T","A","P","B","NR","NC","G","dP","TPR","TPS","CNV","EV","Depenses"]
         indice_variable = liste_variables.index(nom)
         t=[u"Situation financière du système (% PIB)",
-           u"Niveau de vie des retraités p/r à l'ensemble",
-           u"Proportion de la vie passée à la retraite",
+           u"Niveau de vie des retraités p/r à l'ensemble (%)",
+           u"Proportion de la vie passée à la retraite (%)",
            u"Taux de cotisation de retraite (% PIB)",
            u"Age de départ effectif moyen à la retraite",
-           u"Ratio (pension moyenne)/(salaire moyen)",
+           u"Ratio (pension moyenne)/(salaire moyen) (%)",
            u"B: Part des revenus d'activité bruts dans le PIB",
            u"NR: Nombre de retraités",
            u"NC: Nombre de cotisants",
