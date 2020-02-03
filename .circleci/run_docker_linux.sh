@@ -20,5 +20,8 @@ cd ..
 # Doc
 cd doc
 jupyter nbconvert --to notebook --execute Description-du-composant-retraites.ipynb
+jupyter nbconvert --to notebook --execute simulation-COR-juin-2019.ipynb
+jupyter nbconvert --to notebook --execute notes-bugs.ipynb
+jupyter nbconvert --to notebook --execute simulation-Etude-Impact.ipynb
 cd ..
 
