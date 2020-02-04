@@ -36,7 +36,7 @@ class SimulateurRetraites:
         
         # Paramètres constants
         self.horizon=2070
-        self.annees=range(2005, self.horizon+1)           # annees sur lesquelles on fait les calculs
+        self.annees=range(2017, self.horizon+1)           # annees sur lesquelles on fait les calculs
         self.annees_futures=range(2020, self.horizon+1)   # annees sur lesquelles on peut changer qqch
         self.annees_EV=range(1930,2011)              # annees sur lesquelles on a l'espérance de vie
         self.scenarios=range(1,7)                    # scenarios consideres
@@ -293,7 +293,7 @@ class SimulateurRetraites:
         return Ts, Ps, As
     
     
-    def calcule_fixant_As_Ts_S(self, Acible=0, Tcible=0, Ss=0.0):
+    def calcule_fixant_As_Ts_S(self, Acible=0.0, Tcible=0, Ss=0.0):
         """
         Pilotage 4 : calcul à cotisations et âge définis
         
@@ -304,13 +304,16 @@ class SimulateurRetraites:
         # Définit As
         As = deepcopy(self.A)
         for s in self.scenarios:
-            if Acible==0:
-                b = self.A[s][2020]
+            if type(Acible) is float:
+                if Acible==0.0:
+                    b = self.A[s][2020]
+                else:
+                    b = Acible
+                for a in self.annees_futures:
+                    As[s][a] = b
             else:
-                b = Acible
-            for a in self.annees_futures:
-                As[s][a] = b
-        
+                As = Acible
+                
         # Définit Ts
         Ts = deepcopy(self.T)
         if Tcible!=0:

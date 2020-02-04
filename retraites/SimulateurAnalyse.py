@@ -73,7 +73,7 @@ class SimulateurAnalyse:
         self.yaxis_lim["RNV"] = [60.0,120.0]
         self.yaxis_lim["REV"] = [20.0,40.0]
         self.yaxis_lim["T"] = [25.0,40.0]
-        self.yaxis_lim["A"] = [60,70]
+        self.yaxis_lim["A"] = [60,72]
         self.yaxis_lim["P"] = [25.0,55.0]
         self.yaxis_lim["Depenses"] = [11.0,15.0]
         

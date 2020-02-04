@@ -3,6 +3,7 @@
 """
 Test for SimulateurRetraites class.
 """
+
 import unittest
 from SimulateurRetraites import SimulateurRetraites
 import pylab as pl
