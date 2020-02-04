@@ -16,7 +16,7 @@ cd ..
 cd doc/Article4
 pdflatex article4-analyse-impact.tex
 pdflatex article4-analyse-impact.tex
-cd ..
+cd ../..
 
 # Demonstrations Python
 python demo.py
