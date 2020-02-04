@@ -64,7 +64,7 @@ class CheckSimulateur(unittest.TestCase):
         S=0.0
         Age=61.0
         RNV = 1.0
-        analyse = simulateur.pilotageParAgeEtNiveauDeVie(Age, RNV, S)
+        analyse = simulateur.pilotageParAgeEtNiveauDeVie(Acible=Age, RNVcible=RNV, Scible=S)
     
         pl.figure(figsize=(6,8))
         if Age!=0:
@@ -99,11 +99,10 @@ class CheckSimulateur(unittest.TestCase):
         # Pilotage 3 : calcul à cotisations et niveau de vie défini
         # génération des graphes pour la réforme Macron avec maintien du niveau de vie
 
-        Ts=0
-        RNV=1.0
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
                     
-        analyse = simulateur.pilotageParNiveauDeVieEtCotisations(Ts,RNV)
+        RNV=1.0
+        analyse = simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible=RNV, Scible=0.0)
         
         pl.figure(figsize=(6,8))
         pl.suptitle(u'Equilibre financier & maintien du niveau de vie',fontsize=12)
@@ -134,13 +133,12 @@ class CheckSimulateur(unittest.TestCase):
         # génération des graphes pour la réforme Macron avec point indexé sur 
         # le salaire moyen (rapport (pension moyenne/)(salaire moyen) constant égal à celui de 2020)
         
-        Ps=0
-        Ts=0
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
         pl.figure(figsize=(6,8))
         pl.suptitle(u'Equilibre financier & ratio pension/salaire fixe',fontsize=12)
         
-        analyse = simulateur.pilotageParCotisationsEtPensions(Ps,Ts)
+        Pcible=simulateur.P[1][2020]
+        analyse = simulateur.pilotageParCotisationsEtPensions(Pcible=Pcible, Scible=0.0)
             
         analyse.graphiques()
         analyse.mysavefig("macron_point_indexe")
@@ -167,8 +165,7 @@ class CheckSimulateur(unittest.TestCase):
         print("Données et figure pour article 2")
         
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
-        Tcible = 0
-        analyse = simulateur.pilotageParNiveauDeVieEtCotisations(Tcible)
+        analyse = simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible=1.0, Scible=0.0)
             
         pl.figure(figsize=(9,6))
         analyse.graphique(analyse.A,"A",14,[],True,range(1,5))
@@ -205,8 +202,8 @@ class CheckSimulateur(unittest.TestCase):
         print("Données et figures pour article 3")
         
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
-        Age = 62
-        analyse = simulateur.pilotageParCotisationsEtAge(Age) 
+        Age = 62.0
+        analyse = simulateur.pilotageParCotisationsEtAge(Acible=Age, Scible=0.0) 
     
         pl.figure(figsize=(6,8))
         pl.suptitle(u"Equilibre financier, cotisations et âge définis")
@@ -251,7 +248,7 @@ class CheckSimulateur(unittest.TestCase):
         # Pilotage 5 : calcul à âge et dépenses définis
 
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
-        analyse = simulateur.pilotageParAgeEtDepenses()
+        analyse = simulateur.pilotageParAgeEtDepenses(Scible=0.0)
     
         pl.figure(figsize=(8,10))
         pl.suptitle(u"Equilibre financier, age et dépenses définies")
@@ -264,6 +261,7 @@ class CheckSimulateur(unittest.TestCase):
         analyse.plot_legend()
             
         # Vérifie les valeurs imposées à partir de 2020
+        analyse_COR = simulateur.pilotageCOR()
         for s in simulateur.scenarios:
             for a in simulateur.annees:
                 if (a<2020):
@@ -273,7 +271,41 @@ class CheckSimulateur(unittest.TestCase):
                 else:
                     #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
                     np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
-                    #np.testing.assert_allclose(analyse.Ds[s][a], simulateur.Ds[s][a])
+                    np.testing.assert_allclose(analyse.Depenses[s][a], analyse_COR.Depenses[s][a])
+                    np.testing.assert_allclose(analyse.S[s][a], 0., atol=1.e-15)
+
+        return None
+
+    def test_pilotage5_FixeAge(self):
+        # Pilotage 5 : calcul à âge et dépenses définis
+        # Fixe l'âge à une valeur non nulle
+
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        analyse = simulateur.pilotageParAgeEtDepenses(Acible = 62.0, Scible = 0.0)
+    
+        pl.figure(figsize=(8,10))
+        pl.suptitle(u"Equilibre financier, age et dépenses définies")
+        analyse.graphiques()
+        
+        pl.figure()
+        analyse.setLabelLongs(False)
+        analyse.graphique(analyse.Depenses,"Depenses")
+        
+        analyse.plot_legend()
+            
+        # Vérifie les valeurs imposées à partir de 2020
+        analyse_COR = simulateur.pilotageCOR()
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.A[s][a], 62.0)
+                    np.testing.assert_allclose(analyse.Depenses[s][a], analyse_COR.Depenses[s][a])
                     np.testing.assert_allclose(analyse.S[s][a], 0., atol=1.e-15)
 
         return None

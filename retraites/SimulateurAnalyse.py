@@ -276,7 +276,7 @@ class SimulateurAnalyse:
         Affiche les paramètres du simulateur. 
         """
     
-        print("Valeur à rentrer sur le simulateur officiel du COR:")
+        print("Valeurs à rentrer sur le simulateur officiel du COR:")
         
         for s in self.scenarios:
             print("")
@@ -287,8 +287,6 @@ class SimulateurAnalyse:
                                                          self.A[s][a], \
                                                          100*self.T[s][a], \
                                                          100*self.P[s][a]))
-            print("")
-            print("")
         return None
     
     def plot_legend(self):

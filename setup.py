@@ -3,7 +3,7 @@
 Setup script for retraites
 ==========================
 
-This script allows to install retraites within the python environment.
+This script allows to install retraites within the Python environment.
 
 Usage
 -----
@@ -17,7 +17,8 @@ from setuptools import (setup, find_packages)
 setup_requires = ['pytest-runner']
 tests_require = ['pytest', 'coverage']
 install_requires = ['numpy>=1.16',
-                    'matplotlib>=2.1'
+                    'matplotlib>=2.1',
+                    'scipy>=1.0'
                     ]
 extras_require = {'doc': ['jupyter', 'jupyter_client']}
 
@@ -61,5 +62,5 @@ setup(
     include_package_data=True,
     zip_safe=False,
     license="GPL",
-    url="https://github.com/mbaudin47/retraites",
+    url="https://github.com/brunoscherrer/retraites",
 )
