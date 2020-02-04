@@ -39,17 +39,84 @@ Ainsi, l'étude d'impact ne présente pas de résultat techniquement faux :
 elle se content de dissimuler l'effet de la réforme \emph{par omission}, 
 laissant penser ce qu'elle ne dit, en fait, pas. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Modèle du simulateur officiel du COR}
 
 Dans le but de pouvoir comprendre l'influence des changements indiqués par 
 l'étude d'impact, nous souhaiterions pouvoir utiliser le simulateur du COR 
 (\url{https://www.cor-retraites.fr/simulateur}). 
+Comme nous allons le voir, l'exercice de reproduction des résultats 
+de l'étude d'impact révèle les intentions des auteurs de l'étude d'impact. 
+
 Ce simulateur tient compte de deux variables permettant de définir un scénario :
 \begin{itemize}
 \item le taux de hausse des salaires : +1\%, +1.3\%, +1.5\%, +1.8\%, 
 \item le taux de chômage : 4.5%, 7\%, 10\%.
 \end{itemize}
 
+Les rapports du COR s'appuient la plupart du temps sur le taux 
+de chômage de 7\% et prennent en compte les différents taux de hausse 
+des salaires de +1\%, +1.3\%, +1.5\% à +1.8\%. 
+Au contraire, l'étude d'impact ne présente généralement qu'une seule 
+courbe, correspondant au taux de chômage de 7% avec une hausse des 
+salaires de +1.3%. 
+Ainsi, on ne peut pas connaître l'influence de ce paramètre sur les calculs 
+de l'étude d'impact. 
+
+Une fois le scénario choisi dans le simulateur du COR, 
+l'utilisateur doit ajuster trois leviers : 
+\begin{itemize}
+\item l'âge de départ à la retraite, 
+\item le taux de cotisation, 
+\item le niveau des pensions par rapport aux salaires. 
+\end{itemize}
+
+En sortie, le simulateur du COR calcule :
+\begin{itemize}
+\item la situation financière du système de retraites, 
+\item le niveau de vie des retraités, 
+\item la durée de vie passée à la retraite. 
+\end{itemize}
+
+On peut utiliser ce simulateur de différentes manières, mais la 
+logique qui a dominé dans le passé a consisté à se fixer un objectif 
+de niveau de vie des retraités, puis à augmenter l'âge de départ ou 
+le taux de cotisations, tout en élevant progressivement le niveau des pensions. 
+
+Reproduire les simulations de l'étude d'impact avec le simulateur du COR 
+est donc impossible à priori. 
+D'une part, le simulateur ne présente pas le niveau de dépenses du système 
+de retraites. 
+Or l'objectif du gouvernement est d'abaisser ce niveau de dépenses 
+(proche de 14\% en 2020) jusqu'au niveau moyen européen (proche de 12.5\%). 
+D'autre part, le simulateur ne permet pas d'imposer l'équilibre financier du système 
+de retraites. 
+Or cet équilibre financier est l'objet du projet de loi organique. 
+
+C'est pourquoi une inversion mathématique est nécessaire pour pouvoir reproduire 
+les résultats de l'étude d'impact. 
+C'est la raison pour laquelle nous avons développé un simulateur Open Source 
+(\url{https://github.com/brunoscherrer/retraites}) fondé sur les mêmes équations mathématiques 
+que le simulateur du COR, mais dont nous avons inversé les relations pour 
+pouvoir imposer les paramètres pris en compte dans l'étude d'impact. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusion}
+
+Les parlementaires qui auraient pris le soin de lire l'impressionnante 
+étude d'impact (1029 pages !) en sont pour leur frais. 
+En effet, le text ne présente pas les informations essentielles qui leur auraient étés 
+utiles pour s'informer. 
+Pire : les informations présentés dans le texte détournent l'attention de l'essentiel 
+mettant en avant des détails techniques accessoires et affichant fallacieusement 
+des informations soigneusement choisies. 
+
+Les citoyens que nous sommes peuvent comprendre qu'une proposition de loi 
+n'aye pas nécessairement dans le sens politique que nous préférons. 
+En revanche, nous ne pouvons accepter que la décision politique soit 
+prise sur la base d'informations trompeuses. 
 
 \end{document}
 
