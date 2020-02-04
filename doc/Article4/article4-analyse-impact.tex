@@ -1,0 +1,455 @@
+\documentclass[10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{amscd}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\mathtoolsset{showonlyrefs=true}
+\usepackage{fullpage}
+\usepackage{graphicx}
+
+%Il faut qu’on écrive une page ou deux par contre, pour expliquer le projet. En gros un titre,   
+\title{Ce que l'étude d'impact ne dit pas}
+
+\author{Bruno Scherrer \and Michaël Baudin}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Résumé}
+
+Le 24 Janvier 2020, le gouvernement a rendu public une 
+étude d'impact ayant pour objectif de présenter le projet 
+de loi instituant le système universel de retraites. 
+L'objectif du présent texte est de permettre de comprendre 
+l'influence de cette réforme sur l'équilibre financier macro-économique 
+du système de retraite. 
+Nous montrons pourquoi les simulations montrent que l'âge de départ à la 
+retraite augmente et que le niveau des pensions diminue, contrairement à ce que laisse 
+penser l'étude d'impact. 
+Ainsi, l'étude d'impact ne présente pas de résultat techniquement faux : 
+elle se content de dissimuler l'effet de la réforme \emph{par omission}, 
+laissant penser ce qu'elle ne dit, en fait, pas. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Modèle du simulateur officiel du COR}
+
+Dans le but de pouvoir comprendre l'influence des changements indiqués par 
+l'étude d'impact, nous souhaiterions pouvoir utiliser le simulateur du COR 
+(\url{https://www.cor-retraites.fr/simulateur}). 
+Comme nous allons le voir, l'exercice de reproduction des résultats 
+de l'étude d'impact révèle les intentions des auteurs de l'étude d'impact. 
+
+Ce simulateur tient compte de deux variables permettant de définir un scénario :
+\begin{itemize}
+\item le taux de hausse des salaires : +1\%, +1.3\%, +1.5\%, +1.8\%, 
+\item le taux de chômage : 4.5%, 7\%, 10\%.
+\end{itemize}
+
+Les rapports du COR s'appuient la plupart du temps sur le taux 
+de chômage de 7\% et prennent en compte les différents taux de hausse 
+des salaires de +1\%, +1.3\%, +1.5\% à +1.8\%. 
+Au contraire, l'étude d'impact ne présente généralement qu'une seule 
+courbe, correspondant au taux de chômage de 7% avec une hausse des 
+salaires de +1.3%. 
+Ainsi, on ne peut pas connaître l'influence de ce paramètre sur les calculs 
+de l'étude d'impact. 
+
+Une fois le scénario choisi dans le simulateur du COR, 
+l'utilisateur doit ajuster trois leviers : 
+\begin{itemize}
+\item l'âge de départ à la retraite, 
+\item le taux de cotisation, 
+\item le niveau des pensions par rapport aux salaires. 
+\end{itemize}
+
+En sortie, le simulateur du COR calcule :
+\begin{itemize}
+\item la situation financière du système de retraites, 
+\item le niveau de vie des retraités, 
+\item la durée de vie passée à la retraite. 
+\end{itemize}
+
+On peut utiliser ce simulateur de différentes manières, mais la 
+logique qui a dominé dans le passé a consisté à se fixer un objectif 
+de niveau de vie des retraités, puis à augmenter l'âge de départ ou 
+le taux de cotisations, tout en élevant progressivement le niveau des pensions. 
+
+Reproduire les simulations de l'étude d'impact avec le simulateur du COR 
+est donc impossible à priori. 
+D'une part, le simulateur ne présente pas le niveau de dépenses du système 
+de retraites. 
+Or l'objectif du gouvernement est d'abaisser ce niveau de dépenses 
+(proche de 14\% en 2020) jusqu'au niveau moyen européen (proche de 12.5\%). 
+D'autre part, le simulateur ne permet pas d'imposer l'équilibre financier du système 
+de retraites. 
+Or cet équilibre financier est l'objet du projet de loi organique. 
+
+C'est pourquoi une inversion mathématique est nécessaire pour pouvoir reproduire 
+les résultats de l'étude d'impact. 
+C'est la raison pour laquelle nous avons développé un simulateur Open Source 
+(\url{https://github.com/brunoscherrer/retraites}) fondé sur les mêmes équations mathématiques 
+que le simulateur du COR, mais dont nous avons inversé les relations pour 
+pouvoir imposer les paramètres pris en compte dans l'étude d'impact. 
+
+Une difficulté supplémentaire apparaît lorsqu'on fait les calculs : 
+l'étude d'impact s'arrête en 2050, alors que les rapports du COR 
+se projettent jusqu'en 2070. 
+C'est la raison pour laquelle nous sommes contraints de faire des 
+hypothèses sur les variables imposées en 2060 et 2070. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Hypothèses de calcul}
+
+Notre calcul se fonde sur trois variables d'entrée :
+\begin{itemize}
+\item la situation financière du système de retraites, 
+\item les dépenses du système de retraites, 
+\item l'âge de départ à la retraite. 
+\end{itemize}
+
+L'ordre des priorités compte. 
+L'équilibre financier prime sur tout le reste. 
+Puis vient la diminution des dépenses par rapport à leur niveau actuel. 
+L'âge de départ à la retraite doit donc augmenter. 
+Dans la suite du texte, nous allons préciser quantitativement 
+les évolutions prévues de chaque paramètre. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{L'équilibre financier}
+
+L'équilibre financier est certainement la variable 
+la plus facile à ajuster. 
+
+L'étude d'impact, page 180, présente une analyse du solde financier du système de retraite 
+avant et après réforme.
+Le graphique 63 suivant est extrait de l'étude d'impact. 
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{EtudeImpact-situation-financiere.png}
+\end{center}
+
+Le texte indique : "Compte tenu des hypothèses décrites plus haut 
+et en y ajoutant une mesure conventionnelle de redressement à court 
+terme afin d’être à l’équilibre en 2027, le graphique ci-après présente 
+la trajectoire du solde du SUR en la comparant à la trajectoire 
+contrefactuelle (hors réforme) à l’horizon 2050."
+
+C'est pourquoi nous devons considérer un solde financier :
+\begin{itemize}
+\item inchangé avant 2020,
+\item linéairement croissant jusqu'à un solde nul en 2027,
+\item puis nul ensuite.
+\end{itemize}
+
+Nous avons imposé ce solde financier dans notre propre simulateur. 
+Les résultats que nous obtenons sont les suivants. 
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Simulation-Solde-Financier.png}
+
+\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
+\end{center}
+
+La légende de notre simulation insiste sur le fait que 
+le système doit être à l'équilibre financier \emph{quelque soit la 
+conjoncture économique}. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Les dépenses de retraite}
+
+L'étude d'impact, page 174, présente une analyse du niveau de dépenses 
+en \% de PIB : "Ce taux est plus élevé que ce qu’on observe dans 
+les autres pays européens. Les prestations de vieillesse-survie 
+(correspondant au champ comparable internationalement, plus 
+large que les dépenses du seul système de retraite) représentent 
+14,4 \% du PIB en France, contre 12,6 \% du PIB dans l’UE-15 et 12,3 \% dans l’UE-28."
+On comprend donc que l'objectif est de se rapprocher de la moyenne européenne. 
+
+Dans l'étude d'impact, page 174, le graphique 58 présente les dépenses constatées 
+et projetées du système de retraite actuel, en points de PIB.
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{EtudeImpact-depenses-constatees-projetees.png}
+\end{center}
+
+Pour cette trajectoire de dépenses, nous considérons les mêmes 
+niveaux de dépenses de les dépenses de l'étude d'impact de 2020 à 2050. 
+Pour la période 2050-2070, nous faisons l'hypothèse que le niveau 
+de dépense s'abaisse jusqu'à la moyenne 12,6 \% du PIB dans l’UE-15. 
+La figure suivante présente le résultat. 
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{Simulation-Depenses.png}
+
+\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{L'âge de départ en retraite}
+
+Reproduire l'âge de départ en retraite dans notre simulation 
+pose des difficultés. 
+
+Le graphique 49 page 139 de l'étude d'impact de Janvier 2020 est présenté ci-dessous.
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{EtudeImpact-AgeDepartRetraite.png}
+\end{center}
+
+Le texte précise : "Au total, en tenant compte de l’ensemble de ces 
+décalages, l’âge moyen de départ serait plus élevé dans le système 
+universel : 64 ans et 5 mois contre 64 ans et 10 mois environ dans 
+le système actuel pour la génération 1990."
+
+Sur le graphique de l'étude d'impact, nous lisons les valeurs numériques suivantes après réforme :
+\begin{itemize}
+\item un âge de départ à 63,8 ans pour la génération 1975,
+\item un âge de départ à 64,83 ans pour la génération 1990.
+\end{itemize}
+
+L'âge de départ pour la génération 1975 est lu sur le graphique. 
+L'âge de départ pour la génération 1990 se déduit du texte, qui 
+indique un âge de départ de "64 ans et 10 mois". 
+Puisque 10/12 = 0.83, nous en déduisons un âge de départ égal à 64.83 pour 
+la génération 1990. 
+
+On observe que la génération 1975 partira en retraite en 2039 dans le scénario de l'étude d'impact puisque 1975 + 63.8 = 2038.8.
+Remarquons que l'horizon temporel de l'étude d'impact se projette dans le graphique jusqu'à l'année 2054, puisque 1990 + 64.83 = 2054.83. 
+
+
+Pour calculer l'âge de départ en retraite en fonction de l'année du départ, 
+nous réalisons une inversion mathématique.  
+
+Notre calcul se décompose en trois parties :
+\begin{itemize}
+\item jusqu'à l'année 2039, nous utilisons les données du COR, 
+\item de 2039 à 2055, nous utilisons les données de l'étude d'impact,
+\item de 2055 à 2070, nous extrapolons. 
+\end{itemize}
+
+Le résultat de notre simulation est donc le suivant. 
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{Simulation-Age.png}
+
+\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
+\end{center}
+
+On observe que l'âge de départ à la retraite est donc 
+significativement supérieur dans l'étude d'impact. 
+Notre extrapolation a mené à un âge de départ à la retraite égal à 
+environ 66 ans en 2070. 
+Nous ne savons pas si cet âge est réaliste, mais nous notons deux éléments. 
+\begin{itemize}
+\item Le COR prévoyait une augmentation de l'âge de départ moins 
+forte à partir de 2040. 
+\item Si l'âge réel de départ à la retraite ne suit pas la courbe 
+que nous avons imposée, alors les pensions de retraites que nous 
+obtiendrons en conséquence seront inférieures à celles que nous avons 
+simulées. 
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Résultats}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Le niveau de vie des retraités par rapport à l'ensemble de la population}
+
+Le graphique suivant présente le niveau de vie des retraités par rapport aux 
+actifs. 
+D'après la documentation technique du COR : "Le niveau de vie est défini 
+par l’INSEE, au niveau de chaque ménage, comme le revenu disponible (tenant
+compte de l’ensemble des ressources et après prélèvements et transferts sociaux) 
+divisé par le nombre d’unités de consommation dans le ménage 
+(qui dépend du nombre de personnes qui le composent, cf. page 4)."
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{Simulation-RNV.png}
+
+\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
+\end{center}
+
+On observe que le niveau de vie des retraités 
+baisse de 105\% en 2020 jusqu'en 2050 entre 85\% et 90\%, puis se stabilise ensuite. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Le niveau des pensions par rapport aux actifs}
+
+Le graphique suivant présente le rapport entre la pension moyenne et le salaire moyen. 
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{Simulation-P.png}
+
+\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
+\end{center}
+
+On observe que le niveau des pensions par rapport aux actifs 
+baisse de 50\% en 2020 jusqu'en 2050 autour de 39\%, puis se stabilise ensuite. 
+Relativement au niveau actuel de ce ratio, la baisse est donc d'environ 20\%. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Le niveau des pensions dans l'étude d'impact}
+
+Le lecteur de l'étude d'impact sera très étonné à la lecture d'un 
+tel graphique. 
+En effet, à la page 176 de l'étude d'impact, le graphique 59 présente 
+une pension annuelle moyenne plutôt favorable dans le système 
+universel par rapport à la situation hors réforme. 
+Le texte précise : "En moyenne, les niveaux des pensions servies augmentent 
+avec la mise en place du système universel."
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{EtudeImpact-PensionAnnuelle.png}
+\end{center}
+
+L'étude d'impact ne ment pas. 
+Notre simulation ne ment pas plus. 
+Qui dit vrai ?
+
+Pour comprendre la situation, on peut consulter le rapport du COR de Juin 2019 qui 
+présente l'évolution de la pension moyenne de l'ensemble des retraités relative 
+au revenu d'activité moyen. 
+En utilisant cet indicateur, le COR compare le revenu des retraités aux revenu des 
+actifs. 
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{COR-Juin-2019-P.png}
+\end{center}
+
+On observe que, dans le système actuel, la pension moyenne relative au revenu d'activité 
+moyen baisse jusqu'à atteindre entre 33\% et 39\% en fonction du scénario. 
+Cette réalité n'est pas une conséquence du système de retraite tel qu'il était conçu 
+à l'origine. 
+C'est une conséquence des différentes réformes qui ont étées menées 
+à partir des années 1990 et suivante. 
+
+C'est pourquoi l'étude d'impact peu montrer une pension annuelle moyenne 
+dans le système universel supérieure à la pension hors réforme : 
+les pensions baissent moins que ce qui était prévu, mais elles baissent 
+tout de même relativement aux salaires ! 
+Ainsi, en changeant d'indicateur, l'étude d'impact peut montrer une situation 
+dont l'apparence est favorable. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Et si l'âge de départ était modifié ?}
+
+Dans ce contexte plutôt pessimiste, on peut se demander ce qui pourrait 
+advenir en conservant la règle d'équilibre financière, le même niveau de dépenses 
+et un âge de départ à la retraite qui pourrait être modifié. 
+En effet, on peut légitimement penser que l'âge prévu par la réforme actuelle 
+ne puisse pas être atteint car il est trop élevé ou au contraire que, suite à une 
+remarquable amélioration des conditions de vie, l'âge de départ à la retraite 
+puisse être repoussé au delà de ce qui était inialement prévu. 
+
+La figure suivante présente, pour une année future donnée, l'ensemble des niveaux 
+de pensions par rapport aux salaires qui peuvent être atteints avec 
+un âge de départ à la retraite donné. 
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{Simulation-Age-vs-pensions-vs-date.png}
+\end{center}
+
+En 2020, l'âge de départ à la retraite égal à 62 ans 
+mène à un rapport pensions/salaire égal à 0.5 (situation actuelle).  
+En 2055, si l'âge de départ est maintenu à 62 ans, alors ce ratio baisse jusqu'à 0.32, 
+une situation très défavorable pour les retraités futurs
+Au contraire, si en 2055 l'âge de départ est repoussé à 69 ans, 
+alors le ratio est égal à 0.5. 
+Il reste que cet âge de départ semble hypothétique, au vu de l'âge de départ actuel. 
+% Suggestion : ajouter la trajectoire prévue dans l'étude d'impact
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusion}
+
+Nous avons vu comment la logique du projet de loi est une 
+rupture dans le pilotage du système de retraites, 
+imposant l'équilibre financier et le volume des dépenses 
+à priori : les pensions devront donc s'ajuster \emph{en conséquence}. 
+De plus, nous avons observé ce qui nous était caché dans l'étude 
+d'impact, c'est à dire ce qui se passe entre 2050 et 2070. 
+Enfin, nous avons vu comment la réforme est fallacieusement 
+montrée comme avantageuse pour des niveaux de pensions 
+objectivement désavantageux par rapport à la situation 
+actuelle. 
+
+Les conséquences de la réforme sont simples : 
+si cette loi est votée, l'âge de départ à la retraite 
+devra augmenter et le niveau de pension par rapport aux actifs va 
+baisser de -20\% relativement au niveau actuel. 
+Le niveau de vie des futurs retraités par rapport à l'ensemble de la 
+population sera très inférieur : prendre sa retraite sera synonyme de 
+déclassement. 
+Dans la situation où les futurs retraités auraient la fantaisie 
+de prendre leur retraite avant l'âge d'équilibre, par choix ou par contrainte, 
+la situation sera pire encore. 
+
+Les parlementaires qui auraient pris le soin de lire l'impressionnante 
+étude d'impact (1029 pages !) en sont pour leur frais. 
+En effet, le texte ne présente pas les informations essentielles qui leur auraient étés 
+utiles pour s'informer sur les conséquences de la réforme. 
+Pire : les informations présentées dans l'étude détournent l'attention de l'essentiel 
+mettant en avant des détails techniques accessoires et affichant fallacieusement 
+des informations soigneusement choisies. 
+
+Les citoyens que nous sommes peuvent comprendre qu'une proposition de loi 
+aille dans un sens politique que nous ne partageons pas : c'est la 
+liberté de la vie élective. 
+En revanche, nous ne pouvons pas accepter que la décision politique soit 
+prise de données qui ne sont pas ouvertes, 
+de calculs qui ne sont pas publics et, finalement, sur la base d'études trompeuses. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Annexe}
+
+Pour les lecteurs désirant reproduire les simulations de ce texte, 
+nous présentons ci-dessous les paramètres que nous avons calculés.
+\begin{verbatim}
+Scenario : Hausse des salaires: +1,3%/an, Taux de chômage: 7%
+Annéee, Age,      Cotis., Pension:
+ 2020 : 62.2 ans, 30.8 %, 50.2 %
+ 2025 : 62.6 ans, 31.4 %, 49.1 %
+ 2030 : 63.0 ans, 31.3 %, 46.8 %
+ 2040 : 63.9 ans, 30.9 %, 43.4 %
+ 2050 : 64.5 ans, 29.5 %, 40.1 %
+ 2060 : 65.2 ans, 28.8 %, 39.0 %
+ 2070 : 65.8 ans, 28.6 %, 38.8 %
+\end{verbatim}
+
+Pour tester graphiquement les effets de ces paramètres, nous vous recommandons le 
+simulateur du collectifs "Nos retraites" \url{https://nosretraites.github.io/roc-retraites}. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Références}
+
+\begin{itemize}
+\item Projet de loi instituant un système universel de retraite. - Etude d'impact, 24 janvier 2020
+\item Évolutions et perspectives des retraites en France. Rapport annuel du COR – Juin 2019
+\item \url{https://www.cor-retraites.fr/simulateur}
+\item Simulateur du COR / Documentation technique - juillet 2016
+\item \url{https://github.com/brunoscherrer/retraites}
+\item \url{https://nosretraites.github.io/roc-retraites/}
+\end{itemize}
+
+\end{document}
+

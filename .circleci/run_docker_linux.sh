@@ -6,6 +6,18 @@ echo `pwd`
 
 export PYTHONPATH="$PWD/retraites:$PYTHONPATH"
 
+# Doc Latex 1
+cd doc
+pdflatex notice.tex
+pdflatex notice.tex
+cd ..
+
+# Doc Latex 2
+cd doc/Article4
+pdflatex article4-analyse-impact.tex
+pdflatex article4-analyse-impact.tex
+cd ../..
+
 # Demonstrations Python
 python demo.py
 
@@ -26,4 +38,5 @@ jupyter nbconvert --to notebook --execute simulation-Etude-Impact.ipynb
 jupyter nbconvert --to notebook --execute reformes.ipynb
 jupyter nbconvert --to notebook --execute reformes2.ipynb
 cd ..
+
 
