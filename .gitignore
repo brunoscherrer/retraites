@@ -19,6 +19,5 @@ __pycache__/
 .ipynb_checkpoints
 
 # Images
-*.png
 *.pdf
 
