@@ -3,7 +3,7 @@
 
 from __future__ import print_function
 import pylab as pl
-from SimulateurRetraites import SimulateurRetraites
+from retraites.SimulateurRetraites import SimulateurRetraites
 
 # Génération des graphes pour le statu quo (COR)
 
@@ -20,4 +20,4 @@ for c in range(9):
     analyse.graphique(v,V)
 pl.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-analyse.mysavefig("conjoncture")
+#analyse.mysavefig("conjoncture")
