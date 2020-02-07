@@ -3,7 +3,7 @@
 
 from copy import deepcopy
 import json
-from SimulateurAnalyse import SimulateurAnalyse
+from .SimulateurAnalyse import SimulateurAnalyse
 
 class SimulateurRetraites:
     def __init__(self, json_filename):
