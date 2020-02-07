@@ -439,38 +439,22 @@ Il reste que cet âge de départ semble hypothétique, au vu de l'âge de dépar
 Nous avons vu comment la logique du projet de loi est une 
 rupture dans le pilotage du système de retraites, 
 imposant l'équilibre financier et le volume des dépenses 
-à priori : les pensions devront donc s'ajuster \emph{en conséquence}. 
+à priori : en fonction de l'âge de départ à la retraite, 
+les pensions devront donc s'ajuster \emph{en conséquence}. 
 De plus, nous avons observé ce qui nous était caché dans l'étude 
-d'impact, c'est à dire ce qui se passe entre 2050 et 2070. 
+d'impact, c'est à dire ce qui se passe entre 2050 et 2070 ainsi que 
+la sensibilité du niveau de pension en fonction des scénarios 
+de conjoncture. 
 Enfin, nous avons vu comment la réforme est fallacieusement 
 montrée comme avantageuse pour des niveaux de pensions 
 objectivement désavantageux par rapport à la situation 
 actuelle. 
 
-Les conséquences de la réforme sont simples : 
-si cette loi est votée, l'âge de départ à la retraite 
-devra augmenter et le niveau de pension par rapport aux actifs va 
-baisser de -20\% relativement au niveau actuel. 
-Le niveau de vie des futurs retraités par rapport à l'ensemble de la 
-population sera très inférieur : prendre sa retraite sera synonyme de 
-déclassement. 
-Dans la situation où les futurs retraités auraient la fantaisie 
-de prendre leur retraite avant l'âge d'équilibre, par choix ou par contrainte, 
-la situation sera pire encore. 
-
-Les parlementaires qui auraient pris le soin de lire l'impressionnante 
-étude d'impact (1029 pages !) en sont pour leur frais. 
-En effet, le texte ne présente pas les informations essentielles qui leur auraient étés 
-utiles pour s'informer sur les conséquences de la réforme. 
-Pire : les informations présentées dans l'étude détournent l'attention de l'essentiel 
-mettant en avant des détails techniques accessoires et affichant fallacieusement 
-des informations soigneusement choisies. 
-
 Les citoyens que nous sommes peuvent comprendre qu'une proposition de loi 
 aille dans un sens politique que nous ne partageons pas : c'est la 
-liberté de la vie élective. 
+vie élective. 
 En revanche, nous ne pouvons pas accepter que la décision politique soit 
-prise de données qui ne sont pas ouvertes, 
+prise en fonction de données qui ne sont pas ouvertes, 
 de calculs qui ne sont pas publics et, finalement, sur la base d'études trompeuses. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -478,18 +462,22 @@ de calculs qui ne sont pas publics et, finalement, sur la base d'études trompeu
 \section{Annexe}
 
 Pour les lecteurs désirant reproduire les simulations de ce texte, 
-nous présentons ci-dessous les paramètres que nous avons calculés.
-\begin{verbatim}
-Scenario : Hausse des salaires: +1,3%/an, Taux de chômage: 7%
-Annéee, Age,      Cotis., Pension:
- 2020 : 62.2 ans, 30.8 %, 50.2 %
- 2025 : 62.6 ans, 31.4 %, 49.1 %
- 2030 : 63.0 ans, 31.3 %, 46.8 %
- 2040 : 63.9 ans, 30.9 %, 43.4 %
- 2050 : 64.5 ans, 29.5 %, 40.1 %
- 2060 : 65.2 ans, 28.8 %, 39.0 %
- 2070 : 65.8 ans, 28.6 %, 38.8 %
-\end{verbatim}
+nous présentons ci-dessous les paramètres que nous avons calculés dans 
+le scénario hausse des salaires: +1,3 \%/an, taux de chômage: 7\%.
+
+\begin{center}
+\begin{tabular}{l|lll}
+\textbf{Année} & \textbf{Age} & \textbf{Cotis.} & \textbf{Pension} \\
+\hline
+ 2020 & 62.2 ans & 30.8 \% & 50.2 \% \\
+ 2025 & 62.6 ans & 30.9 \% & 48.4 \% \\
+ 2030 & 63.0 ans & 30.7 \% & 45.7 \% \\
+ 2040 & 63.9 ans & 30.2 \% & 42.4 \% \\
+ 2050 & 64.5 ans & 29.3 \% & 39.7 \% \\
+ 2060 & 65.2 ans & 28.8 \% & 39.0 \% \\
+ 2070 & 65.8 ans & 28.6 \% & 38.8 \%
+\end{tabular}
+\end{center}
 
 Pour tester graphiquement les effets de ces paramètres, nous vous recommandons le 
 simulateur du collectifs "Nos retraites" \url{https://nosretraites.github.io/roc-retraites}. 
@@ -530,9 +518,9 @@ divisé par le nombre d’unités de consommation dans le ménage
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{Simulation-RNV.pdf}
+\includegraphics[width=0.8\textwidth]{Simulation-RNV.pdf}
 
-\includegraphics[width=0.5\textwidth]{Simulation-legende.pdf}
+\includegraphics[width=0.6\textwidth]{Simulation-legende.pdf}
 \end{center}
 
 \caption{Le niveau de pensions en fonction de l'âge et de l'année.}
