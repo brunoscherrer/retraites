@@ -11,21 +11,23 @@ import os
 class SimulateurAnalyse:
     ### fonctions pour générer des graphiques
     def __init__(self, T, P, A, S, RNV, REV, Depenses, \
-                 scenarios, annees_EV, annees):
+                 scenarios, annees_EV, annees, dir_image="."):
         """
         Créée une analyse de simulateur de retraites.
         
         Paramètres
-        T: niveau des cotisations sociales
-        P: niveau des pensions par rapport aux salaires
-        A: âge moyen de départ à la retraite
-        S: Situation financière du système de retraite en \% du PIB
-        RNV: Niveau de vie des retraités par rapport à l'ensemble de la population
-        REV: Durée de la vie passée à la retraite
-        Depenses: Dépenses de retraites en % PIB
+        T: un dictionnaire, niveau des cotisations sociales
+        P: un dictionnaire, niveau des pensions par rapport aux salaires
+        A: un dictionnaire, âge moyen de départ à la retraite
+        S: un dictionnaire, Situation financière du système de retraite en \% du PIB
+        RNV: un dictionnaire, Niveau de vie des retraités par rapport à l'ensemble de la population
+        REV: un dictionnaire, Durée de la vie passée à la retraite
+        Depenses: un dictionnaire, Dépenses de retraites en % PIB
         scenarios: une liste d'indices, les scénarios considérés
-        annees_EV: annees sur lesquelles on a l'espérance de vie
-        annees: scenarios consideres
+        annees_EV: une liste d'entiers, annees sur lesquelles on a l'espérance de vie
+        annees: une liste d'entiers supérieurs ou égaux à 1, les scenarios consideres
+        dir_image : le répertoire de sauvegarde des images 
+                    (par défaut, le répertoire courant)
         
         Exemple
         simulateur = SimulateurRetraites('retraites/fileProjection.json')
@@ -62,7 +64,7 @@ class SimulateurAnalyse:
 
         self.labels_is_long = True # True, si on utilise les labels longs
         
-        self.dir_image="." # répertoire pour les images
+        self.dir_image=dir_image # répertoire pour les images
 
         self.ext_image=["png","pdf"]   # types de fichier à générer
         

@@ -8,6 +8,7 @@ import unittest
 from SimulateurRetraites import SimulateurRetraites
 import pylab as pl
 import numpy as np
+import tempfile
 
 class CheckSimulateur(unittest.TestCase):
 
@@ -19,6 +20,7 @@ class CheckSimulateur(unittest.TestCase):
         pl.suptitle('Projections du COR',fontsize=16)
         
         analyse = simulateur.pilotageCOR()
+        analyse.setDirectoryImage(tempfile.gettempdir())
         analyse.graphiques()
     
         analyse.mysavefig("cor")
@@ -42,6 +44,7 @@ class CheckSimulateur(unittest.TestCase):
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
         
         analyse = simulateur.pilotageCOR()
+        analyse.setDirectoryImage(tempfile.gettempdir())
 
         pl.figure(figsize=(10,8))
         pl.suptitle(u"Projections du COR (hypothèses)",fontsize=16)
@@ -65,6 +68,7 @@ class CheckSimulateur(unittest.TestCase):
         Age=61.0
         RNV = 1.0
         analyse = simulateur.pilotageParAgeEtNiveauDeVie(Acible=Age, RNVcible=RNV, Scible=S)
+        analyse.setDirectoryImage(tempfile.gettempdir())
     
         pl.figure(figsize=(6,8))
         if Age!=0:
@@ -103,6 +107,7 @@ class CheckSimulateur(unittest.TestCase):
                     
         RNV=1.0
         analyse = simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible=RNV, Scible=0.0)
+        analyse.setDirectoryImage(tempfile.gettempdir())
         
         pl.figure(figsize=(6,8))
         pl.suptitle(u'Equilibre financier & maintien du niveau de vie',fontsize=12)
@@ -139,6 +144,7 @@ class CheckSimulateur(unittest.TestCase):
         
         Pcible=simulateur.P[1][2020]
         analyse = simulateur.pilotageParCotisationsEtPensions(Pcible=Pcible, Scible=0.0)
+        analyse.setDirectoryImage(tempfile.gettempdir())
             
         analyse.graphiques()
         analyse.mysavefig("macron_point_indexe")
@@ -166,6 +172,7 @@ class CheckSimulateur(unittest.TestCase):
         
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
         analyse = simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible=1.0, Scible=0.0)
+        analyse.setDirectoryImage(tempfile.gettempdir())
             
         pl.figure(figsize=(9,6))
         analyse.graphique(analyse.A,"A",14,[],True,range(1,5))
@@ -204,6 +211,7 @@ class CheckSimulateur(unittest.TestCase):
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
         Age = 62.0
         analyse = simulateur.pilotageParCotisationsEtAge(Acible=Age, Scible=0.0) 
+        analyse.setDirectoryImage(tempfile.gettempdir())
     
         pl.figure(figsize=(6,8))
         pl.suptitle(u"Equilibre financier, cotisations et âge définis")
@@ -249,6 +257,7 @@ class CheckSimulateur(unittest.TestCase):
 
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
         analyse = simulateur.pilotageParAgeEtDepenses(Scible=0.0)
+        analyse.setDirectoryImage(tempfile.gettempdir())
     
         pl.figure(figsize=(8,10))
         pl.suptitle(u"Equilibre financier, age et dépenses définies")
@@ -283,6 +292,7 @@ class CheckSimulateur(unittest.TestCase):
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
         
         analyse = simulateur.pilotageParAgeEtDepenses(Acible = 62.0, Scible = 0.0)
+        analyse.setDirectoryImage(tempfile.gettempdir())
     
         pl.figure(figsize=(8,10))
         pl.suptitle(u"Equilibre financier, age et dépenses définies")
