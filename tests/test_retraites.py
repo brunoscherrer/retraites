@@ -5,7 +5,7 @@ Test for SimulateurRetraites class.
 """
 
 import unittest
-from SimulateurRetraites import SimulateurRetraites
+from retraites import SimulateurRetraites
 import pylab as pl
 import numpy as np
 

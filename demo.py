@@ -3,7 +3,7 @@
 
 from __future__ import print_function
 import pylab as pl
-from SimulateurRetraites import SimulateurRetraites
+from retraites import SimulateurRetraites
 
 # Génération des graphes pour le statu quo (COR)
 
