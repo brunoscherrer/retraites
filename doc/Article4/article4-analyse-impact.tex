@@ -54,6 +54,19 @@ Ce simulateur tient compte de deux variables permettant de définir un scénario
 \item le taux de chômage : 4.5%, 7\%, 10\%.
 \end{itemize}
 
+Les scénarios de base sont les suivants :
+\begin{itemize}
+\item taux de chômage : 7\%, taux de hausse des salaires : +1\%, 
+\item taux de chômage : 7\%, taux de hausse des salaires : +1.3\%, 
+\item taux de chômage : 7\%, taux de hausse des salaires : +1.5\%, 
+\item taux de chômage : 7\%, taux de hausse des salaires : +1.8\%.
+\end{itemize}
+De plus, deux scénarios complémentaires sont présentés :
+\begin{itemize}
+\item un scénario "pessimiste" : taux de chômage : 10\%, taux de hausse des salaires : +1\%, 
+\item un scénario "optimiste" : taux de chômage : 4.5\%, taux de hausse des salaires : +1.8\%. 
+\end{itemize}
+
 Les rapports du COR s'appuient la plupart du temps sur le taux 
 de chômage de 7\% et prennent en compte les différents taux de hausse 
 des salaires de +1\%, +1.3\%, +1.5\% à +1.8\%. 
@@ -62,6 +75,7 @@ courbe, correspondant au taux de chômage de 7% avec une hausse des
 salaires de +1.3%. 
 Ainsi, on ne peut pas connaître l'influence de ce paramètre sur les calculs 
 de l'étude d'impact. 
+Cela constitue un premier étonnement. 
 
 Une fois le scénario choisi dans le simulateur du COR, 
 l'utilisateur doit ajuster trois leviers : 
@@ -103,8 +117,9 @@ pouvoir imposer les paramètres pris en compte dans l'étude d'impact.
 Une difficulté supplémentaire apparaît lorsqu'on fait les calculs : 
 l'étude d'impact s'arrête en 2050, alors que les rapports du COR 
 se projettent jusqu'en 2070. 
+C'est un second étonnement. 
 C'est la raison pour laquelle nous sommes contraints de faire des 
-hypothèses sur les variables imposées en 2060 et 2070. 
+hypothèses sur les variables imposées entre 2050 et 2070. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -133,11 +148,16 @@ la plus facile à ajuster.
 
 L'étude d'impact, page 180, présente une analyse du solde financier du système de retraite 
 avant et après réforme.
-Le graphique 63 suivant est extrait de l'étude d'impact. 
+La figure \ref{fig-solde-etude-impact} est extraite de l'étude d'impact 
+(graphique 63 page 180). 
 
+\begin{figure}
 \begin{center}
 \includegraphics[width=0.9\textwidth]{EtudeImpact-situation-financiere.png}
 \end{center}
+\caption{Solde financier d'après l'étude d'impact.}
+\label{fig-solde-etude-impact}
+\end{figure}
 
 Le texte indique : "Compte tenu des hypothèses décrites plus haut 
 et en y ajoutant une mesure conventionnelle de redressement à court 
@@ -153,13 +173,15 @@ C'est pourquoi nous devons considérer un solde financier :
 \end{itemize}
 
 Nous avons imposé ce solde financier dans notre propre simulateur. 
-Les résultats que nous obtenons sont les suivants. 
+Les résultats que nous obtenons présentés dans la figure \ref{fig-solde-simulation}. 
 
+\begin{figure}
 \begin{center}
-\includegraphics[width=0.7\textwidth]{Simulation-Solde-Financier.png}
-
-\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
+\includegraphics[width=0.7\textwidth]{Simulation-Solde-Financier.pdf}
 \end{center}
+\caption{Solde financier dans notre simulation.}
+\label{fig-solde-simulation}
+\end{figure}
 
 La légende de notre simulation insiste sur le fait que 
 le système doit être à l'équilibre financier \emph{quelque soit la 
@@ -177,24 +199,30 @@ large que les dépenses du seul système de retraite) représentent
 14,4 \% du PIB en France, contre 12,6 \% du PIB dans l’UE-15 et 12,3 \% dans l’UE-28."
 On comprend donc que l'objectif est de se rapprocher de la moyenne européenne. 
 
-Dans l'étude d'impact, page 174, le graphique 58 présente les dépenses constatées 
-et projetées du système de retraite actuel, en points de PIB.
+Dans le tableau 39 de l'étude d'impact, page 176, nous observons les valeurs numériques de la trajectoire de dépenses du système universel de retraites. 
+Elles sont présentées dans la figure \ref{fig-depenses-etude-impact}.
 
+\begin{figure}
 \begin{center}
-\includegraphics[width=0.9\textwidth]{EtudeImpact-depenses-constatees-projetees.png}
+\includegraphics[width=0.9\textwidth]{EtudeImpact-Depenses-SUR.png}
 \end{center}
+\caption{Dépenses dans l'étude d'impact.}
+\label{fig-depenses-etude-impact}
+\end{figure}
 
 Pour cette trajectoire de dépenses, nous considérons les mêmes 
-niveaux de dépenses de les dépenses de l'étude d'impact de 2020 à 2050. 
+niveaux de dépenses que l'étude d'impact de 2020 à 2050. 
 Pour la période 2050-2070, nous faisons l'hypothèse que le niveau 
 de dépense s'abaisse jusqu'à la moyenne 12,6 \% du PIB dans l’UE-15. 
-La figure suivante présente le résultat. 
+La figure \ref{fig-dépenses-simulation} présente le résultat. 
 
+\begin{figure}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{Simulation-Depenses.png}
-
-\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
+\includegraphics[width=0.7\textwidth]{Simulation-Depenses.pdf}
 \end{center}
+\caption{Dépenses dans notre simulation.}
+\label{fig-dépenses-simulation}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -203,16 +231,24 @@ La figure suivante présente le résultat.
 Reproduire l'âge de départ en retraite dans notre simulation 
 pose des difficultés. 
 
-Le graphique 49 page 139 de l'étude d'impact de Janvier 2020 est présenté ci-dessous.
+Le graphique 49 page 139 de l'étude d'impact de Janvier 2020 est présenté 
+dans la figure \ref{fig-age-etude-impact}.
 
+\begin{figure}
 \begin{center}
 \includegraphics[width=0.9\textwidth]{EtudeImpact-AgeDepartRetraite.png}
 \end{center}
+\caption{Age de départ à la retraite dans l'étude d'impact.}
+\label{fig-age-etude-impact}
+\end{figure}
 
 Le texte précise : "Au total, en tenant compte de l’ensemble de ces 
 décalages, l’âge moyen de départ serait plus élevé dans le système 
 universel : 64 ans et 5 mois contre 64 ans et 10 mois environ dans 
-le système actuel pour la génération 1990."
+le système actuel pour la génération 1990." 
+Remarquons que le texte semble comporter une coquille, avec une inversion 
+des âges dans les deux systèmes : l'aĝe dans le système universel sera supérieur, 
+bien sûr ! 
 
 Sur le graphique de l'étude d'impact, nous lisons les valeurs numériques suivantes après réforme :
 \begin{itemize}
@@ -228,7 +264,8 @@ la génération 1990.
 
 On observe que la génération 1975 partira en retraite en 2039 dans le scénario de l'étude d'impact puisque 1975 + 63.8 = 2038.8.
 Remarquons que l'horizon temporel de l'étude d'impact se projette dans le graphique jusqu'à l'année 2054, puisque 1990 + 64.83 = 2054.83. 
-
+Ce choix peut sembler \emph{étonnant}, dans la mesure où l'horizon de l'étude d'impact 
+s'arrête en 2050. 
 
 Pour calculer l'âge de départ en retraite en fonction de l'année du départ, 
 nous réalisons une inversion mathématique.  
@@ -240,13 +277,16 @@ Notre calcul se décompose en trois parties :
 \item de 2055 à 2070, nous extrapolons. 
 \end{itemize}
 
-Le résultat de notre simulation est donc le suivant. 
+Le résultat de notre simulation est présenté dans la figure \ref{fig-simulation-A}. 
 
+\begin{figure}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{Simulation-Age.png}
-
-\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
+\includegraphics[width=0.7\textwidth]{Simulation-Age.pdf}
 \end{center}
+
+\caption{L'âge de départ en retraite moyen.}
+\label{fig-simulation-A}
+\end{figure}
 
 On observe que l'âge de départ à la retraite est donc 
 significativement supérieur dans l'étude d'impact. 
@@ -268,40 +308,34 @@ simulées.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Le niveau de vie des retraités par rapport à l'ensemble de la population}
-
-Le graphique suivant présente le niveau de vie des retraités par rapport aux 
-actifs. 
-D'après la documentation technique du COR : "Le niveau de vie est défini 
-par l’INSEE, au niveau de chaque ménage, comme le revenu disponible (tenant
-compte de l’ensemble des ressources et après prélèvements et transferts sociaux) 
-divisé par le nombre d’unités de consommation dans le ménage 
-(qui dépend du nombre de personnes qui le composent, cf. page 4)."
-
-\begin{center}
-\includegraphics[width=0.5\textwidth]{Simulation-RNV.png}
-
-\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
-\end{center}
-
-On observe que le niveau de vie des retraités 
-baisse de 105\% en 2020 jusqu'en 2050 entre 85\% et 90\%, puis se stabilise ensuite. 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{Le niveau des pensions par rapport aux actifs}
 
-Le graphique suivant présente le rapport entre la pension moyenne et le salaire moyen. 
+La figure \ref{fig-simulation-P} présente le rapport entre la pension moyenne et le salaire moyen. 
 
+\begin{figure}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{Simulation-P.png}
+\includegraphics[width=0.8\textwidth]{Simulation-P.pdf}
 
-\includegraphics[width=0.5\textwidth]{Simulation-legende.png}
+\includegraphics[width=0.7\textwidth]{Simulation-legende.pdf}
 \end{center}
 
-On observe que le niveau des pensions par rapport aux actifs 
+\caption{Le niveau de pensions par rapport aux actifs.}
+\label{fig-simulation-P}
+\end{figure}
+
+Pour les quatre scénarios principaux (associés au taux de chômage 
+de 7\%), on observe que le niveau des pensions par rapport aux actifs 
 baisse de 50\% en 2020 jusqu'en 2050 autour de 39\%, puis se stabilise ensuite. 
 Relativement au niveau actuel de ce ratio, la baisse est donc d'environ 20\%. 
+
+On observe que le niveau de pensions n'est pas très sensible 
+aux taux de hausse des salaires, puisque les quatre courbes associées 
+à +1\%, +1.3\%, +1.5\%,  +1.8\% sont très proches. 
+En revanche, le niveau des pensions est très sensible au taux de chômage : 
+un taux de chômage élevé et égal à 10\% (dans le scénario pessimiste) 
+fait remonter le niveau des pensions à près de 44\% tandis qu'un taux de 
+chômage faible et égal à 4.5\% (dans le scénario optimiste) fait baisser 
+le niveau à près de 36\%. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -312,12 +346,20 @@ tel graphique.
 En effet, à la page 176 de l'étude d'impact, le graphique 59 présente 
 une pension annuelle moyenne plutôt favorable dans le système 
 universel par rapport à la situation hors réforme. 
+Ce graphique est présenté dans la figure \ref{fig-pension-annuelle-etude-impact}. 
 Le texte précise : "En moyenne, les niveaux des pensions servies augmentent 
 avec la mise en place du système universel."
 
+
+\begin{figure}
 \begin{center}
-\includegraphics[width=0.7\textwidth]{EtudeImpact-PensionAnnuelle.png}
+\includegraphics[width=0.9\textwidth]{EtudeImpact-PensionAnnuelle.png}
 \end{center}
+
+\caption{Pension annuelle moyenne dans l'étude d'impact.}
+\label{fig-pension-annuelle-etude-impact}
+\end{figure}
+
 
 L'étude d'impact ne ment pas. 
 Notre simulation ne ment pas plus. 
@@ -325,13 +367,19 @@ Qui dit vrai ?
 
 Pour comprendre la situation, on peut consulter le rapport du COR de Juin 2019 qui 
 présente l'évolution de la pension moyenne de l'ensemble des retraités relative 
-au revenu d'activité moyen. 
+au revenu d'activité moyen dans la figure \ref{fig-pension-COR}.
 En utilisant cet indicateur, le COR compare le revenu des retraités aux revenu des 
 actifs. 
 
+\begin{figure}
 \begin{center}
 \includegraphics[width=0.5\textwidth]{COR-Juin-2019-P.png}
 \end{center}
+
+\caption{Pension moyenne de l'ensemble des retraités par rapport aux salaires 
+(COR, juin 2019).}
+\label{fig-pension-COR}
+\end{figure}
 
 On observe que, dans le système actuel, la pension moyenne relative au revenu d'activité 
 moyen baisse jusqu'à atteindre entre 33\% et 39\% en fonction du scénario. 
@@ -349,23 +397,31 @@ dont l'apparence est favorable.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Et si l'âge de départ était modifié ?}
+\section{Et si l'âge moyen de départ était modifié ?}
 
 Dans ce contexte plutôt pessimiste, on peut se demander ce qui pourrait 
 advenir en conservant la règle d'équilibre financière, le même niveau de dépenses 
 et un âge de départ à la retraite qui pourrait être modifié. 
-En effet, on peut légitimement penser que l'âge prévu par la réforme actuelle 
-ne puisse pas être atteint car il est trop élevé ou au contraire que, suite à une 
-remarquable amélioration des conditions de vie, l'âge de départ à la retraite 
-puisse être repoussé au delà de ce qui était inialement prévu. 
+En effet, on peut penser que l'âge prévu par la réforme actuelle 
+ne puisse pas être atteint car il est trop élevé de telle sorte que 
+les salariés ne liquident pas leur retraite au moment que nous avons 
+pris en compte. 
+Au contraire, suite à une remarquable amélioration des conditions de vie, 
+l'âge de départ à la retraite pourrait être repoussé au delà de ce qui 
+était initialement prévu. 
 
-La figure suivante présente, pour une année future donnée, l'ensemble des niveaux 
-de pensions par rapport aux salaires qui peuvent être atteints avec 
+La figure \ref{fig-simulation-age-vs-pensions} présente, pour une année future donnée, 
+l'ensemble des niveaux de pensions par rapport aux salaires qui peuvent être atteints avec 
 un âge de départ à la retraite donné. 
 
+\begin{figure}
 \begin{center}
 \includegraphics[width=0.5\textwidth]{Simulation-Age-vs-pensions-vs-date.png}
 \end{center}
+
+\caption{Le niveau de pensions en fonction de l'âge et de l'année.}
+\label{fig-simulation-age-vs-pensions}
+\end{figure}
 
 En 2020, l'âge de départ à la retraite égal à 62 ans 
 mène à un rapport pensions/salaire égal à 0.5 (situation actuelle).  
@@ -383,38 +439,22 @@ Il reste que cet âge de départ semble hypothétique, au vu de l'âge de dépar
 Nous avons vu comment la logique du projet de loi est une 
 rupture dans le pilotage du système de retraites, 
 imposant l'équilibre financier et le volume des dépenses 
-à priori : les pensions devront donc s'ajuster \emph{en conséquence}. 
+à priori : en fonction de l'âge de départ à la retraite, 
+les pensions devront donc s'ajuster \emph{en conséquence}. 
 De plus, nous avons observé ce qui nous était caché dans l'étude 
-d'impact, c'est à dire ce qui se passe entre 2050 et 2070. 
+d'impact, c'est à dire ce qui se passe entre 2050 et 2070 ainsi que 
+la sensibilité du niveau de pension en fonction des scénarios 
+de conjoncture. 
 Enfin, nous avons vu comment la réforme est fallacieusement 
 montrée comme avantageuse pour des niveaux de pensions 
 objectivement désavantageux par rapport à la situation 
 actuelle. 
 
-Les conséquences de la réforme sont simples : 
-si cette loi est votée, l'âge de départ à la retraite 
-devra augmenter et le niveau de pension par rapport aux actifs va 
-baisser de -20\% relativement au niveau actuel. 
-Le niveau de vie des futurs retraités par rapport à l'ensemble de la 
-population sera très inférieur : prendre sa retraite sera synonyme de 
-déclassement. 
-Dans la situation où les futurs retraités auraient la fantaisie 
-de prendre leur retraite avant l'âge d'équilibre, par choix ou par contrainte, 
-la situation sera pire encore. 
-
-Les parlementaires qui auraient pris le soin de lire l'impressionnante 
-étude d'impact (1029 pages !) en sont pour leur frais. 
-En effet, le texte ne présente pas les informations essentielles qui leur auraient étés 
-utiles pour s'informer sur les conséquences de la réforme. 
-Pire : les informations présentées dans l'étude détournent l'attention de l'essentiel 
-mettant en avant des détails techniques accessoires et affichant fallacieusement 
-des informations soigneusement choisies. 
-
 Les citoyens que nous sommes peuvent comprendre qu'une proposition de loi 
 aille dans un sens politique que nous ne partageons pas : c'est la 
-liberté de la vie élective. 
+vie élective. 
 En revanche, nous ne pouvons pas accepter que la décision politique soit 
-prise de données qui ne sont pas ouvertes, 
+prise en fonction de données qui ne sont pas ouvertes, 
 de calculs qui ne sont pas publics et, finalement, sur la base d'études trompeuses. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -422,18 +462,22 @@ de calculs qui ne sont pas publics et, finalement, sur la base d'études trompeu
 \section{Annexe}
 
 Pour les lecteurs désirant reproduire les simulations de ce texte, 
-nous présentons ci-dessous les paramètres que nous avons calculés.
-\begin{verbatim}
-Scenario : Hausse des salaires: +1,3%/an, Taux de chômage: 7%
-Annéee, Age,      Cotis., Pension:
- 2020 : 62.2 ans, 30.8 %, 50.2 %
- 2025 : 62.6 ans, 31.4 %, 49.1 %
- 2030 : 63.0 ans, 31.3 %, 46.8 %
- 2040 : 63.9 ans, 30.9 %, 43.4 %
- 2050 : 64.5 ans, 29.5 %, 40.1 %
- 2060 : 65.2 ans, 28.8 %, 39.0 %
- 2070 : 65.8 ans, 28.6 %, 38.8 %
-\end{verbatim}
+nous présentons ci-dessous les paramètres que nous avons calculés dans 
+le scénario hausse des salaires: +1,3 \%/an, taux de chômage: 7\%.
+
+\begin{center}
+\begin{tabular}{l|lll}
+\textbf{Année} & \textbf{Age} & \textbf{Cotis.} & \textbf{Pension} \\
+\hline
+ 2020 & 62.2 ans & 30.8 \% & 50.2 \% \\
+ 2025 & 62.6 ans & 30.9 \% & 48.4 \% \\
+ 2030 & 63.0 ans & 30.7 \% & 45.7 \% \\
+ 2040 & 63.9 ans & 30.2 \% & 42.4 \% \\
+ 2050 & 64.5 ans & 29.3 \% & 39.7 \% \\
+ 2060 & 65.2 ans & 28.8 \% & 39.0 \% \\
+ 2070 & 65.8 ans & 28.6 \% & 38.8 \%
+\end{tabular}
+\end{center}
 
 Pour tester graphiquement les effets de ces paramètres, nous vous recommandons le 
 simulateur du collectifs "Nos retraites" \url{https://nosretraites.github.io/roc-retraites}. 
@@ -450,6 +494,41 @@ simulateur du collectifs "Nos retraites" \url{https://nosretraites.github.io/roc
 \item \url{https://github.com/brunoscherrer/retraites}
 \item \url{https://nosretraites.github.io/roc-retraites/}
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Remerciements}
+
+Nous remercions chaleureusement Michaël Zemmour pour son support 
+technique et ses encouragements dans la réalisation de cet article. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Annexes}
+
+\subsection{Le niveau de vie des retraités par rapport à l'ensemble de la population}
+
+La figure \ref{fig-simulation-RNV-vs-pensions} présente 
+le niveau de vie des retraités par rapport aux actifs. 
+D'après la documentation technique du COR : "Le niveau de vie est défini 
+par l’INSEE, au niveau de chaque ménage, comme le revenu disponible (tenant
+compte de l’ensemble des ressources et après prélèvements et transferts sociaux) 
+divisé par le nombre d’unités de consommation dans le ménage 
+(qui dépend du nombre de personnes qui le composent, cf. page 4)."
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{Simulation-RNV.pdf}
+
+\includegraphics[width=0.6\textwidth]{Simulation-legende.pdf}
+\end{center}
+
+\caption{Le niveau de pensions en fonction de l'âge et de l'année.}
+\label{fig-simulation-RNV-vs-pensions}
+\end{figure}
+
+On observe que le niveau de vie des retraités 
+baisse de 105\% en 2020 jusqu'en 2050 entre 85\% et 90\%, puis se stabilise ensuite. 
 
 \end{document}
 

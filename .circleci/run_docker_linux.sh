@@ -4,7 +4,7 @@ set -xe
 
 echo `pwd`
 
-export PYTHONPATH="$PWD/retraites:$PYTHONPATH"
+export PYTHONPATH="$PWD:$PYTHONPATH"
 
 # Doc Latex 1
 cd doc

@@ -18,7 +18,3 @@ __pycache__/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Images
-*.png
-*.pdf
-

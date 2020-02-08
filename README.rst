@@ -125,7 +125,7 @@ des résultats.
 
 .. code-block:: python
 
-	from SimulateurRetraites import SimulateurRetraites
+	from retraites.SimulateurRetraites import SimulateurRetraites
 	simulateur = SimulateurRetraites('../retraites/fileProjection.json')
 	analyse = simulateur.pilotageCOR()
 

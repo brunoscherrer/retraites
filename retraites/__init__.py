@@ -1,4 +1,4 @@
-"""SimulateurRetraites module."""
+"""retraites module."""
 from .SimulateurRetraites import SimulateurRetraites
 from .SimulateurAnalyse import SimulateurAnalyse
 
