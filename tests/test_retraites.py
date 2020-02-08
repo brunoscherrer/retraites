@@ -20,12 +20,6 @@ class CheckSimulateur(unittest.TestCase):
         pl.suptitle('Projections du COR',fontsize=16)
         
         analyse = simulateur.pilotageCOR()
-        analyse.setDirectoryImage(tempfile.gettempdir())
-        analyse.graphiques()
-    
-        analyse.mysavefig("cor")
-        
-        analyse.affiche_solutions_simulateur_COR()
 
         # Vérifie les ordres de grandeurs des calculs
         for s in simulateur.scenarios:
@@ -39,24 +33,94 @@ class CheckSimulateur(unittest.TestCase):
                 np.testing.assert_allclose(analyse.P[s][a], 0.5, atol=0.3)
         return None
     
-    def test_1(self):
-        # génération des graphes sur la conjoncture
+    def test_graphiques(self):
+        # génération des graphes pour le statu quo (COR)
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
         
         analyse = simulateur.pilotageCOR()
         analyse.setDirectoryImage(tempfile.gettempdir())
 
+        pl.figure(figsize=(6,8))
+        pl.suptitle('Projections du COR',fontsize=16)
+        analyse.dessineSimulation()
+        pl.close()
+        
+        # Teste les options des graphiques
+        pl.figure()
+        analyse.graphique("P", analyse.P)
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("P")
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("P", dessine_legende = True)
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("P", scenarios_indices = range(1,5))
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("P", dessine_annees = range(2020,2041))
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("P", taille_fonte_titre = 14)
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("A")
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("S")
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("T")
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("RNV")
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("REV")
+        pl.close()
+
+        pl.figure()
+        analyse.graphique("Depenses")
+        analyse.sauveFigure("Depenses")
+        pl.close()
+
+        # Configure des longs titres
+        analyse.setLabelLongs(True)
+        analyse.graphique("P", analyse.P)
+        pl.close()
+        
+        # Dessine la légende
+        analyse.dessineLegende()
+        analyse.sauveFigure("Legende")    
+        pl.close()
+
+        analyse.afficheSolutionsSimulateurCOR()
+
+        return None
+    
+    def test_simulateur_retraites(self):
+        # génération des graphes sur la conjoncture
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        simulateur.setDirectoryImage(tempfile.gettempdir())
+
         pl.figure(figsize=(10,8))
         pl.suptitle(u"Projections du COR (hypothèses)",fontsize=16)
-        for c in range(9):
-            pl.subplot(3,3,c+1)
-            v,V = [ (simulateur.B,'B'), (simulateur.NR,'NR'), (simulateur.NC,'NC'), (simulateur.G,'G'), \
-                   (simulateur.dP,'dP'), (simulateur.TCR,'TPR'), (simulateur.TCS,'TPS'), \
-                   (simulateur.CNV,'CNV'), (simulateur.EV,'EV') ][c]
-            analyse.graphique(v,V)
-        pl.tight_layout(rect=[0, 0.03, 1, 0.95])
+        simulateur.dessineConjoncture()
         
-        analyse.mysavefig("conjoncture")
+        simulateur.sauveFigure("conjoncture")
         return None
 
     def test_2(self):
@@ -77,12 +141,12 @@ class CheckSimulateur(unittest.TestCase):
             pl.suptitle(u"Equilibre financier & maintien du niveau de vie",fontsize=10)
                 
         
-        analyse.graphiques()
+        analyse.dessineSimulation()
         
         if Age!=0:
-            analyse.mysavefig( ("%dans"%(Age)))
+            analyse.sauveFigure( ("%dans"%(Age)))
         else:
-            analyse.mysavefig("cotisations")
+            analyse.sauveFigure("cotisations")
             
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
@@ -111,12 +175,12 @@ class CheckSimulateur(unittest.TestCase):
         
         pl.figure(figsize=(6,8))
         pl.suptitle(u'Equilibre financier & maintien du niveau de vie',fontsize=12)
-        analyse.graphiques()
+        analyse.dessineSimulation()
         
         print("Maintien du niveau de vie")
-        analyse.affiche_solutions_simulateur_COR()
+        analyse.afficheSolutionsSimulateurCOR()
         
-        analyse.mysavefig("macron_niveau_de_vie")
+        analyse.sauveFigure("macron_niveau_de_vie")
         
         # Vérifie les valeurs
         for s in simulateur.scenarios:
@@ -146,11 +210,11 @@ class CheckSimulateur(unittest.TestCase):
         analyse = simulateur.pilotageParCotisationsEtPensions(Pcible=Pcible, Scible=0.0)
         analyse.setDirectoryImage(tempfile.gettempdir())
             
-        analyse.graphiques()
-        analyse.mysavefig("macron_point_indexe")
+        analyse.dessineSimulation()
+        analyse.sauveFigure("macron_point_indexe")
         
         print("Maintien du rapport pension moyenne / salaire moyen")
-        analyse.affiche_solutions_simulateur_COR()
+        analyse.afficheSolutionsSimulateurCOR()
 
         # Vérifie les valeurs
         for s in simulateur.scenarios:
@@ -175,19 +239,19 @@ class CheckSimulateur(unittest.TestCase):
         analyse.setDirectoryImage(tempfile.gettempdir())
             
         pl.figure(figsize=(9,6))
-        analyse.graphique(analyse.A,"A",14,[],True,range(1,5))
+        analyse.graphique("A")
         pl.suptitle(u"Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)",fontsize=14)
         pl.legend(loc="best")
-        analyse.mysavefig("macron_68_ans")
+        analyse.sauveFigure("macron_68_ans")
     
         pl.figure(figsize=(9,6))
-        analyse.graphique(analyse.A,"A",14,[],True)
+        analyse.graphique("A")
         pl.suptitle(u"Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)",fontsize=14)
         pl.legend(loc="best")
-        analyse.mysavefig("macron_68_ans_tout")
+        analyse.sauveFigure("macron_68_ans_tout")
         
         print("Réforme Macron, Maintien du niveau de vie")
-        analyse.affiche_solutions_simulateur_COR()
+        analyse.afficheSolutionsSimulateurCOR()
         
         # Vérifie les valeurs
         for s in simulateur.scenarios:
@@ -215,28 +279,28 @@ class CheckSimulateur(unittest.TestCase):
     
         pl.figure(figsize=(6,8))
         pl.suptitle(u"Equilibre financier, cotisations et âge définis")
-        analyse.graphiques()
+        analyse.dessineSimulation()
 
         titre=u"Modèle du COR: Réforme Macron (éq. financier & départ à 62 ans)"
         
         pl.figure(figsize=(9,6))
-        analyse.graphique(analyse.RNV,"RNV",14,[],True,range(1,5))
+        analyse.graphique("RNV")
         pl.suptitle(titre,fontsize=14)
         pl.legend(loc="best")
-        analyse.mysavefig("macron_62_ans_nv")
+        analyse.sauveFigure("macron_62_ans_nv")
         
         pl.figure(figsize=(9,6))
-        analyse.graphique(analyse.P,"P",14,[],True,range(1,5))
+        analyse.graphique("P")
         pl.suptitle(titre,fontsize=14)
         pl.legend(loc="best")
-        analyse.mysavefig("macron_62_ans_p")
+        analyse.sauveFigure("macron_62_ans_p")
         
         print("Réforme Macron, Départ à 62 ans")
-        analyse.affiche_solutions_simulateur_COR()
+        analyse.afficheSolutionsSimulateurCOR()
         print("\nEvolution du niveau de vie:")
-        analyse.affiche_variable(analyse.RNV)
+        analyse.afficheVariable(analyse.RNV)
         print("\nEvolution du ratio pension/salaire:")
-        analyse.affiche_variable(analyse.P)
+        analyse.afficheVariable(analyse.P)
         
         # Vérifie les valeurs
         for s in simulateur.scenarios:
@@ -261,13 +325,13 @@ class CheckSimulateur(unittest.TestCase):
     
         pl.figure(figsize=(8,10))
         pl.suptitle(u"Equilibre financier, age et dépenses définies")
-        analyse.graphiques()
+        analyse.dessineSimulation()
         
         pl.figure()
         analyse.setLabelLongs(False)
-        analyse.graphique(analyse.Depenses,"Depenses")
+        analyse.graphique("Depenses")
         
-        analyse.plot_legend()
+        analyse.dessineLegende()
             
         # Vérifie les valeurs imposées à partir de 2020
         analyse_COR = simulateur.pilotageCOR()
@@ -296,13 +360,13 @@ class CheckSimulateur(unittest.TestCase):
     
         pl.figure(figsize=(8,10))
         pl.suptitle(u"Equilibre financier, age et dépenses définies")
-        analyse.graphiques()
+        analyse.dessineSimulation()
         
         pl.figure()
         analyse.setLabelLongs(False)
-        analyse.graphique(analyse.Depenses,"Depenses")
+        analyse.graphique("Depenses")
         
-        analyse.plot_legend()
+        analyse.dessineLegende()
             
         # Vérifie les valeurs imposées à partir de 2020
         analyse_COR = simulateur.pilotageCOR()

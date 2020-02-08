@@ -32,7 +32,7 @@ class SimulateurAnalyse:
         Exemple
         simulateur = SimulateurRetraites('retraites/fileProjection.json')
         analyse = simulateur.pilotageCOR()
-        analyse.graphiques()
+        analyse.dessineSimulation()
         """
         self.scenarios = scenarios
         self.annees_EV = annees_EV
@@ -48,7 +48,11 @@ class SimulateurAnalyse:
         self.RNV = RNV
         self.REV = REV
         self.Depenses = Depenses
+        
+        # Liste des années dans le simulateur du COR
+        self.liste_annees=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
 
+        # Graphiques
         self.scenarios_labels=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
                               "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
                               "Hausse des salaires: +1,3%/an, Taux de chômage: 7%",
@@ -78,17 +82,42 @@ class SimulateurAnalyse:
         self.yaxis_lim["A"] = [60,72]
         self.yaxis_lim["P"] = [25.0,55.0]
         self.yaxis_lim["Depenses"] = [11.0,15.0]
-        
-        # Liste des années dans le simulateur du COR
-        self.liste_annees=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
 
+        self.affiche_quand_ecrit = True # Affiche un message quand on écrit un fichier
+        
+        self.liste_variables = ["S","RNV","REV","T","A","P","Depenses"]
+        self.liste_legendes=[u"Situation financière du système (% PIB)",
+           u"Niveau de vie des retraités p/r à l'ensemble (%)",
+           u"Proportion de la vie passée à la retraite (%)",
+           u"Taux de cotisation de retraite (% PIB)",
+           u"Age de départ effectif moyen à la retraite",
+           u"Ratio (pension moyenne)/(salaire moyen) (%)",
+           u"Dépenses de retraites (% PIB)"
+        ]
+        return None
+
+    def setAfficheMessageEcriture(self, affiche_quand_ecrit):
+        """
+        Configure l'affichage d'un message quand on écrit un fichier
+        
+        Paramètres
+        affiche_quand_ecrit : un booléen (par défaut = True)
+        
+        Exemple
+        analyse.setAfficheMessageEcriture(False)
+        """
+        self.affiche_quand_ecrit = affiche_quand_ecrit
         return None
     
     def setImageFormats(self, ext_image):
         """
         Configure le format de sauvegarde des images
         
+        Paramètres
         ext_image : une liste de chaînes de caractères (par defaut, ext_image=["png","pdf"])
+        
+        Exemple
+        analyse.setImageFormats(["jpg"])
         """
         self.ext_image = ext_image
         return None
@@ -104,7 +133,11 @@ class SimulateurAnalyse:
         """
         Configure la longueur des étiquettes
         
+        Paramètres
         labels_is_long : un booléen, True si les labels longs sont utilisés (par défaut = True)
+        
+        Exemple
+        analyse.setLabelLongs(False)
         """
         self.labels_is_long = labels_is_long
         return None
@@ -121,7 +154,7 @@ class SimulateurAnalyse:
         
         dir_image : une chaîne de caractères, le répertoire contenant les images 
         (par défaut, dir_image="fig")
-        exportées par mysavefig.
+        exportées par sauveFigure.
         """
         self.dir_image = dir_image
         return None
@@ -132,7 +165,7 @@ class SimulateurAnalyse:
         """
         return self.dir_image
 
-    def mysavefig(self, f):
+    def sauveFigure(self, f):
         """
         Sauvegarde l'image dans le répertoire
         
@@ -143,76 +176,90 @@ class SimulateurAnalyse:
         Sauvegarde l'image dans les formats définis. 
         
         Exemple:
-        analyse.mysavefig("conjoncture")
+        analyse.sauveFigure("conjoncture")
         """
     
         for ext in self.ext_image:
             basefilename = f + "." + ext
             filename = os.path.join(self.dir_image,basefilename)
+            if self.affiche_quand_ecrit:
+                print("Ecriture du fichier %s" % (filename))
             pl.savefig(filename)
         return None
     
-    def graphique(self, v, nom, font_size=8, yaxis_lim=[], \
-                  draw_legend=False, scenarios_indices=None):
+    def graphique(self, nom, v = None, taille_fonte_titre = 8, yaxis_lim = [], \
+                  dessine_legende = False, scenarios_indices = None, 
+                  dessine_annees = None):
         """
         Dessine un graphique associé à une variable donnée 
         pour tous les scénarios.
         
         Paramètres:
-        v : variable à dessiner
         nom : chaîne de caractère, nom de la variable
-        font_size : taille de la fonte (par défaut, fs=8)
+        v : variable à dessiner (par défaut, en fonction du nom)
+        taille_fonte_titre : taille de la fonte du titre (par défaut, fs=8)
         yaxis_lim : une liste de taille 2, les bornes inférieures et supérieures 
         de l'axe des ordonnées
-        draw_legend : booleen, True si la légende doit être dessinée
+        dessine_legende : booleen, True si la légende doit être dessinée
         scenarios_indices : une liste d'entiers, la liste des indices des scénarios
         (par défaut, sc = range(1,7))
+        dessine_annees : la liste des années à dessiner
         
         Exemple:
-        analyse.graphique(analyse.RNV,"RNV",14,[],True,range(1,6))
+        analyse.graphique("RNV")
+        analyse.graphique("RNV", dessine_legende = True, scenarios_indices = range(1,5))
+        analyse.graphique("RNV", dessine_annees = range(2020,2041))
+        analyse.graphique("RNV", taille_fonte_titre = 14)
+        analyse.graphique("B", simulateur.B)
         """
+        
+        if v is None:
+            if nom=="T":
+                v = self.T
+            elif nom=="P":
+                v = self.P
+            elif nom=="A":
+                v = self.A
+            elif nom=="S":
+                v = self.S
+            elif nom=="RNV":
+                v = self.RNV
+            elif nom=="REV":
+                v = self.REV
+            elif nom=="Depenses":
+                v = self.Depenses
+            else:
+                raise TypeError('Mauvaise valeur pour le nom : %s' % (nom))
+
         if scenarios_indices==None:
             scenarios_indices = self.scenarios
-            
-        if nom=="EV":
-            an=self.annees_EV
+        
+        if dessine_annees is not None:
+            list_annees_dessin = dessine_annees
         else:
-            an=self.annees
+            if nom=="EV":
+                list_annees_dessin=self.annees_EV
+            else:
+                list_annees_dessin=self.annees
     
         for s in scenarios_indices:
             if (nom=="S" or nom=="RNV" or nom=="T" or nom=="P" \
                 or nom=="REV" or nom=="Depenses"):
-                y = [ 100.0 * v[s][a] for a in an ]
+                # Ce sont des % : multiplie par 100.0
+                y = [ 100.0 * v[s][a] for a in list_annees_dessin ]
             else:
-                y = [ v[s][a] for a in an ]
+                y = [ v[s][a] for a in list_annees_dessin ]
             if (self.labels_is_long):
                 label_variable = self.scenarios_labels[s-1]
             else:
                 label_variable = self.scenarios_labels_courts[s-1]
-            pl.plot(an, y, label=label_variable )
+            pl.plot(list_annees_dessin, y, label=label_variable )
     
         # titres des figures
-        liste_variables = ["S","RNV","REV","T","A","P","B","NR","NC","G","dP","TPR","TPS","CNV","EV","Depenses"]
-        indice_variable = liste_variables.index(nom)
-        t=[u"Situation financière du système (% PIB)",
-           u"Niveau de vie des retraités p/r à l'ensemble (%)",
-           u"Proportion de la vie passée à la retraite (%)",
-           u"Taux de cotisation de retraite (% PIB)",
-           u"Age de départ effectif moyen à la retraite",
-           u"Ratio (pension moyenne)/(salaire moyen) (%)",
-           u"B: Part des revenus d'activité bruts dans le PIB",
-           u"NR: Nombre de retraités",
-           u"NC: Nombre de cotisants",
-           u"G: Effectif d'une generation arrivant à l'âge de la retraite",
-           u"dP: Autres dépenses de retraites",
-           u"TPR: Taux de prélèvement sur les retraites",
-           u"TPS: Taux de prélèvement sur les salaires",
-           u"CNV: (niveau de vie)/[(pension moy))/(salaire moy)]",
-           u"EV: Espérance de vie à 60 ans",
-           u"Dépenses de retraites (% PIB)"
-        ][ indice_variable ]
+        indice_variable = self.liste_variables.index(nom)
+        titre_figure = self.liste_legendes[ indice_variable ]
            
-        pl.title(t,fontsize=font_size)
+        pl.title(titre_figure,fontsize=taille_fonte_titre)
         
         # Ajuste les limites de l'axe des ordonnées
         if yaxis_lim==[]:
@@ -224,17 +271,17 @@ class SimulateurAnalyse:
         if yaxis_lim!=[]:
             pl.ylim(bottom=yaxis_lim[0],top=yaxis_lim[1])
 
-        if draw_legend:
+        if dessine_legende:
             pl.legend(loc="best")
         return None
     
-    def graphiques(self, font_size=8):
+    def dessineSimulation(self, taille_fonte_titre=8):
         """
-        Dessine les 6 graphiques "standards" 
-        pour tous les scénarios.
+        Dessine les 9 graphiques "standards" 
+        de la conjoncture pour tous les scénarios.
         
         Paramètres:
-        font_size : taille de la fonte (par défaut, fs=8)
+        taille_fonte_titre : taille de la fonte (par défaut, fs=8)
         
         Description
         Dessine S, RNV, REV, T, A, P. 
@@ -245,24 +292,19 @@ class SimulateurAnalyse:
     
         for i in range(6):
             pl.subplot(3,2,i+1)
-            v,V = [ (self.S,"S" ),
-                      (self.RNV,"RNV"),
-                      (self.REV,"REV"),
-                      (self.T,"T" ),
-                      (self.A,"A"),
-                      (self.P,"P") ][ i ]
-            self.graphique(v, V, font_size)
+            nom= self.liste_variables[ i ]
+            self.graphique(nom, taille_fonte_titre = taille_fonte_titre)
         pl.tight_layout(rect=[0, 0.03, 1, 0.95])
         return None
     
-    def affiche_variable(self, v):
+    def afficheVariable(self, v):
         """
         Affiche les valeurs d'une variable. 
         
         v : une variable
         
         Exemple
-        analyse.affiche_variable(RNV)
+        analyse.afficheVariable(RNV)
         """
     
         for s in self.scenarios:
@@ -273,7 +315,7 @@ class SimulateurAnalyse:
             print("")
         return None
             
-    def affiche_solutions_simulateur_COR(self):
+    def afficheSolutionsSimulateurCOR(self):
         """
         Affiche les paramètres du simulateur. 
         """
@@ -291,9 +333,9 @@ class SimulateurAnalyse:
                                                          100*self.P[s][a]))
         return None
     
-    def plot_legend(self):
+    def dessineLegende(self):
         """
-        Affiche les légendes des graphiques.
+        Crée un graphique présentant les légendes des graphiques.
         """
         # Juste les légendes
         pl.figure(figsize=(6,2))
@@ -304,3 +346,4 @@ class SimulateurAnalyse:
         pl.ylim(bottom=0.0,top=0.7)
         pl.axis('off')
         return None
+

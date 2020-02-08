@@ -27,6 +27,7 @@ jupyter nbconvert --to notebook --execute index.ipynb
 # Tests unitaires
 cd tests
 python test_retraites.py
+python test_etudeimpact.py
 cd ..
 
 # Doc
