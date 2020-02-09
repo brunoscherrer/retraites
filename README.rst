@@ -114,12 +114,12 @@ L'installation se fait avec les commandes suivantes::
 Exemple
 -------
 
-La classe SimulateurRetraites implémente le simulateur qui évalue les résultats 
+La classe ``SimulateurRetraites`` implémente le simulateur qui évalue les résultats 
 du modèle en fonction des hypothèses (conjoncture) et des leviers. 
 Cette classe implémente plusieurs stratégie de pilotage, la plus simple étant 
-le pilotage du COR qui est évaluée grâce à la méthode pilotageCOR. 
+le pilotage du COR qui est évaluée grâce à la méthode ``pilotageCOR``. 
  
-La méthode pilotageCOR retourne une instance de la classe SimulateurAnalyse. 
+La méthode ``pilotageCOR`` retourne une instance de la classe ``SimulateurAnalyse``. 
 Cette classe permet de produire les graphiques pour réaliser l'analyse 
 des résultats. 
 
@@ -129,22 +129,41 @@ des résultats.
 	simulateur = SimulateurRetraites('../retraites/fileProjection.json')
 	analyse = simulateur.pilotageCOR()
 
-La méthode graphiques permet de produire les graphiques standard dans l'analyse 
+La méthode ``graphiques`` permet de produire les graphiques standard dans l'analyse 
 d'une stratégie de pilotage. 
 
 .. code-block:: python
 
-	analyse.graphiques()
+	analyse.dessineSimulation()
 
 Le code précédent produit le graphique suivant. 
 
 .. image::  fig/cor.jpg
 
+Documentation
+-------------
+
 .. _`doc`: https://github.com/brunoscherrer/retraites/blob/master/doc
 .. _`index`: https://github.com/brunoscherrer/retraites/blob/master/index.ipynb
+.. _`simulationCOR`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-COR-juin-2019.ipynb
+.. _`simulationEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact.ipynb
+.. _`possiblesEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
+.. _`documentationModele`: https://github.com/brunoscherrer/retraites/blob/master/doc/Description-du-composant-retraites.ipynb
+.. _`reformes`: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes.ipynb
+.. _`reformes2`: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes2.ipynb
+.. _`articleEI`: https://github.com/brunoscherrer/retraites/blob/master/doc/Article4/article4-analyse-impact.pdf
+
+La description du modèle mathématique est donnée dans `documentationModele`_. 
 
 Un exemple complet est présenté dans le fichier `index`_.
 
-D'autres exemples sont présentés dans le répertoire `doc`_.
+D'autres exemples sont présentés dans le répertoire `doc`_ :
 
+- `simulationCOR`_ : une simulation du rapport du COR de Juin 2019
+- `simulationEtudeImpact`_ : une simulation de l'étude d'impact de Janvier 2020
+- `possiblesEtudeImpact`_ : une représentation des trajectoires possibles dans le cadre de l'étude d'impact de Janvier 2020
+- `reformes`_ : une simulation fondée sur l'étude d'impact
+- `reformes2`_ : une simulation fondée sur une modification de l'étude d'impact, avec augmentation des cotisations
+
+Une analyse détaillée de ce que l'étude d'impact ne dit pas est présentée dans `articleEI`_.
 
