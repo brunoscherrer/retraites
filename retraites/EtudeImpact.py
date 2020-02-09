@@ -40,9 +40,9 @@ class EtudeImpact:
         # Paramètres pour le calcul des âges
         # Paramètres de l'interpolation linéaire
         self.premiere_generation = 1975
-        self.age_premiere_generation = 63.8
+        self.age_premiere_generation = 63.6
         self.derniere_generation = 2000 # Graphique 49 : 1990
-        self.age_derniere_generation = 65.25 # Graphique 49 : 64.83
+        self.age_derniere_generation = 65.2 # Graphique 49 : 64.83
         self.age_annee_transition = int(self.premiere_generation + self.age_premiere_generation)
         self.age_annee_extrapolation = int(self.derniere_generation + self.age_derniere_generation)
         
@@ -98,6 +98,38 @@ class EtudeImpact:
 
         return None
 
+    def ageDepartParAnnee(self, a):
+        """
+        Paramètres
+        a : année de départ en retraite
+        
+        Description
+        Retourne l'âge de départ en retraite
+        """
+        # Interpolation linéaire inverse
+        Age1 = self.age_premiere_generation
+        Age2 = self.age_derniere_generation
+        an1 = self.premiere_generation
+        an2 = self.derniere_generation
+        As = (Age2 * (a - an1) + Age1 * (an2 - a)) / ((an2 - an1) + (Age2 - Age1))
+        return As
+
+    def ageDepartParGeneration(self, an):
+        """
+        Paramètres
+        an : année de naissance
+        
+        Description
+        Retourne l'âge de départ en retraite
+        """
+        # Interpolation linéaire inverse
+        Age1 = self.age_premiere_generation
+        Age2 = self.age_derniere_generation
+        an1 = self.premiere_generation
+        an2 = self.derniere_generation
+        As = Age1 * (an2 - an) / (an2 - an1) + Age2 * (an - an1) / (an2 - an1)
+        return As
+
     def calculeAgeDepartRetraite(self):
         """
         Calcule l'âge de départ en retraite de l'étude d'impact (Janvier 2020).
@@ -107,19 +139,10 @@ class EtudeImpact:
         de départ en retraite. 
         """
     
-        def ageDepart(a):
-            # Interpolation linéaire inverse
-            Age1 = self.age_premiere_generation
-            Age2 = self.age_derniere_generation
-            an1 = self.premiere_generation
-            an2 = self.derniere_generation
-            As = (Age2 * (a - an1) + Age1 * (an2 - a)) / ((an2 - an1) + (Age2 - Age1))
-            return As
-
         for s in self.simulateur.scenarios:
             for a in self.simulateur.annees_futures:
                 if (a>=self.age_annee_transition):
-                    self.As[s][a] = ageDepart(a)
+                    self.As[s][a] = self.ageDepartParAnnee(a)
                     
         return None
     
