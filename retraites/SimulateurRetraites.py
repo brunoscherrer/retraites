@@ -4,6 +4,8 @@
 from copy import deepcopy
 import json
 from retraites.SimulateurAnalyse import SimulateurAnalyse
+import pylab as pl
+import os
 
 class SimulateurRetraites:
     def __init__(self, json_filename):
@@ -48,13 +50,50 @@ class SimulateurRetraites:
         self.G = self.get('G')
         self.NR = self.get('NR')
         self.NC = self.get('NC')
-        self.TCR = self.get('TCR')
-        self.TCS = self.get('TCS')
+        self.TCR = self.get('TCR') # Son nom est TPR dans le composant, TCR dans le fichier json
+        self.TCS = self.get('TCS') # Son nom est TCS dans le composant, TCS dans le fichier json
         self.CNV = self.get('CNV')
         self.dP = self.get('dP')
         self.B = self.get('B')
         self.EV = self.get('EV')
         
+        # Graphiques
+        self.scenarios_labels=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
+                              "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
+                              "Hausse des salaires: +1,3%/an, Taux de chômage: 7%",
+                              "Hausse des salaires: +1%/an, Taux de chômage: 7%",
+                              "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
+                              "Hausse des salaires: +1%/an, Taux de chômage: 10%"]
+        self.scenarios_labels_courts=["+1,8%/an, Taux de chômage: 7%",
+                              "+1,5%/an, Chômage: 7%",
+                              "+1,3%/an, Chômage: 7%",
+                              "+1%/an, Chômage: 7%",
+                              "+1,8%/an, Chômage: 4.5%",
+                              "+1%/an, Chômage: 10%"]
+
+        self.liste_variables = ["B","NR","NC","G","dP","TPR","TPS","CNV","EV"]
+        self.liste_legendes=[u"B: Part des revenus d'activité bruts dans le PIB",
+           u"NR: Nombre de retraités",
+           u"NC: Nombre de cotisants",
+           u"G: Effectif d'une generation arrivant à l'âge de la retraite",
+           u"dP: Autres dépenses de retraites",
+           u"TPR: Taux de prélèvement sur les retraites",
+           u"TPS: Taux de prélèvement sur les salaires",
+           u"CNV: (niveau de vie)/[(pension moy))/(salaire moy)]",
+           u"EV: Espérance de vie à 60 ans"
+        ]
+
+        self.labels_is_long = True # True, si on utilise les labels longs
+        
+        # Configure les plages min et max pour l'axe des ordonnées 
+        # des variables standard en sortie du simulateur
+        self.yaxis_lim = dict()
+        self.yaxis_lim["RNV"] = [60.0,120.0]
+        self.yaxis_lim["REV"] = [20.0,40.0]
+
+        self.ext_image=["png","pdf"]   # types de fichier à générer
+
+        self.affiche_quand_ecrit = True # Affiche un message quand on écrit un fichier
         return None
 
     def pilotageCOR(self):
@@ -454,3 +493,208 @@ class SimulateurRetraites:
                         trajectoire[s][a] = valeur
 
         return trajectoire
+
+    def dessineConjoncture(self, taille_fonte_titre = 8, \
+                  dessine_legende = False, scenarios_indices = None, 
+                  dessine_annees = None):
+        """
+        Dessine les hypothèses de conjoncture.
+        
+        Paramètres:
+        taille_fonte_titre : taille de la fonte du titre (par défaut, fs=8)
+        dessine_legende : booleen, True si la légende doit être dessinée
+        scenarios_indices : une liste d'entiers, la liste des indices des scénarios
+        (par défaut, sc = range(1,7))
+        dessine_annees : la liste des années à dessiner
+        
+        Exemple:
+        simulateur.dessine_conjoncture()
+        """
+        pl.figure(figsize=(10,8))
+        pl.suptitle(u"Projections du COR (hypothèses)",fontsize=16)
+        for c in range(9):
+            pl.subplot(3,3,c+1)
+            nom = self.liste_variables[c]
+            self.graphique(nom, taille_fonte_titre = taille_fonte_titre, \
+                            dessine_legende = dessine_legende, \
+                            scenarios_indices = scenarios_indices, \
+                            dessine_annees = dessine_annees)
+        pl.tight_layout(rect=[0, 0.03, 1, 0.95])
+        return None
+    
+    def graphique(self, nom, v = None, taille_fonte_titre = 8, yaxis_lim = [], \
+                  dessine_legende = False, scenarios_indices = None, 
+                  dessine_annees = None):
+        """
+        Dessine un graphique associé à une variable donnée 
+        pour tous les scénarios.
+        
+        Paramètres:
+        nom : chaîne de caractère, nom de la variable
+        v : variable à dessiner (par défaut, en fonction du nom)
+        taille_fonte_titre : taille de la fonte du titre (par défaut, fs=8)
+        yaxis_lim : une liste de taille 2, les bornes inférieures et supérieures 
+        de l'axe des ordonnées
+        dessine_legende : booleen, True si la légende doit être dessinée
+        scenarios_indices : une liste d'entiers, la liste des indices des scénarios
+        (par défaut, sc = range(1,7))
+        dessine_annees : la liste des années à dessiner
+        
+        """
+        if v is None:
+            if nom=="B":
+                v = self.B
+            elif nom=="NR":
+                v = self.NR
+            elif nom=="NC":
+                v = self.NC
+            elif nom=="G":
+                v = self.G
+            elif nom=="dP":
+                v = self.dP
+            elif nom=="TPR":
+                v = self.TCR
+            elif nom=="TPS":
+                v = self.TCS
+            elif nom=="CNV":
+                v = self.CNV
+            elif nom=="EV":
+                v = self.EV
+            else:
+                raise TypeError('Mauvaise valeur pour le nom : %s' % (nom))
+
+        if scenarios_indices==None:
+            scenarios_indices = self.scenarios
+        
+        if dessine_annees is not None:
+            list_annees_dessin = dessine_annees
+        else:
+            if nom=="EV":
+                list_annees_dessin=self.annees_EV
+            else:
+                list_annees_dessin=self.annees
+    
+        for s in scenarios_indices:
+            if (nom=="RNV"):
+                # Ce sont des % : multiplie par 100.0
+                y = [ 100.0 * v[s][a] for a in list_annees_dessin ]
+            else:
+                y = [ v[s][a] for a in list_annees_dessin ]
+
+            if (self.labels_is_long):
+                label_variable = self.scenarios_labels[s-1]
+            else:
+                label_variable = self.scenarios_labels_courts[s-1]
+            pl.plot(list_annees_dessin, y, label=label_variable )
+    
+        # titres des figures
+        indice_variable = self.liste_variables.index(nom)
+        titre_figure=self.liste_legendes[ indice_variable ]
+           
+        pl.title(titre_figure,fontsize=taille_fonte_titre)
+        
+        # Ajuste les limites de l'axe des ordonnées
+        if yaxis_lim==[]:
+            # If the use did not set the yaxis_lim
+            if nom in self.yaxis_lim.keys():
+                # If the variable name was found in the dictionnary
+                yaxis_lim = self.yaxis_lim[nom]
+
+        if yaxis_lim!=[]:
+            pl.ylim(bottom=yaxis_lim[0],top=yaxis_lim[1])
+
+        if dessine_legende:
+            pl.legend(loc="best")
+        return None
+    
+    def setAfficheMessageEcriture(self, affiche_quand_ecrit):
+        """
+        Configure l'affichage d'un message quand on écrit un fichier
+        
+        Paramètres
+        affiche_quand_ecrit : un booléen (par défaut = True)
+        
+        Exemple
+        analyse.setAfficheMessageEcriture(False)
+        """
+        self.affiche_quand_ecrit = affiche_quand_ecrit
+        return None
+    
+    def setImageFormats(self, ext_image):
+        """
+        Configure le format de sauvegarde des images
+        
+        Paramètres
+        ext_image : une liste de chaînes de caractères (par defaut, ext_image=["png","pdf"])
+        
+        Exemple
+        analyse.setImageFormats(["jpg"])
+        """
+        self.ext_image = ext_image
+        return None
+
+    def getImageFormats(self):
+        """
+        Retourne le répertoire contenant les images
+        """
+        return self.ext_image 
+
+    
+    def setLabelLongs(self, labels_is_long):
+        """
+        Configure la longueur des étiquettes
+        
+        Paramètres
+        labels_is_long : un booléen, True si les labels longs sont utilisés (par défaut = True)
+        
+        Exemple
+        analyse.setLabelLongs(False)
+        """
+        self.labels_is_long = labels_is_long
+        return None
+
+    def getLabelLongs(self):
+        """
+        Retourne le répertoire contenant les images
+        """
+        return self.labels_is_long 
+
+    def setDirectoryImage(self, dir_image):
+        """
+        Configure le répertoire contenant les images
+        
+        dir_image : une chaîne de caractères, le répertoire contenant les images 
+        (par défaut, dir_image="fig")
+        exportées par sauveFigure.
+        """
+        self.dir_image = dir_image
+        return None
+
+    def getDirectoryImage(self):
+        """
+        Retourne le répertoire contenant les images
+        """
+        return self.dir_image
+
+    def sauveFigure(self, f):
+        """
+        Sauvegarde l'image dans le répertoire
+        
+        Paramètres:
+        f : une chaîne de caractères, le nom des fichiers à sauver
+        
+        Description
+        Sauvegarde l'image dans les formats définis. 
+        
+        Exemple:
+        analyse.sauveFigure("conjoncture")
+        """
+    
+        for ext in self.ext_image:
+            basefilename = f + "." + ext
+            filename = os.path.join(self.dir_image,basefilename)
+            if self.affiche_quand_ecrit:
+                print("Ecriture du fichier %s" % (filename))
+            pl.savefig(filename)
+        return None
+    
