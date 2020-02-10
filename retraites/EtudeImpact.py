@@ -133,10 +133,15 @@ class EtudeImpact:
     def calculeAgeDepartRetraite(self):
         """
         Calcule l'âge de départ en retraite de l'étude d'impact (Janvier 2020).
-        Source : graphique 49 page 139 de l'étude d'impact de Janvier 2020.
+        Source : graphique 73 page 139 de l'étude d'impact de Janvier 2020. 
         Méthode : interpolation linéaire, puis inversion formelle des équations 
         pour obtenir l'âge de départ en retraite en fonction de l'année 
         de départ en retraite. 
+        
+        Note : dans la première version, nous utilisions le 
+        graphique 49 page 139 de l'étude d'impact de Janvier 2020. 
+        Mais le graphique 49 s'arrête en 1990 alors que le graphique 73 
+        présente jusqu'à 2000.
         """
     
         for s in self.simulateur.scenarios:
