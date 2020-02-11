@@ -40,13 +40,42 @@ class CheckEtudeImpact(unittest.TestCase):
         np.testing.assert_allclose(etudeImpact.Ss[s][a], 0.0, atol= 1.e-7)
         np.testing.assert_allclose(etudeImpact.Ds[s][a], 0.135, atol= 0.001)
         a = 2050
-        np.testing.assert_allclose(etudeImpact.As[s][a], 64.5, atol= 0.1)
+        np.testing.assert_allclose(etudeImpact.As[s][a], 64.3, atol= 0.1)
         np.testing.assert_allclose(etudeImpact.Ss[s][a], 0.0, atol= 1.e-7)
         np.testing.assert_allclose(etudeImpact.Ds[s][a], 0.129, atol= 0.001)
         a = 2070
         np.testing.assert_allclose(etudeImpact.As[s][a], 65.5, atol= 0.1)
         np.testing.assert_allclose(etudeImpact.Ss[s][a], 0.0, atol= 1.e-7)
         np.testing.assert_allclose(etudeImpact.Ds[s][a], 0.126, atol= 0.001)
+        return None
+
+    def test_AgeParAnnee(self):
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        etudeImpact = EtudeImpact(simulateur)
+
+        # Vérifie l'age par année et par génération
+        
+        # Génération 1975
+        an = 1975.0
+        ageDepart_reference = 63.6
+        ageDepart = etudeImpact.ageDepartParGeneration(an)
+        print("Generation",an, ", ageDepart", ageDepart)
+        np.testing.assert_allclose(ageDepart, ageDepart_reference, atol= 0.1)
+        anneeDepart = 2038.6 # 1975.0 + 63.6
+        ageDepart = etudeImpact.ageDepartParAnnee(anneeDepart)
+        print("Annee",anneeDepart, ", ageDepart", ageDepart)
+        np.testing.assert_allclose(ageDepart, ageDepart_reference, atol= 0.1)
+        
+        # Génération 2000
+        an = 2000.0
+        ageDepart_reference = 65.2
+        ageDepart = etudeImpact.ageDepartParGeneration(an)
+        print("Generation",an, ", ageDepart", ageDepart)
+        np.testing.assert_allclose(ageDepart, ageDepart_reference, atol= 0.1)
+        anneeDepart = 2065.2 # 2000.0 + 65.2
+        ageDepart = etudeImpact.ageDepartParAnnee(anneeDepart)
+        print("Annee",anneeDepart, ", ageDepart", ageDepart)
+        np.testing.assert_allclose(ageDepart, ageDepart_reference, atol= 0.1)
         return None
 
 
