@@ -250,48 +250,71 @@ Remarquons que le texte semble comporter une coquille, avec une inversion
 des âges dans les deux systèmes : l'aĝe dans le système universel sera supérieur, 
 bien sûr ! 
 
-Sur le graphique de l'étude d'impact, nous lisons les valeurs numériques suivantes après réforme :
-\begin{itemize}
-\item un âge de départ à 63,8 ans pour la génération 1975,
-\item un âge de départ à 64,83 ans pour la génération 1990.
-\end{itemize}
+Le graphique 73 page 199 de l'étude d'impact de Janvier 2020 est présenté 
+dans la figure \ref{fig-age-etude-impact-graphique-73}.
 
-L'âge de départ pour la génération 1975 est lu sur le graphique. 
-L'âge de départ pour la génération 1990 se déduit du texte, qui 
-indique un âge de départ de "64 ans et 10 mois". 
-Puisque 10/12 = 0.83, nous en déduisons un âge de départ égal à 64.83 pour 
-la génération 1990. 
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{EtudeImpact-Graphique73-AgeDepartRetraite.png}
+\end{center}
+\caption{Age de départ à la retraite dans l'étude d'impact.}
+\label{fig-age-etude-impact-graphique-73}
+\end{figure}
+
+Le texte précise : "La hausse de l’âge moyen de liquidation permet d’augmenter 
+significativement les pensions versées : la prise en compte des comportements 
+augmente ainsi la pension moyenne de 5 \% pour la génération 1990."
 
 On observe que la génération 1975 partira en retraite en 2039 dans le scénario de l'étude d'impact puisque 1975 + 63.8 = 2038.8.
-Remarquons que l'horizon temporel de l'étude d'impact se projette dans le graphique jusqu'à l'année 2054, puisque 1990 + 64.83 = 2054.83. 
-Ce choix peut sembler \emph{étonnant}, dans la mesure où l'horizon de l'étude d'impact 
-s'arrête en 2050. 
+Remarquons que l'horizon temporel de l'étude d'impact se projette dans le graphique jusqu'à l'année 2064, puisque 2000 + 64 = 2064. 
+Ce choix peut sembler pour le moins \emph{étonnant}, dans la mesure où l'horizon 
+de l'étude d'impact s'arrête en 2050 en ce qui concerne d'autres données, 
+comme par exemple la trajectoire de dépenses du tableau 39. 
+
+Sur le graphique 73 de l'étude d'impact, nous lisons les valeurs numériques suivantes après réforme :
+\begin{itemize}
+\item un âge de départ à 63,8 ans pour la génération 1975,
+\item un âge de départ à 65,25 ans pour la génération 2000.
+\end{itemize}
 
 Pour calculer l'âge de départ en retraite en fonction de l'année du départ, 
 nous réalisons une inversion mathématique.  
 
 Notre calcul se décompose en trois parties :
 \begin{itemize}
-\item jusqu'à l'année 2039, nous utilisons les données du COR, 
-\item de 2039 à 2055, nous utilisons les données de l'étude d'impact,
-\item de 2055 à 2070, nous extrapolons. 
+\item jusqu'à l'année 2039 (année du départ à la retraite 
+de la génération 1975), nous utilisons les données du COR, 
+\item de 2039 à 2065 (année du départ à la retraite de la génération 
+2000), nous utilisons les données de l'étude d'impact,
+\item de 2065 à 2070, nous extrapolons. 
 \end{itemize}
 
 Le résultat de notre simulation est présenté dans la figure \ref{fig-simulation-A}. 
+La figure \ref{fig-simulation-A-vs-COR} compare l'âge utilisé 
+dans l'étude d'impact comparé à l'âge utilisé dans le rapport du COR 
+de Juin 2019.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.7\textwidth]{Simulation-Age.pdf}
 \end{center}
-
 \caption{L'âge de départ en retraite moyen.}
 \label{fig-simulation-A}
 \end{figure}
 
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Simulation-Age-vs-COR.pdf}
+\end{center}
+\caption{L'âge de départ en retraite moyen dans l'étude d'impact comparé 
+au calcul du COR.}
+\label{fig-simulation-A-vs-COR}
+\end{figure}
+
 On observe que l'âge de départ à la retraite est donc 
-significativement supérieur dans l'étude d'impact. 
+significativement supérieur dans l'étude d'impact comparé au calcul du COR de Juin 2019. 
 Notre extrapolation a mené à un âge de départ à la retraite égal à 
-environ 66 ans en 2070. 
+environ 65.5 ans en 2070. 
 Nous ne savons pas si cet âge est réaliste, mais nous notons deux éléments. 
 \begin{itemize}
 \item Le COR prévoyait une augmentation de l'âge de départ moins 
@@ -416,7 +439,7 @@ un âge de départ à la retraite donné.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{Simulation-Age-vs-pensions-vs-date.png}
+\includegraphics[width=0.7\textwidth]{Simulation-Age-vs-pensions-vs-date.pdf}
 \end{center}
 
 \caption{Le niveau de pensions en fonction de l'âge et de l'année.}
