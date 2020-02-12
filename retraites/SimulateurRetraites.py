@@ -17,13 +17,17 @@ class SimulateurRetraites:
         pilotage : un entier, la stratégie de pilotage (par défaut, celle du COR)
         
         Description
-        Plusieurs stratégies de pilotage peuvent être utilisées. 
-        Les pilotages 1 à 4 assurent l'équilibre financier. 
-        * pilotage 0 : statu quo du COR (peut créer un déficit financier)
-        * pilotage 1 : imposer l'âge de départ à la retraite et le niveau de vie,
-        * pilotage 2 : imposer le taux de cotisations et le niveau pensions par rapport aux salaires,
-        * pilotage 3 : imposer le niveau de vie par rapport à l'ensemble de la population et le taux de cotisations,
-        * pilotage 4 : imposer le taux de cotisations et l'âge de départ à la retraite.
+        Plusieurs stratégies de pilotage peuvent être utilisées :
+            pilotageParPensionAgeCotisations
+            pilotageParSoldePensionAge
+            pilotageParSoldePensionCotisations
+            pilotageParSoldeAgeCotisations
+            pilotageParSoldeAgeDepenses
+            pilotageParSoldePensionDepenses
+            pilotageParPensionCotisationsDepenses
+            pilotageParAgeCotisationsDepenses
+            pilotageParAgeEtNiveauDeVie (sous-entendu et par solde financier)
+            pilotageParNiveauDeVieEtCotisations (sous-entendu et par solde financier)
 
         Exemple :
         simulateur = SimulateurRetraites('fileProjection.json')
@@ -105,6 +109,260 @@ class SimulateurRetraites:
         resultat = SimulateurAnalyse(self.T, self.P, self.A, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
+    
+    def pilotageParPensionAgeCotisations(self, Pcible=None, Acible=None, Tcible=None):
+        """
+        pilotage 1 : imposer 1) le niveau des pensions par rapport aux salaires
+        2) l'âge de départ à la retraite
+        3) le taux de cotisations
+            
+        Paramètres
+        Pcible : le niveau de pension des retraites par rapport aux actifs
+        Acible : l'âge de départ à la retraite
+        Tcible : le taux de cotisations
+
+        Description
+        Retourne un objet de type SimulateurAnalyse.
+        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        """
+        # Génère les trajectoires en fonction des paramètres
+        Ps = self.genereTrajectoire("P", Pcible)
+        As = self.genereTrajectoire("A", Acible)
+        Ts = self.genereTrajectoire("T", Tcible)
+
+        # Simule 
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
+                                     self.scenarios, self.annees_EV, self.annees)
+        return resultat
+
+    def pilotageParSoldePensionAge(self, Scible=None, Pcible=None, Acible=None):
+        """
+        pilotage 2 : imposer 1) le bilan financer
+        2) le niveau des pensions par rapport aux salaires
+        3) l'âge de départ à la retraite
+            
+        Paramètres
+        Scible : la situation financière en % de PIB
+        Pcible : le niveau de pension des retraites par rapport aux actifs
+        Acible : l'âge de départ à la retraite
+            
+        Description
+        Retourne un objet de type SimulateurAnalyse.
+        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        """
+        # Génère les trajectoires en fonction des paramètres
+        Ss = self.genereTrajectoire("S", Scible)
+        Ps = self.genereTrajectoire("P", Pcible)
+        As = self.genereTrajectoire("A", Acible)
+
+        # Calcule le pilotage
+        Ts, Ps, As = self._calcule_fixant_Ss_Ps_As(Ss, Ps, As)
+        # Simule 
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
+                                     self.scenarios, self.annees_EV, self.annees)
+        return resultat
+
+    def pilotageParSoldePensionCotisations(self, Scible=None, Pcible=None, Tcible=None):
+        """
+        pilotage 3 : imposer 1) le bilan financer
+        2) le niveau des pensions par rapport aux salaires
+        3) le taux de cotisations
+            
+        Paramètres
+        Scible : la situation financière en % de PIB
+        Pcible : le niveau de pension des retraites par rapport aux actifs
+        Tcible : le taux de cotisations
+            
+        Description
+        Retourne un objet de type SimulateurAnalyse.
+        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        """
+        # Génère les trajectoires en fonction des paramètres
+        Ss = self.genereTrajectoire("S", Scible)
+        Ps = self.genereTrajectoire("P", Pcible)
+        Ts = self.genereTrajectoire("T", Tcible)
+
+        # Calcule le pilotage
+        Ts, Ps, As = self._calcule_fixant_Ss_Ps_Ts(Ss, Ps, Ts)
+        # Simule 
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
+                                     self.scenarios, self.annees_EV, self.annees)
+        return resultat 
+
+    def pilotageParSoldeAgeCotisations(self, Scible=None, Acible=None, Tcible=None):
+        """
+        pilotage 4 : imposer 1) le bilan financer
+        2) l'âge de départ à la retraite
+        3) le taux de cotisations
+            
+        Paramètres
+        Scible : la situation financière en % de PIB
+        Acible : l'âge de départ à la retraite
+        Tcible : le taux de cotisations
+            
+        Description
+        Retourne un objet de type SimulateurAnalyse.
+        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        """
+        # Génère les trajectoires en fonction des paramètres
+        Ss = self.genereTrajectoire("S", Scible)
+        As = self.genereTrajectoire("A", Acible)
+        Ts = self.genereTrajectoire("T", Tcible)
+
+        # Calcule le pilotage
+        Ts, Ps, As = self._calcule_fixant_Ss_As_Ts(Ss, As, Ts)
+        # Simule 
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
+                                     self.scenarios, self.annees_EV, self.annees)
+        return resultat 
+
+    def pilotageParSoldeAgeDepenses(self, Scible=None, Acible=None, Dcible=None):
+        """
+        pilotage 5 : imposer 1) le bilan financer
+        2) l'âge de départ à la retraite
+        3) le niveau de dépenses
+            
+        Paramètres
+        Scible : la situation financière en % de PIB
+        Acible : l'âge de départ à la retraite
+        Dcible : le niveau de dépenses
+            
+        Description
+        Retourne un objet de type SimulateurAnalyse.
+        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        """
+        # Génère les trajectoires en fonction des paramètres
+        Ss = self.genereTrajectoire("S", Scible)
+        As = self.genereTrajectoire("A", Acible)
+        Ds = self.genereTrajectoire("Depenses", Dcible)
+
+        # Calcule le pilotage
+        Ts, Ps, As = self._calcule_fixant_Ss_As_Ds(Ss, As, Ds)
+        # Simule 
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
+                                     self.scenarios, self.annees_EV, self.annees)
+        return resultat 
+    
+    def pilotageParSoldePensionDepenses(self, Scible=None, Pcible=None, Dcible=None):
+        """
+        pilotage 6 : imposer 1) le bilan financer
+        2) le niveau des pensions par rapport aux salaires
+        3) le niveau de dépenses
+            
+        Paramètres
+        Scible : la situation financière en % de PIB
+        Pcible : le niveau de pension des retraites par rapport aux actifs
+        Dcible : le niveau de dépenses
+            
+        Description
+        Retourne un objet de type SimulateurAnalyse.
+        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        """
+        # Génère les trajectoires en fonction des paramètres
+        Ss = self.genereTrajectoire("S", Scible)
+        Ps = self.genereTrajectoire("P", Pcible)
+        Ds = self.genereTrajectoire("Depenses", Dcible)
+
+        # Calcule le pilotage
+        Ts, Ps, As = self._calcule_fixant_Ss_Ps_Ds(Ss, Ps, Ds)
+        # Simule 
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
+                                     self.scenarios, self.annees_EV, self.annees)
+        return resultat 
+
+    def pilotageParPensionCotisationsDepenses(self, Pcible=None, Tcible=None, Dcible=None):
+        """
+        pilotage 7 : imposer 1) le niveau des pensions par rapport aux salaires
+        2) le taux de cotisations
+        3) le niveau de dépenses
+            
+        Paramètres
+        Pcible : le niveau de pension des retraites par rapport aux actifs
+        Tcible : le taux de cotisations
+        Dcible : le niveau de dépenses
+            
+        Description
+        Retourne un objet de type SimulateurAnalyse.
+        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        """
+        # Génère les trajectoires en fonction des paramètres
+        Ps = self.genereTrajectoire("P", Pcible)
+        Ts = self.genereTrajectoire("T", Tcible)
+        Ds = self.genereTrajectoire("Depenses", Dcible)
+
+        # Calcule le pilotage
+        Ts, Ps, As = self._calcule_fixant_Ps_Ts_Ds(Ps, Ts, Ds)
+        # Simule 
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
+                                     self.scenarios, self.annees_EV, self.annees)
+        return resultat 
+
+    def pilotageParAgeCotisationsDepenses(self, Acible=None, Tcible=None, Dcible=None):
+        """
+        pilotage 8 : imposer 1) l'âge de départ à la retraite
+        2) le taux de cotisations
+        3) le niveau de dépenses
+            
+        Paramètres
+        Acible : l'âge de départ à la retraite
+        Tcible : le taux de cotisations
+        Dcible : le niveau de dépenses
+            
+        Description
+        Retourne un objet de type SimulateurAnalyse.
+        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        """
+        # Génère les trajectoires en fonction des paramètres
+        As = self.genereTrajectoire("A", Acible)
+        Ts = self.genereTrajectoire("T", Tcible)
+        Ds = self.genereTrajectoire("Depenses", Dcible)
+
+        # Calcule le pilotage
+        Ts, Ps, As = self._calcule_fixant_As_Ts_Ds(As, Ts, Ds)
+        # Simule 
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
+                                     self.scenarios, self.annees_EV, self.annees)
+        return resultat 
     
     def pilotageParAgeEtNiveauDeVie(self, Acible=None, RNVcible=None, Scible=None):
         """
@@ -285,6 +543,166 @@ class SimulateurRetraites:
                 v[s][a]=self.data[var][str(s)][str(a)]
                 
         return v
+
+    def _calcule_fixant_Ss_Ps_As(self, Ss, Ps, As):
+        """
+        Calcul à solde, pension et âge définis
+        
+        Paramètres
+        Ss : un dictionnaire, Ss[s][a] est le solde financier 
+        du scénario s à l'année a
+        Ps : un dictionnaire, Ps[s][a] est le montant de la pension 
+        par rapport aux salaires du scénario s à l'année a
+        As : un dictionnaire, As[s][a] est l'âge de départ à la retraite 
+        du scénario s à l'année a
+        """
+    
+        # Calcule Ts
+        Ts = deepcopy(self.T)    
+        for s in self.scenarios:    
+            for a in self.annees_futures:
+                GdA = self.G[s][a] * ( As[s][a] - self.A[s][a] )
+                K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5*GdA)
+                Ts[s][a] = Ss[s][a] / self.B[s][a] + K * (Ps[s][a] + self.dP[s][a])
+                
+        return Ts, Ps, As
+
+    def _calcule_fixant_Ss_Ps_Ts(self, Ss, Ps, Ts):
+        """
+        Calcul à solde, pension et cotisations définis
+        
+        Paramètres
+        Ss : un dictionnaire, Ss[s][a] est le solde financier 
+        du scénario s à l'année a
+        Ps : un dictionnaire, Ps[s][a] est le montant de la pension 
+        par rapport aux salaires du scénario s à l'année a
+        Ts : un dictionnaire, Ts[s][a] est le taux de cotisations 
+        du scénario s à l'année a
+        """
+    
+        # Calcule As
+        As = deepcopy(self.A)    
+        for s in self.scenarios:    
+            for a in self.annees_futures:
+                K = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / (Ps[s][a] + self.dP[s][a])
+                As[s][a] = self.A[s][a] + (self.NR[s][a] - K * self.NC[s][a]) / (0.5*K + 1) / self.G[s][a]
+                
+        return Ts, Ps, As
+
+    def _calcule_fixant_Ss_As_Ts(self, Ss, As, Ts):
+        """
+        Calcul à solde, âge et cotisations définis
+        
+        Paramètres
+        Ss : un dictionnaire, Ss[s][a] est le solde financier 
+        du scénario s à l'année a
+        As : un dictionnaire, As[s][a] est l'âge de départ à la retraite 
+        du scénario s à l'année a
+        Ts : un dictionnaire, Ts[s][a] est le taux de cotisations 
+        du scénario s à l'année a
+        """
+    
+        # Calcule Ps
+        Ps = deepcopy(self.P)
+        for s in self.scenarios:    
+            for a in self.annees_futures:
+                GdA = self.G[s][a] * ( As[s][a] - self.A[s][a] )
+                K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5*GdA)
+                Ps[s][a] = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / K - self.dP[s][a]
+                
+        return Ts, Ps, As
+
+    def _calcule_fixant_Ss_As_Ds(self, Ss, As, Ds):
+        """
+        Calcul à solde, âge et dépenses définis
+        
+        Paramètres
+        Ss : un dictionnaire, Ss[s][a] est le solde financier 
+        du scénario s à l'année a
+        As : un dictionnaire, As[s][a] est l'âge de départ à la retraite 
+        du scénario s à l'année a
+        Ds : un dictionnaire, Ds[s][a] est le niveau de dépenses 
+        du scénario s à l'année a
+        """
+    
+        # Calcule Ps et Ts
+        Ps, Ts = deepcopy(self.P), deepcopy(self.T)
+        for s in self.scenarios:    
+            for a in self.annees_futures:
+                Ts[s][a] = (Ss[s][a] + Ds[s][a]) / self.B[s][a]
+                GdA = self.G[s][a] * ( As[s][a] - self.A[s][a] )
+                K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5*GdA)
+                Ps[s][a] = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / K - self.dP[s][a]
+                
+        return Ts, Ps, As
+
+    def _calcule_fixant_Ss_Ps_Ds(self, Ss, Ps, Ds):
+        """
+        Calcul à solde, pension et dépenses définis
+        
+        Paramètres
+        Ss : un dictionnaire, Ss[s][a] est le solde financier 
+        du scénario s à l'année a
+        Ps : un dictionnaire, Ps[s][a] est le montant de la pension 
+        par rapport aux salaires du scénario s à l'année a
+        Ds : un dictionnaire, Ds[s][a] est le niveau de dépenses 
+        du scénario s à l'année a
+        """
+    
+        # Calcule As et Ts
+        As, Ts = deepcopy(self.A), deepcopy(self.T)
+        for s in self.scenarios:    
+            for a in self.annees_futures:
+                K = Ds[s][a] / self.B[s][a] / (Ps[s][a] + self.dP[s][a])
+                As[s][a] = self.A[s][a] + (self.NR[s][a] - K * self.NC[s][a]) / (0.5*K + 1) / self.G[s][a]
+                Ts[s][a] = (Ss[s][a] + Ds[s][a]) / self.B[s][a]
+                
+        return Ts, Ps, As
+    
+    def _calcule_fixant_Ps_Ts_Ds(self, Ps, Ts, Ds):
+        """
+        Calcul à pension, cotisations et dépenses définis
+        
+        Paramètres
+        Ps : un dictionnaire, Ps[s][a] est le montant de la pension 
+        par rapport aux salaires du scénario s à l'année a
+        Ts : un dictionnaire, Ts[s][a] est le taux de cotisations 
+        du scénario s à l'année a
+        Ds : un dictionnaire, Ds[s][a] est le niveau de dépenses 
+        du scénario s à l'année a
+        """
+    
+        # Calcule As
+        As = deepcopy(self.A)
+        for s in self.scenarios:    
+            for a in self.annees_futures:
+                K = Ds[s][a] / self.B[s][a] / (Ps[s][a] + self.dP[s][a])
+                As[s][a] = self.A[s][a] + (self.NR[s][a] - K * self.NC[s][a]) / (0.5*K + 1) / self.G[s][a]
+                
+        return Ts, Ps, As
+
+    def _calcule_fixant_As_Ts_Ds(self, As, Ts, Ds):
+        """
+        Calcul à âge, cotisations et dépenses définis
+        
+        Paramètres
+        As : un dictionnaire, As[s][a] est l'âge de départ à la retraite 
+        du scénario s à l'année a
+        Ts : un dictionnaire, Ts[s][a] est le taux de cotisations 
+        du scénario s à l'année a
+        Ds : un dictionnaire, Ds[s][a] est le niveau de dépenses 
+        du scénario s à l'année a
+        """
+    
+        # Calcule Ps
+        Ps = deepcopy(self.P)
+        for s in self.scenarios:    
+            for a in self.annees_futures:
+                GdA = self.G[s][a] * ( As[s][a] - self.A[s][a] )
+                K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5*GdA)
+                Ps[s][a] = Ds[s][a] / self.B[s][a] / K - self.dP[s][a]
+                
+        return Ts, Ps, As
     
     def _calcule_fixant_As_RNV_S(self, As, RNVs, Ss):
         """
