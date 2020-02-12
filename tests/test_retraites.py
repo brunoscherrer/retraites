@@ -383,7 +383,190 @@ class CheckSimulateur(unittest.TestCase):
                     np.testing.assert_allclose(analyse.S[s][a], 0., atol=1.e-15)
 
         return None
+    
+    def test_pilotageParPensionAgeCotisations(self):
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        Ps = 0.5
+        As = 62.0
+        Ts = 0.28
+        analyse = simulateur.pilotageParPensionAgeCotisations(Pcible=Ps, Acible=As, Tcible = Ts)
 
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.P[s][a], Ps)
+                    np.testing.assert_allclose(analyse.A[s][a], As)
+                    np.testing.assert_allclose(analyse.T[s][a], Ts)
+
+        return None
+
+    def test_pilotageParSoldePensionAge(self):
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        Ss = 0.0
+        Ps = 0.5
+        As = 62.0
+        analyse = simulateur.pilotageParSoldePensionAge(Scible = Ss, Pcible=Ps, Acible=As)
+
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.S[s][a], Ss)
+                    np.testing.assert_allclose(analyse.P[s][a], Ps)
+                    np.testing.assert_allclose(analyse.A[s][a], As)
+
+        return None
+
+    def test_pilotageParSoldePensionCotisations(self):
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        Ss = 0.0
+        Ps = 0.5
+        Ts = 0.28
+        analyse = simulateur.pilotageParSoldePensionCotisations(Scible=Ss, Pcible=Ps, Tcible = Ts)
+
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.S[s][a], Ss, atol=1e-15)
+                    np.testing.assert_allclose(analyse.P[s][a], Ps)
+                    np.testing.assert_allclose(analyse.T[s][a], Ts)
+
+        return None
+
+    def test_pilotageParSoldeAgeCotisations(self):
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        Ss = 0.0
+        As = 62.0
+        Ts = 0.28
+        analyse = simulateur.pilotageParSoldeAgeCotisations(Scible=Ss, Acible=As, Tcible = Ts)
+
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.S[s][a], Ss, atol=1e-15)
+                    np.testing.assert_allclose(analyse.A[s][a], As)
+                    np.testing.assert_allclose(analyse.T[s][a], Ts)
+
+        return None
+
+    def test_pilotageParSoldeAgeDepenses(self):
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        Ss = 0.0
+        As = 62.0
+        Ds = 0.13
+        analyse = simulateur.pilotageParSoldeAgeDepenses(Scible=Ss, Acible=As, Dcible = Ds)
+
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.S[s][a], Ss, atol=1e-15)
+                    np.testing.assert_allclose(analyse.A[s][a], As)
+                    np.testing.assert_allclose(analyse.Depenses[s][a], Ds)
+
+        return None
+
+    def test_pilotageParSoldePensionDepenses(self):
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        Ss = 0.0
+        Ps = 0.5
+        Ds = 0.13
+        analyse = simulateur.pilotageParSoldePensionDepenses(Scible=Ss, Pcible=Ps, Dcible = Ds)
+
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.S[s][a], Ss, atol=1e-15)
+                    np.testing.assert_allclose(analyse.P[s][a], Ps)
+                    np.testing.assert_allclose(analyse.Depenses[s][a], Ds)
+
+        return None
+
+    def test_pilotageParPensionCotisationsDepenses(self):
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        Ps = 0.5
+        Ts = 0.28
+        Ds = 0.13
+        analyse = simulateur.pilotageParPensionCotisationsDepenses(Pcible=Ps, Tcible=Ts, Dcible = Ds)
+
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.P[s][a], Ps)
+                    np.testing.assert_allclose(analyse.T[s][a], Ts)
+                    np.testing.assert_allclose(analyse.Depenses[s][a], Ds)
+
+        return None
+
+    def test_pilotageParAgeCotisationsDepenses(self):
+        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        
+        As = 62.0
+        Ts = 0.28
+        Ds = 0.13
+        analyse = simulateur.pilotageParAgeCotisationsDepenses(Acible=As, Tcible=Ts, Dcible = Ds)
+
+        # Vérifie les valeurs imposées à partir de 2020
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.A[s][a], As)
+                    np.testing.assert_allclose(analyse.T[s][a], Ts)
+                    np.testing.assert_allclose(analyse.Depenses[s][a], Ds)
+
+        return None
 
 if __name__=="__main__":
     unittest.main()
