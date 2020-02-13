@@ -8,4 +8,8 @@ from retraites.SimulateurRetraites import SimulateurRetraites
 
 simulateur = SimulateurRetraites('retraites/fileProjection.json')
 simulateur.dessineConjoncture()
+
+import pylab as pl
+pl.show()
+
 #analyse.sauveFigure("conjoncture")
