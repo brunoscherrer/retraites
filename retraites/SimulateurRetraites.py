@@ -1116,3 +1116,17 @@ class SimulateurRetraites:
             pl.savefig(filename)
         return None
     
+    def dessineLegende(self):
+        """
+        Crée un graphique présentant les légendes des graphiques.
+        """
+        # Juste les légendes
+        pl.figure(figsize=(6,2))
+        nb_scenarios = len(self.scenarios_labels)
+        for i in range(nb_scenarios):
+            pl.plot(0.,0.,label=self.scenarios_labels[i])
+        pl.legend(self.scenarios_labels, loc="center")
+        pl.ylim(bottom=0.0,top=0.7)
+        pl.axis('off')
+        return None
+
