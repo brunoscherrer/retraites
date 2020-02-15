@@ -23,6 +23,21 @@ jobs:
             sudo pip3 install matplotlib
             sudo pip3 install jupyter
       - run:
+          name: Install Python deps in a venv with pip
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+            rm -r venv
+      - run:
+          name: Install Python deps in a venv with setup
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            python setup.py install
+            python demo.py
+            rm -r venv
+      - run:
           name: Build and test - global
           command: ./.circleci/run_docker_linux.sh
 
