@@ -4,7 +4,7 @@
     :target: https://circleci.com/gh/mbaudin47/retraites
 
 .. image:: https://mybinder.org/badge_logo.svg
- :target: https://mybinder.org/v2/gh/mbaudin47/retraites/ReproduitEtudeImpact?filepath=index.ipynb
+ :target: https://mybinder.org/v2/gh/brunoscherrer/retraites/master?filepath=index.ipynb
 
 .. |Python| image:: https://img.shields.io/badge/python-3.7-blue.svg
 .. _Python: https://python.org
