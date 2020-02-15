@@ -6,7 +6,7 @@
 .. image:: https://mybinder.org/badge_logo.svg
  :target: https://mybinder.org/v2/gh/mbaudin47/retraites/ReproduitEtudeImpact?filepath=index.ipynb
 
-.. |Python| image:: https://img.shields.io/badge/python-2.7,_3.7-blue.svg
+.. |Python| image:: https://img.shields.io/badge/python-3.7-blue.svg
 .. _Python: https://python.org
 
 .. |License| image:: https://img.shields.io/github/license/brunoscherrer/retraites
@@ -97,7 +97,7 @@ Dépendances
 
 Les dépendances sont :
 
-- Python >= 2.7 or >= 3.3
+- Python >= 3.4
 - `numpy <http://www.numpy.org>`_ >= 0.10
 - `matplotlib <https://matplotlib.org>`_ >= 1.5.3
 - `scipy <https://www.scipy.org/>`_ >= 1.0.0
