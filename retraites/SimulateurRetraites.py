@@ -6,14 +6,18 @@ import json
 from retraites.SimulateurAnalyse import SimulateurAnalyse
 import pylab as pl
 import os
+import retraites
 
 class SimulateurRetraites:
-    def __init__(self, json_filename):
+    def __init__(self, json_filename = None):
         """
         Crée un simulateur à partir d'un fichier d'hypothèses JSON.
         
         Paramètres
-        json_filename : une chaîne de caractère, le nom du fichier JSON contenant les hypothèses
+        json_filename : une chaîne de caractère, le nom du fichier JSON 
+        contenant les hypothèses
+        (par défaut, charge le fichier "fileProjection.json" fournit par le 
+        module)
         pilotage : un entier, la stratégie de pilotage (par défaut, celle du COR)
         
         Description
@@ -32,6 +36,11 @@ class SimulateurRetraites:
         Exemple :
         simulateur = SimulateurRetraites('fileProjection.json')
         """
+        
+        if (json_filename is None):
+            # Loading default JSON data
+            json_filename = os.path.join(retraites.__path__[0], "fileProjection.json")
+            
         # initialisations diverses
         # chargement des donnees du COR pour les 6 scenarios
         
@@ -941,7 +950,7 @@ class SimulateurRetraites:
         pl.tight_layout(rect=[0, 0.03, 1, 0.95])
         return None
     
-    def graphique(self, nom, v = None, taille_fonte_titre = 8, yaxis_lim = [], \
+    def graphique(self, nom, v = None, taille_fonte_titre = 8, yaxis_lim = None, \
                   dessine_legende = False, scenarios_indices = None, 
                   dessine_annees = None):
         """
@@ -953,7 +962,8 @@ class SimulateurRetraites:
         v : variable à dessiner (par défaut, en fonction du nom)
         taille_fonte_titre : taille de la fonte du titre (par défaut, fs=8)
         yaxis_lim : une liste de taille 2, les bornes inférieures et supérieures 
-        de l'axe des ordonnées
+        de l'axe des ordonnées (par défaut, utilise les paramètres de 
+        l'objet)
         dessine_legende : booleen, True si la légende doit être dessinée
         scenarios_indices : une liste d'entiers, la liste des indices des scénarios
         (par défaut, sc = range(1,7))
@@ -982,7 +992,7 @@ class SimulateurRetraites:
             else:
                 raise TypeError('Mauvaise valeur pour le nom : %s' % (nom))
 
-        if scenarios_indices==None:
+        if scenarios_indices is None:
             scenarios_indices = self.scenarios
         
         if dessine_annees is not None:
@@ -1013,13 +1023,12 @@ class SimulateurRetraites:
         pl.title(titre_figure,fontsize=taille_fonte_titre)
         
         # Ajuste les limites de l'axe des ordonnées
-        if yaxis_lim==[]:
+        if yaxis_lim is None:
             # If the use did not set the yaxis_lim
             if nom in self.yaxis_lim.keys():
                 # If the variable name was found in the dictionnary
                 yaxis_lim = self.yaxis_lim[nom]
-
-        if yaxis_lim!=[]:
+        else:
             pl.ylim(bottom=yaxis_lim[0],top=yaxis_lim[1])
 
         if dessine_legende:
