@@ -852,7 +852,7 @@ class SimulateurRetraites:
                 S[s][a] = self.B[s][a] * ( Ts[s][a] -  K * ( Ps[s][a] + self.dP[s][a] ) ) 
                 RNV[s][a] =  Ps[s][a] * ( 1.0 - self.TCR[s][a] ) / (U - Ts[s][a]) * self.CNV[s][a]
     
-                tmp = 60.0 + self.EV[s][ int(a+.5-As[s][a]) ]
+                tmp = 60.0 + self.EV[s][round(a+.5-As[s][a])]
                 REV[s][a] = ( tmp - As[s][a] ) / tmp
     
         return S, RNV, REV, Depenses
