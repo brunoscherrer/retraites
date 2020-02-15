@@ -34,7 +34,7 @@ class SimulateurRetraites:
             pilotageParNiveauDeVieEtCotisations (sous-entendu et par solde financier)
 
         Exemple :
-        simulateur = SimulateurRetraites('fileProjection.json')
+        simulateur = SimulateurRetraites()
         """
         
         if (json_filename is None):

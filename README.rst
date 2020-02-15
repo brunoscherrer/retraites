@@ -126,7 +126,7 @@ des résultats.
 .. code-block:: python
 
 	from retraites.SimulateurRetraites import SimulateurRetraites
-	simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+	simulateur = SimulateurRetraites()
 	analyse = simulateur.pilotageCOR()
 
 La méthode ``graphiques`` permet de produire les graphiques standard dans l'analyse 
