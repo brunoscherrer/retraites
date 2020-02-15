@@ -49,6 +49,11 @@ class EtudeImpact:
         # Paramètre pour le calcul du solde
         self.solde_annee_transition = 2020
         self.solde_annee_equilibre = 2027 # Première année d'équilibre strict
+        
+        # Préférences graphiques de l'étude d'impact
+        self.epaisseur_ligne= 3
+        self.couleur_HR = "cornflowerblue"
+        self.couleur_SUR = "orange"
 
         return None
 
