@@ -111,7 +111,7 @@ class SimulateurRetraites:
 
     def pilotageCOR(self):
         """
-        pilotage 0 : statu quo du COR
+        pilotage 1 : statu quo du COR
         Retourne un objet de type SimulateurAnalyse.
         """
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(self.T, self.P, self.A)
@@ -375,7 +375,7 @@ class SimulateurRetraites:
     
     def pilotageParAgeEtNiveauDeVie(self, Acible=None, RNVcible=None, Scible=None):
         """
-        pilotage 1 : imposer 1) l'âge de départ à la retraite,  
+        pilotage 9 : imposer 1) l'âge de départ à la retraite,  
         2) le niveau de vie par rapport à l'ensemble de la population et 
         3) le bilan financier
         
@@ -400,37 +400,6 @@ class SimulateurRetraites:
         # Calcule le pilotage
         Ts, Ps, As = self._calcule_fixant_As_RNV_S(As, RNVs, Ss)
         # Simule 
-        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
-        return resultat
-
-    def pilotageParCotisationsEtPensions(self, Pcible=None, Tcible=None, Scible=None):
-        """
-        pilotage 2 : imposer 1) le taux de cotisations,  
-        2) le niveau de pensions par rapport aux salaires et 
-        3) le bilan financier
-        
-        Paramètres
-        Pcible : le niveau de pension des retraites par rapport aux actifs
-        Tcible : le taux de cotisations
-        Scible : la situation financière en % de PIB
-        
-        Description
-        Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
-        COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
-        une trajectoire et utilise cette trajectoire.         
-        """
-        # Génère les trajectoires en fonction des paramètres
-        Ps = self.genereTrajectoire("P", Pcible)
-        Ts = self.genereTrajectoire("T", Tcible)
-        Ss = self.genereTrajectoire("S", Scible)
-        # Calcule le pilotage
-        Ts, Ps, As = self._calcule_fixant_Ps_Ts_S(Ps, Ts, Ss)
-        # Simule
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
                                      self.scenarios, self.annees_EV, self.annees)
@@ -741,27 +710,6 @@ class SimulateurRetraites:
                 
         return Ts, Ps, As
     
-    def _calcule_fixant_Ps_Ts_S(self, Ps, Ts, Ss):
-        """
-        Pilotage 2 : calcul à cotisations et pensions définies
-        
-        Paramètres
-        Ps : un dictionnaire, Ps[s][a] est le montant de la pension 
-        par rapport aux salaires du scénario s à l'année a
-        Ts : un dictionnaire, Ts[s][a] est le taux de cotisations
-        du scénario s à l'année a
-        Ss : un dictionnaire, Ss[s][a] est le solde financier 
-        du scénario s à l'année a
-        """
-    
-        # Calcule l'âge 
-        As = deepcopy(self.A)    
-        for s in self.scenarios:    
-            for a in self.annees_futures:    
-                K = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / (Ps[s][a]+self.dP[s][a])
-                As[s][a] = self.A[s][a] + ( self.NR[s][a] - K*self.NC[s][a] ) / (0.5*K + 1.0) / self.G[s][a]
-                
-        return Ts, Ps, As
         
     def _calcule_fixant_Ts_RNV_S(self, Ts, RNVs, Ss):
         """
