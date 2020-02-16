@@ -43,12 +43,17 @@ class EtudeImpact:
         self.age_premiere_generation = 63.6
         self.derniere_generation = 2000 # Graphique 49 : 1990
         self.age_derniere_generation = 65.2 # Graphique 49 : 64.83
-        self.age_annee_transition = int(self.premiere_generation + self.age_premiere_generation)
-        self.age_annee_extrapolation = int(self.derniere_generation + self.age_derniere_generation)
+        self.age_annee_transition = int(self.premiere_generation + self.age_premiere_generation) # 2038
+        self.age_annee_extrapolation = int(self.derniere_generation + self.age_derniere_generation) # 2065
         
         # Paramètre pour le calcul du solde
         self.solde_annee_transition = 2020
         self.solde_annee_equilibre = 2027 # Première année d'équilibre strict
+        
+        # Préférences graphiques de l'étude d'impact
+        self.epaisseur_ligne= 3
+        self.couleur_HR = "cornflowerblue"
+        self.couleur_SUR = "orange"
 
         return None
 

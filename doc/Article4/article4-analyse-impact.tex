@@ -97,6 +97,10 @@ logique qui a dominé dans le passé a consisté à se fixer un objectif
 de niveau de vie des retraités, puis à augmenter l'âge de départ ou 
 le taux de cotisations, tout en élevant progressivement le niveau des pensions. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Difficultés dans l'étude d'impact}
+
 Reproduire les simulations de l'étude d'impact avec le simulateur du COR 
 est donc impossible à priori. 
 D'une part, le simulateur ne présente pas le niveau de dépenses du système 
@@ -114,12 +118,65 @@ C'est la raison pour laquelle nous avons développé un simulateur Open Source
 que le simulateur du COR, mais dont nous avons inversé les relations pour 
 pouvoir imposer les paramètres pris en compte dans l'étude d'impact. 
 
-Une difficulté supplémentaire apparaît lorsqu'on fait les calculs : 
+Une difficulté apparaît lorsqu'on fait les calculs : 
 l'étude d'impact s'arrête en 2050, alors que les rapports du COR 
 se projettent jusqu'en 2070. 
 C'est un second étonnement. 
 C'est la raison pour laquelle nous sommes contraints de faire des 
 hypothèses sur les variables imposées entre 2050 et 2070. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Différence entre ensemble de la population et génération}
+
+Dans ce paragraphe, nous détaillons la différence entre 
+l'ensemble de la population à une date donnée et la génération d'une année 
+donnée. 
+
+Lorsqu'on cherche à reproduire les simulation de l'étude d'impact, nous 
+avons besoin de données relatives à l'année de départ en retraite. 
+Une difficulté importante vient du fait que les graphiques de l'étude 
+d'impact sont réalisés, au contraire, par génération. 
+Dans l'étude d'impact, une génération correspond à l'ensemble des personnes 
+nées la même année. 
+
+La figure \ref{fig-trajectoire-vie} présente les générations des années 1940 
+à 2010 environ, pour lesquelles nous avons utilisé les hypothèses du COR (Juin 2019).
+Nous avons représenté par un point bleu l'année de naissance, par un point 
+vert l'année de départ à la retraite et par un point rouge l'année de la 
+mort. 
+
+Observons tout d'abord que l'espérance de vie à 60 ans est supérieure à la 
+différence entre l'espérance de vie à la naissance et 60 ans :
+$$
+E.V.(\textrm{60 ans}) \geq E.V.(\textrm{naissance}) - 60.
+$$
+Pour calculer l'année de mort, nous avons utilisé l'espérance de vie à 60 ans 
+fournie par le COR. 
+Observons que notre calcul est une approximation puisque nous aurions pu utiliser 
+l'espérance de vie à la naissance. 
+Toutefois, cela aurait mal reflété la durée de vie à la retraite pour ceux 
+d'entre nous qui ont la chance de vivre jusqu'à cette date. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{Simulation-generation-vs-annee.pdf}
+\end{center}
+\caption{Trajectoire de vie de la naissance à la mort avec 
+les hypothèses du COR (Juin 2019). 
+Les générations dont l'individu moyen est en retraite en 2060 
+sont les générations 1970 à 1996. }
+\label{fig-trajectoire-vie}
+\end{figure}
+
+Pour une année donnée, plusieurs générations se côtoient au sein de la population des retraités. 
+Pour le voir, on peut tracer la ligne horizontale correspondant à chaque année et observer les générations retraitées dont l'individu moyen est en vie à cette date. 
+Par exemple, en 2060, l'individu moyen de la génération 1970 (et des générations précédentes) est mort tandis que que les générations nées après 1996 ne sont pas encore à la retraite. 
+Par conséquent, les générations dont l'individu moyen est en retraite en 2060 sont les générations 1970 à 1996. 
+
+Ainsi, lorsque nous souhaitons inférer le comportement de l'ensemble de la 
+population des retraités lors d'une année donnée, nous ne devrions pas, en toute 
+rigueur, utiliser les données d'une génération seulement. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -153,7 +210,7 @@ La figure \ref{fig-solde-etude-impact} est extraite de l'étude d'impact
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.9\textwidth]{EtudeImpact-situation-financiere.png}
+\includegraphics[width=0.9\textwidth]{../Figures-Etude-Impact/EtudeImpact-Graphique-63-situation-financiere.png}
 \end{center}
 \caption{Solde financier d'après l'étude d'impact.}
 \label{fig-solde-etude-impact}
@@ -183,7 +240,7 @@ Les résultats que nous obtenons présentés dans la figure \ref{fig-solde-simul
 \label{fig-solde-simulation}
 \end{figure}
 
-La légende de notre simulation insiste sur le fait que 
+Insistons sur le fait que 
 le système doit être à l'équilibre financier \emph{quelque soit la 
 conjoncture économique}. 
 
@@ -204,7 +261,7 @@ Elles sont présentées dans la figure \ref{fig-depenses-etude-impact}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.9\textwidth]{EtudeImpact-Depenses-SUR.png}
+\includegraphics[width=0.9\textwidth]{../Figures-Etude-Impact/EtudeImpact-Tableau-39-Depenses-SUR.png}
 \end{center}
 \caption{Dépenses dans l'étude d'impact.}
 \label{fig-depenses-etude-impact}
@@ -236,9 +293,9 @@ dans la figure \ref{fig-age-etude-impact}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.9\textwidth]{EtudeImpact-AgeDepartRetraite.png}
+\includegraphics[width=0.9\textwidth]{../Figures-Etude-Impact/EtudeImpact-Graphique-49-AgeDepartRetraite.png}
 \end{center}
-\caption{Age de départ à la retraite dans l'étude d'impact.}
+\caption{Age de départ à la retraite dans le graphique 49 de l'étude d'impact.}
 \label{fig-age-etude-impact}
 \end{figure}
 
@@ -255,9 +312,9 @@ dans la figure \ref{fig-age-etude-impact-graphique-73}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.9\textwidth]{EtudeImpact-Graphique73-AgeDepartRetraite.png}
+\includegraphics[width=0.9\textwidth]{../Figures-Etude-Impact/EtudeImpact-Graphique-73-AgeDepartRetraite.png}
 \end{center}
-\caption{Age de départ à la retraite dans l'étude d'impact.}
+\caption{Age de départ à la retraite dans le graphique 73 de l'étude d'impact.}
 \label{fig-age-etude-impact-graphique-73}
 \end{figure}
 
@@ -265,17 +322,18 @@ Le texte précise : "La hausse de l’âge moyen de liquidation permet d’augme
 significativement les pensions versées : la prise en compte des comportements 
 augmente ainsi la pension moyenne de 5 \% pour la génération 1990."
 
-On observe que la génération 1975 partira en retraite en 2039 dans le scénario de l'étude d'impact puisque 1975 + 63.8 = 2038.8.
-Remarquons que l'horizon temporel de l'étude d'impact se projette dans le graphique jusqu'à l'année 2064, puisque 2000 + 64 = 2064. 
-Ce choix peut sembler pour le moins \emph{étonnant}, dans la mesure où l'horizon 
-de l'étude d'impact s'arrête en 2050 en ce qui concerne d'autres données, 
-comme par exemple la trajectoire de dépenses du tableau 39. 
-
-Sur le graphique 73 de l'étude d'impact, nous lisons les valeurs numériques suivantes après réforme :
+Sur le graphique 73 de l'étude d'impact, nous lisons les valeurs numériques 
+suivantes après réforme :
 \begin{itemize}
-\item un âge de départ à 63,8 ans pour la génération 1975,
-\item un âge de départ à 65,25 ans pour la génération 2000.
+\item un âge de départ à 63,6 ans pour la génération 1975,
+\item un âge de départ à 65,2 ans pour la génération 2000.
 \end{itemize}
+
+On observe que la génération 1975 partira en retraite en 2038 dans le scénario de l'étude d'impact puisque 1975 + 63,6 = 2038.6.
+Remarquons que l'horizon temporel de cette partie de l'étude d'impact est l'année 2065, puisque 2000 + 65,2 = 2065.2. 
+Ce choix peut sembler pour le moins \emph{étonnant}, dans la mesure où cet horizon 
+est l'année 2050 pour d'autres aspects de l'étude d'impact, 
+comme par exemple la trajectoire de dépenses du tableau 39. 
 
 Pour calculer l'âge de départ en retraite en fonction de l'année du départ, 
 nous réalisons une inversion mathématique.  
@@ -289,18 +347,24 @@ de la génération 1975), nous utilisons les données du COR,
 \item de 2065 à 2070, nous extrapolons. 
 \end{itemize}
 
+
 Le résultat de notre simulation est présenté dans la figure \ref{fig-simulation-A}. 
-La figure \ref{fig-simulation-A-vs-COR} compare l'âge utilisé 
-dans l'étude d'impact comparé à l'âge utilisé dans le rapport du COR 
-de Juin 2019.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.7\textwidth]{Simulation-Age.pdf}
 \end{center}
-\caption{L'âge de départ en retraite moyen.}
+\caption{L'âge de départ en retraite moyen dans notre simulation.}
 \label{fig-simulation-A}
 \end{figure}
+
+La trajectoire de l'âge de départ en retraite est discontinue car l'âge prévu par le COR en 2038 n'est pas égal à celui que nous avons inféré depuis le graphique 73. Dans l'étude d'impact, nous avons utilisé un âge de départ à la retraite égal à 63,6 alors qu'un âge permettant d'assurer la continuité serait égal à 63,8.
+
+Nous avons calculé l'âge de départ en retraite moyen pour l'ensemble des retraités partant en retraite en 2038 en fonction seulement de l'âge de départ en retraite de la génération 1975. Notre calcul n'est donc qu'une approximation, puisque les personnes partant en retraite en 2038 ne sont pas toutes de la génération 1975. L'étude d'impact ne donnant pas d'information sur l'âge moyen de départ en retraite en 2038, il ne semble pas facile de faire un calcul plus précis. 
+
+La figure \ref{fig-simulation-A-vs-COR} compare l'âge utilisé 
+dans l'étude d'impact comparé à l'âge utilisé dans le rapport du COR 
+de Juin 2019.
 
 \begin{figure}
 \begin{center}
@@ -342,7 +406,8 @@ La figure \ref{fig-simulation-P} présente le rapport entre la pension moyenne e
 \includegraphics[width=0.7\textwidth]{Simulation-legende.pdf}
 \end{center}
 
-\caption{Le niveau de pensions par rapport aux actifs.}
+\caption{Le niveau de pensions par rapport aux actifs d'après notre simulation, 
+avec les hypothèses de l'étude d'impact.}
 \label{fig-simulation-P}
 \end{figure}
 
@@ -360,75 +425,101 @@ fait remonter le niveau des pensions à près de 44\% tandis qu'un taux de
 chômage faible et égal à 4.5\% (dans le scénario optimiste) fait baisser 
 le niveau à près de 36\%. 
 
+Page 80 de l'étude d'impact, le texte indique que la réforme 
+réduit "l’exposition du système aux fluctuations économiques et démographiques". 
+On constate que c'est faux, dans la mesure où le niveau des pensions 
+dépend fortement du taux de chômage.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Le niveau des pensions dans l'étude d'impact}
+\subsection{Le niveau absolu des pensions dans l'étude d'impact}
 
-Le lecteur de l'étude d'impact sera très étonné à la lecture d'un 
-tel graphique. 
-En effet, à la page 176 de l'étude d'impact, le graphique 59 présente 
-une pension annuelle moyenne plutôt favorable dans le système 
-universel par rapport à la situation hors réforme. 
-Ce graphique est présenté dans la figure \ref{fig-pension-annuelle-etude-impact}. 
+Le lecteur de l'étude d'impact sera très étonné à la lecture de la figure 
+\ref{fig-simulation-P}. 
+En effet, à la page 176 de l'étude d'impact, le graphique 59, 
+reproduit dans la figure \ref{fig-pension-annuelle-etude-impact}, 
+présente une pension annuelle moyenne plutôt favorable au système 
+universel.
 Le texte précise : "En moyenne, les niveaux des pensions servies augmentent 
 avec la mise en place du système universel."
 
-
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.9\textwidth]{EtudeImpact-PensionAnnuelle.png}
+\includegraphics[width=0.9\textwidth]{../Figures-Etude-Impact/EtudeImpact-Graphique-59-PensionAnnuelle.png}
 \end{center}
 
 \caption{Pension annuelle moyenne dans l'étude d'impact.}
 \label{fig-pension-annuelle-etude-impact}
 \end{figure}
 
+Deux éléments sont significatifs dans le graphique 59. 
+Premièrement, la vitesse de croissance de la pension annuelle est forte. 
+Deuxièmement, la réforme améliore significativement la pension annuelle 
+par rapport à la situation hors réforme. 
 
-L'étude d'impact ne ment pas. 
-Notre simulation ne ment pas plus. 
-Qui dit vrai ?
-
-Pour comprendre la situation, on peut consulter le rapport du COR de Juin 2019 qui 
-présente l'évolution de la pension moyenne de l'ensemble des retraités relative 
-au revenu d'activité moyen dans la figure \ref{fig-pension-COR}.
-En utilisant cet indicateur, le COR compare le revenu des retraités aux revenu des 
-actifs. 
+Pour évaluer la pension annuelle moyenne de droit direct, on ne peut pas, 
+une fois de plus, utiliser le simulateur du COR car
+il ne fournit pas ce résultat.
+C'est pourquoi nous avons utilisé notre simulateur en ajoutant les équations 
+nécessaires. 
+Nous avons obtenu la figure \ref{fig-pension-annuelle-simulation} qui présente 
+la pension annuelle moyenne de droit direct avec les hypothèses de l'étude d'impact. 
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{COR-Juin-2019-P.png}
+\includegraphics[width=0.7\textwidth]{Simulation-pension-annuelle-moyenne.pdf}
+
+\includegraphics[width=0.7\textwidth]{Simulation-legende.pdf}
 \end{center}
 
-\caption{Pension moyenne de l'ensemble des retraités par rapport aux salaires 
-(COR, juin 2019).}
-\label{fig-pension-COR}
+\caption{Pension annuelle moyenne d'après notre simulation 
+avec les hypothèses de l'étude d'impact.}
+\label{fig-pension-annuelle-simulation}
 \end{figure}
 
-On observe que, dans le système actuel, la pension moyenne relative au revenu d'activité 
-moyen baisse jusqu'à atteindre entre 33\% et 39\% en fonction du scénario. 
-Cette réalité n'est pas une conséquence du système de retraite tel qu'il était conçu 
-à l'origine. 
-C'est une conséquence des différentes réformes qui ont étées menées 
-à partir des années 1990 et suivante. 
+On observe que la pension annuelle moyenne augmente dans le scénario central de 
+l'étude d'impact (hausse des salaires : +1.3\%, taux de chômage : 7\%). 
+Toutefois, on observe que la vitesse de cette augmentation est moins importante 
+que dans le graphique 59 de l'étude d'impact. 
+De plus, on observe que les pensions peuvent temporairement baisser dans certains 
+des scénarios économiques, comme lorsque la hausse des salaires n'est que 
+de +1\%. 
 
-C'est pourquoi l'étude d'impact peu montrer une pension annuelle moyenne 
-dans le système universel supérieure à la pension hors réforme : 
-les pensions baissent moins que ce qui était prévu, mais elles baissent 
-tout de même relativement aux salaires ! 
+Dans le but de comparer les situations avec et sans réforme, nous 
+avons fait la comparaison avec les hypothèses du COR. 
+La figure \ref{fig-pension-annuelle-simulation-vs-COR} présente le résultat. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Simulation-pension-annuelle-moyenne-3.pdf}
+
+\includegraphics[width=0.7\textwidth]{Simulation-legende.pdf}
+\end{center}
+
+\caption{Pension annuelle moyenne dans le scénario central 
+d'après notre simulation avec les hypothèses de l'étude d'impact 
+et d'après notre simulation avec les hypothèses du COR.}
+\label{fig-pension-annuelle-simulation-vs-COR}
+\end{figure}
+
+Nous observons que le montant de pension annuelle de droit direct 
+du système universel est inférieur à celle du COR jusqu'en 2060 environ, 
+puis devient légèrement supérieure ensuite. 
+
 Ainsi, en changeant d'indicateur, l'étude d'impact peut montrer une situation 
 dont l'apparence est favorable. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Et si l'âge moyen de départ était modifié ?}
+\subsection{Et si l'âge moyen de départ était modifié ?}
 
-Dans ce contexte plutôt pessimiste, on peut se demander ce qui pourrait 
-advenir en conservant la règle d'équilibre financière, le même niveau de dépenses 
-et un âge de départ à la retraite qui pourrait être modifié. 
+On peut se demander ce qui pourrait 
+advenir en conservant la règle d'équilibre financière et le niveau de dépenses actuel
+mais en laissant varier l'âge de départ à la retraite. 
 En effet, on peut penser que l'âge prévu par la réforme actuelle 
-ne puisse pas être atteint car il est trop élevé de telle sorte que 
-les salariés ne liquident pas leur retraite au moment que nous avons 
-pris en compte. 
+ne sera pas atteint car trop élevé. 
+Les salariés ne pourront donc pas tous liquider leur retraite au moment
+supposé jusqu'ici. 
 Au contraire, suite à une remarquable amélioration des conditions de vie, 
 l'âge de départ à la retraite pourrait être repoussé au delà de ce qui 
 était initialement prévu. 
@@ -474,8 +565,8 @@ objectivement désavantageux par rapport à la situation
 actuelle. 
 
 Les citoyens que nous sommes peuvent comprendre qu'une proposition de loi 
-aille dans un sens politique que nous ne partageons pas : c'est la 
-vie élective. 
+aille dans un sens politique que nous ne partageons pas : c'est le 
+fonctionnement actuel de la République. 
 En revanche, nous ne pouvons pas accepter que la décision politique soit 
 prise en fonction de données qui ne sont pas ouvertes, 
 de calculs qui ne sont pas publics et, finalement, sur la base d'études trompeuses. 
@@ -524,6 +615,7 @@ simulateur du collectifs "Nos retraites" \url{https://nosretraites.github.io/roc
 
 Nous remercions chaleureusement Michaël Zemmour pour son support 
 technique et ses encouragements dans la réalisation de cet article. 
+Nous remercions Joseph Muré pour son travail de relecture. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -554,4 +646,3 @@ On observe que le niveau de vie des retraités
 baisse de 105\% en 2020 jusqu'en 2050 entre 85\% et 90\%, puis se stabilise ensuite. 
 
 \end{document}
-
