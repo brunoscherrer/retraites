@@ -22,16 +22,17 @@ class SimulateurRetraites:
         
         Description
         Plusieurs stratégies de pilotage peuvent être utilisées :
-            pilotageParPensionAgeCotisations
-            pilotageParSoldePensionAge
-            pilotageParSoldePensionCotisations
-            pilotageParSoldeAgeCotisations
-            pilotageParSoldeAgeDepenses
-            pilotageParSoldePensionDepenses
-            pilotageParPensionCotisationsDepenses
-            pilotageParAgeCotisationsDepenses
-            pilotageParAgeEtNiveauDeVie (sous-entendu et par solde financier)
-            pilotageParNiveauDeVieEtCotisations (sous-entendu et par solde financier)
+        1 pilotageCOR, avec les paramètres du COR
+        1 pilotageParPensionAgeCotisations
+        2 pilotageParSoldePensionAge
+        3 pilotageParSoldePensionCotisations
+        4 pilotageParSoldeAgeCotisations
+        5 pilotageParSoldeAgeDepenses
+        6 pilotageParSoldePensionDepenses
+        7 pilotageParPensionCotisationsDepenses
+        8 pilotageParAgeCotisationsDepenses
+        9 pilotageParAgeEtNiveauDeVie (sous-entendu et par solde financier)
+        10 pilotageParNiveauDeVieEtCotisations (sous-entendu et par solde financier)
 
         Exemple :
         simulateur = SimulateurRetraites()
@@ -437,35 +438,6 @@ class SimulateurRetraites:
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
     
-    def pilotageParAgeEtDepenses(self, Acible=None, Dcible=None, Scible=None):
-        """
-        pilotage 5 : imposer 1) l'âge de départ à la retraite, 
-        2) le niveau de dépenses Ds et 
-        3) le bilan financier. 
-        
-        Paramètres
-        Acible : l'âge de départ à la retraite
-        Dcible : le niveau de dépenses
-        Scible : la situation financière en % de PIB
-        
-        Description
-        Retourne un objet de type SimulateurAnalyse.
-        Si la valeur n'est pas donnée, conserve la valeur du COR.
-        Si une valeur est donnée, utilise cette valeur pour les années 
-        futures. 
-        """
-        # Génère les trajectoires en fonction des paramètres
-        As = self.genereTrajectoire("A", Acible)
-        Ds = self.genereTrajectoire("Depenses", Dcible)
-        Ss = self.genereTrajectoire("S", Scible)
-        # Calcule le pilotage
-        Ts, Ps, As = self._calcule_fixant_As_Ds_S(As, Ds, Ss)
-        # Simule
-        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
-        return resultat
-
     def get(self, var):
         """
         Retourne une donnée du COR correspondant à un nom donné.
@@ -728,31 +700,6 @@ class SimulateurRetraites:
                 
         return Ts, Ps, As
         
-    def _calcule_fixant_As_Ds_S(self, As, Ds, Ss):
-        """
-        Pilotage 5 : calcul à âge et dépenses définis
-        
-        Paramètres
-        As : un dictionnaire, As[s][a] est l'âge de départ à la retraite 
-        du scénario s à l'année a
-        Ds : un dictionnaire, Ds[s][a] est le niveau de dépenses 
-        du scénario s à l'année a
-        Ss : un dictionnaire, Ss[s][a] est le solde financier 
-        du scénario s à l'année a
-        """
-        
-        # Calcule Ps et Ts
-        Ps = deepcopy(self.P)
-        Ts = deepcopy(self.T)
-        for s in self.scenarios:
-            for a in self.annees_futures:
-                Ts[s][a] = (Ss[s][a] + Ds[s][a])/self.B[s][a]
-                GdA = self.G[s][a] * ( As[s][a]-self.A[s][a] )
-                K = ( self.NR[s][a] - GdA ) / ( self.NC[s][a] + 0.5 * GdA )
-                Ps[s][a] = (Ts[s][a]-Ss[s][a]/self.B[s][a])/K - self.dP[s][a]
-                
-        return Ts, Ps, As
-
     def _calcule_S_RNV_REV(self, Ts, Ps, As):
         """
         pilotage 0 : statu quo du COR

@@ -218,6 +218,39 @@ class CheckSimulateur(unittest.TestCase):
 
         return None
     
+    def test_4(self):
+        # Pilotage 2 : calcul à cotisations et pensions définies
+        # génération des graphes pour la réforme Macron avec point indexé sur 
+        # le salaire moyen (rapport (pension moyenne/)(salaire moyen) constant égal à celui de 2020)
+
+        simulateur = SimulateurRetraites()
+        pl.figure(figsize=(6,8))
+        pl.suptitle(u'Equilibre financier & ratio pension/salaire fixe',fontsize=12)
+
+        Pcible=simulateur.P[1][2020]
+        analyse = simulateur.pilotageParSoldePensionCotisations(Scible=0.0, Pcible=Pcible)
+        analyse.setDirectoryImage(tempfile.gettempdir())
+
+        analyse.dessineSimulation()
+        analyse.sauveFigure("macron_point_indexe")
+
+        print("Maintien du rapport pension moyenne / salaire moyen")
+        analyse.afficheSolutionsSimulateurCOR()
+
+        # Vérifie les valeurs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                if (a<2020):
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][a])
+                    np.testing.assert_allclose(analyse.A[s][a], simulateur.A[s][a])
+                else:
+                    #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                    np.testing.assert_allclose(analyse.T[s][a], simulateur.T[s][a])
+                    np.testing.assert_allclose(analyse.P[s][a], simulateur.P[s][2020])
+                    np.testing.assert_allclose(analyse.S[s][a], 0.0, atol=1.e-15)
+        return None
+
     def test_article2(self):
         # Pilotage 3 : calcul à cotisations et niveau de vie défini
         print("Données et figure pour article 2")
@@ -308,7 +341,7 @@ class CheckSimulateur(unittest.TestCase):
         # Pilotage 5 : calcul à âge et dépenses définis
 
         simulateur = SimulateurRetraites()
-        analyse = simulateur.pilotageParAgeEtDepenses(Scible=0.0)
+        analyse = simulateur.pilotageParSoldeAgeDepenses(Scible=0.0)
         analyse.setDirectoryImage(tempfile.gettempdir())
     
         pl.figure(figsize=(8,10))
@@ -343,7 +376,7 @@ class CheckSimulateur(unittest.TestCase):
 
         simulateur = SimulateurRetraites()
         
-        analyse = simulateur.pilotageParAgeEtDepenses(Acible = 62.0, Scible = 0.0)
+        analyse = simulateur.pilotageParSoldeAgeDepenses(Acible = 62.0, Scible = 0.0)
         analyse.setDirectoryImage(tempfile.gettempdir())
     
         pl.figure(figsize=(8,10))
