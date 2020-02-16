@@ -146,12 +146,12 @@ Documentation
 .. _`doc`: https://github.com/brunoscherrer/retraites/blob/master/doc
 .. _`index`: https://github.com/brunoscherrer/retraites/blob/master/index.ipynb
 .. _`simulationCOR`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-COR-juin-2019.ipynb
-.. _`simulationEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact.ipynb
-.. _`possiblesEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
 .. _`documentationModele`: https://github.com/brunoscherrer/retraites/blob/master/doc/Description-du-composant-retraites.ipynb
 .. _`reformes`: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes.ipynb
 .. _`reformes2`: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes2.ipynb
 .. _`articleEI`: https://github.com/brunoscherrer/retraites/blob/master/doc/Article4/article4-analyse-impact.pdf
+.. _`pilotagesPossibles`: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotages-possibles.ipynb
+.. _`naissanceRetraiteMort`: https://github.com/brunoscherrer/retraites/blob/master/doc/Calcule-naissance-retraite-mort.ipynb
 
 La description du modèle mathématique est donnée dans `documentationModele`_. 
 
@@ -160,10 +160,24 @@ Un exemple complet est présenté dans le fichier `index`_.
 D'autres exemples sont présentés dans le répertoire `doc`_ :
 
 - `simulationCOR`_ : une simulation du rapport du COR de Juin 2019
-- `simulationEtudeImpact`_ : une simulation de l'étude d'impact de Janvier 2020
-- `possiblesEtudeImpact`_ : une représentation des trajectoires possibles dans le cadre de l'étude d'impact de Janvier 2020
+- `pilotagesPossibles`_ : un exemple de tous les pilotages possibles
 - `reformes`_ : une simulation fondée sur l'étude d'impact
 - `reformes2`_ : une simulation fondée sur une modification de l'étude d'impact, avec augmentation des cotisations
+- `naissanceRetraiteMort`_ : une analyse génération par génération de la vie : naissance, retraite et mort
+
+.. _`simulationEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact.ipynb
+.. _`possiblesEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
+.. _`etudeImpactAge`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-analyse-age.ipynb
+.. _`etudeImpactDepenses`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-budget.ipynb
+.. _`etudeImpactAgePensions`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
+
+Une analyse détaillée de l'étude d'impact de Janvier 2020 :
+
+- `simulationEtudeImpact`_ : une simulation de l'étude d'impact de Janvier 2020
+- `possiblesEtudeImpact`_ : une représentation des trajectoires possibles dans le cadre de l'étude d'impact de Janvier 2020
+- `etudeImpactAge`_ : une analyse de la trajectoire d'âge de l'étude d'impact
+- `etudeImpactDepenses`_ : une analyse de la trajectoire de dépenses de l'étude d'impact
+- `etudeImpactAgePensions`_ : une analyse de l'étude d'impact en fonction de l'âge et du niveau de pensions
 
 Une analyse détaillée de ce que l'étude d'impact ne dit pas est présentée dans `articleEI`_.
 
