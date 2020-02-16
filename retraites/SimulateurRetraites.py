@@ -408,7 +408,7 @@ class SimulateurRetraites:
     
     def pilotageParNiveauDeVieEtCotisations(self, Tcible=None, RNVcible=None, Scible=None):
         """
-        pilotage 3 : imposer 1) le taux de cotisations, 
+        pilotage 10 : imposer 1) le taux de cotisations, 
         2) le niveau de vie par rapport à l'ensemble de la population et 
         3) le bilan financier
         
