@@ -3,7 +3,7 @@
 
 from retraites.SimulateurRetraites import SimulateurRetraites
 
-simulateur = SimulateurRetraites('retraites/fileProjection.json')
+simulateur = SimulateurRetraites()
 analyse = simulateur.pilotageCOR()
 analyse.afficheSolutionsSimulateurCOR()
 

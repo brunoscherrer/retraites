@@ -12,7 +12,28 @@ import tempfile
 
 class CheckSimulateur(unittest.TestCase):
 
-    def test_0(self):
+    def test_Paquet_Defaut(self):
+        # génération des graphes pour le statu quo (COR)
+        simulateur = SimulateurRetraites()
+        
+        pl.figure(figsize=(6,8))
+        pl.suptitle('Projections du COR',fontsize=16)
+        
+        analyse = simulateur.pilotageCOR()
+
+        # Vérifie les ordres de grandeurs des calculs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                #print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
+                np.testing.assert_allclose(analyse.A[s][a], 64.0, atol=4.0)
+                np.testing.assert_allclose(analyse.RNV[s][a], 0.8, atol=0.3)
+                np.testing.assert_allclose(analyse.S[s][a], 0.0, atol=0.02)
+                np.testing.assert_allclose(analyse.REV[s][a], 0.3, atol=0.2)
+                np.testing.assert_allclose(analyse.T[s][a], 0.3, atol=0.3)
+                np.testing.assert_allclose(analyse.P[s][a], 0.5, atol=0.3)
+        return None
+    
+    def test_Specifie_JSON(self):
         # génération des graphes pour le statu quo (COR)
         simulateur = SimulateurRetraites('../retraites/fileProjection.json')
         
@@ -35,7 +56,7 @@ class CheckSimulateur(unittest.TestCase):
     
     def test_graphiques(self):
         # génération des graphes pour le statu quo (COR)
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         
         analyse = simulateur.pilotageCOR()
@@ -112,7 +133,7 @@ class CheckSimulateur(unittest.TestCase):
     
     def test_simulateur_retraites(self):
         # génération des graphes sur la conjoncture
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         simulateur.setDirectoryImage(tempfile.gettempdir())
 
@@ -127,7 +148,7 @@ class CheckSimulateur(unittest.TestCase):
         # Pilotage 1 : calcul à âge et niveau de vie défini
         # génération des graphes pour des réformes à prestation garantie
 
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         S=0.0
         Age=61.0
         RNV = 1.0
@@ -167,7 +188,7 @@ class CheckSimulateur(unittest.TestCase):
         # Pilotage 3 : calcul à cotisations et niveau de vie défini
         # génération des graphes pour la réforme Macron avec maintien du niveau de vie
 
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
                     
         RNV=1.0
         analyse = simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible=RNV, Scible=0.0)
@@ -202,7 +223,7 @@ class CheckSimulateur(unittest.TestCase):
         # génération des graphes pour la réforme Macron avec point indexé sur 
         # le salaire moyen (rapport (pension moyenne/)(salaire moyen) constant égal à celui de 2020)
         
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         pl.figure(figsize=(6,8))
         pl.suptitle(u'Equilibre financier & ratio pension/salaire fixe',fontsize=12)
         
@@ -234,7 +255,7 @@ class CheckSimulateur(unittest.TestCase):
         # Pilotage 3 : calcul à cotisations et niveau de vie défini
         print("Données et figure pour article 2")
         
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         analyse = simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible=1.0, Scible=0.0)
         analyse.setDirectoryImage(tempfile.gettempdir())
             
@@ -272,7 +293,7 @@ class CheckSimulateur(unittest.TestCase):
     
         print("Données et figures pour article 3")
         
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         Age = 62.0
         analyse = simulateur.pilotageParCotisationsEtAge(Acible=Age, Scible=0.0) 
         analyse.setDirectoryImage(tempfile.gettempdir())
@@ -319,7 +340,7 @@ class CheckSimulateur(unittest.TestCase):
     def test_pilotage5(self):
         # Pilotage 5 : calcul à âge et dépenses définis
 
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         analyse = simulateur.pilotageParAgeEtDepenses(Scible=0.0)
         analyse.setDirectoryImage(tempfile.gettempdir())
     
@@ -353,7 +374,7 @@ class CheckSimulateur(unittest.TestCase):
         # Pilotage 5 : calcul à âge et dépenses définis
         # Fixe l'âge à une valeur non nulle
 
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         analyse = simulateur.pilotageParAgeEtDepenses(Acible = 62.0, Scible = 0.0)
         analyse.setDirectoryImage(tempfile.gettempdir())
@@ -385,7 +406,7 @@ class CheckSimulateur(unittest.TestCase):
         return None
     
     def test_pilotageParPensionAgeCotisations(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         Ps = 0.5
         As = 62.0
@@ -408,7 +429,7 @@ class CheckSimulateur(unittest.TestCase):
         return None
 
     def test_pilotageParSoldePensionAge(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         Ss = 0.0
         Ps = 0.5
@@ -431,7 +452,7 @@ class CheckSimulateur(unittest.TestCase):
         return None
 
     def test_pilotageParSoldePensionCotisations(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         Ss = 0.0
         Ps = 0.5
@@ -454,7 +475,7 @@ class CheckSimulateur(unittest.TestCase):
         return None
 
     def test_pilotageParSoldeAgeCotisations(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         Ss = 0.0
         As = 62.0
@@ -477,7 +498,7 @@ class CheckSimulateur(unittest.TestCase):
         return None
 
     def test_pilotageParSoldeAgeDepenses(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         Ss = 0.0
         As = 62.0
@@ -500,7 +521,7 @@ class CheckSimulateur(unittest.TestCase):
         return None
 
     def test_pilotageParSoldePensionDepenses(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         Ss = 0.0
         Ps = 0.5
@@ -523,7 +544,7 @@ class CheckSimulateur(unittest.TestCase):
         return None
 
     def test_pilotageParPensionCotisationsDepenses(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         Ps = 0.5
         Ts = 0.28
@@ -546,7 +567,7 @@ class CheckSimulateur(unittest.TestCase):
         return None
 
     def test_pilotageParAgeCotisationsDepenses(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         
         As = 62.0
         Ts = 0.28

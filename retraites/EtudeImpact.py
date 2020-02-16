@@ -16,7 +16,7 @@ class EtudeImpact:
         simulateur: un SimulateurRetraites.
         
         Exemple
-        simulateur = SimulateurRetraites('retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         etudeImpact = EtudeImpact(simulateur)
         etudeImpact.calcule()
         Ds = etudeImpact.getDepenses()

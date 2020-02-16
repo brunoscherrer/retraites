@@ -12,7 +12,7 @@ import numpy as np
 class CheckEtudeImpact(unittest.TestCase):
 
     def test_0(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         etudeImpact = EtudeImpact(simulateur)
         analyse = etudeImpact.calcule()
 
@@ -50,7 +50,7 @@ class CheckEtudeImpact(unittest.TestCase):
         return None
 
     def test_AgeParAnnee(self):
-        simulateur = SimulateurRetraites('../retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         etudeImpact = EtudeImpact(simulateur)
 
         # Vérifie l'age par année et par génération

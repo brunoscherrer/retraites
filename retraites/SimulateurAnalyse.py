@@ -30,7 +30,7 @@ class SimulateurAnalyse:
                     (par défaut, le répertoire courant)
         
         Exemple
-        simulateur = SimulateurRetraites('retraites/fileProjection.json')
+        simulateur = SimulateurRetraites()
         analyse = simulateur.pilotageCOR()
         analyse.dessineSimulation()
         """
