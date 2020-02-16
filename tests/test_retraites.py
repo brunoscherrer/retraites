@@ -262,7 +262,7 @@ class CheckSimulateur(unittest.TestCase):
         
         simulateur = SimulateurRetraites()
         Age = 62.0
-        analyse = simulateur.pilotageParCotisationsEtAge(Acible=Age, Scible=0.0) 
+        analyse = simulateur.pilotageParSoldeAgeCotisations(Scible=0.0, Acible=Age) 
         analyse.setDirectoryImage(tempfile.gettempdir())
     
         pl.figure(figsize=(6,8))

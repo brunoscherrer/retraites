@@ -437,37 +437,6 @@ class SimulateurRetraites:
                                      self.scenarios, self.annees_EV, self.annees)
         return resultat
     
-    def pilotageParCotisationsEtAge(self, Acible=None, Tcible=None, Scible=None):
-        """
-        pilotage 4 : imposer 1) le taux de cotisations, 
-        2) l'âge de départ à la retraite et 
-        3) le bilan financier. 
-        
-        Paramètres
-        Acible : l'âge de départ à la retraite
-        Tcible : le taux de cotisations
-        Scible : la situation financière en % de PIB
-        
-        Description
-        Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
-        COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
-        une trajectoire et utilise cette trajectoire.         
-        """
-        # Génère les trajectoires en fonction des paramètres
-        As = self.genereTrajectoire("A", Acible)
-        Ts = self.genereTrajectoire("T", Tcible)
-        Ss = self.genereTrajectoire("S", Scible)
-        # Calcule le pilotage
-        Ts, Ps, As = self._calcule_fixant_As_Ts_S(As, Ts, Ss) 
-        # Simule
-        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
-        return resultat
-
     def pilotageParAgeEtDepenses(self, Acible=None, Dcible=None, Scible=None):
         """
         pilotage 5 : imposer 1) l'âge de départ à la retraite, 
