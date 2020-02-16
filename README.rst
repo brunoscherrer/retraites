@@ -170,6 +170,8 @@ D'autres exemples sont présentés dans le répertoire `doc`_ :
 .. _`etudeImpactAge`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-analyse-age.ipynb
 .. _`etudeImpactDepenses`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-budget.ipynb
 .. _`etudeImpactAgePensions`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
+.. _`etudeImpactPensionAnnuelle`: https://github.com/brunoscherrer/retraites/blob/master/doc/CalculePensionAnnuelle/simulation-pension-annuelle.ipynb
+.. _`etudeImpactNumerisation`: https://github.com/brunoscherrer/retraites/blob/master/doc/DigitalisationEI/Numerisation-Etude-Impact.ipynb
 
 Une analyse détaillée de l'étude d'impact de Janvier 2020 :
 
@@ -178,6 +180,8 @@ Une analyse détaillée de l'étude d'impact de Janvier 2020 :
 - `etudeImpactAge`_ : une analyse de la trajectoire d'âge de l'étude d'impact
 - `etudeImpactDepenses`_ : une analyse de la trajectoire de dépenses de l'étude d'impact
 - `etudeImpactAgePensions`_ : une analyse de l'étude d'impact en fonction de l'âge et du niveau de pensions
+- `etudeImpactPensionAnnuelle`_ : une analyse de l'étude d'impact en termes de pension annuelle
+- `etudeImpactNumerisation`_ : une numérisation de données de l'étude d'impact à partir des graphiques
 
 Une analyse détaillée de ce que l'étude d'impact ne dit pas est présentée dans `articleEI`_.
 
