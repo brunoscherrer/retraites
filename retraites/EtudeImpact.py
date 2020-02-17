@@ -67,7 +67,7 @@ class EtudeImpact:
         self.calculeAgeDepartRetraite()
         self.calculeSolde()
         
-        analyse = self.simulateur.pilotageParAgeEtDepenses(Acible=self.As, Dcible=self.Ds, Scible=self.Ss)
+        analyse = self.simulateur.pilotageParSoldeAgeDepenses(Scible=self.Ss, Acible=self.As, Dcible=self.Ds)
         return analyse
     
     def calculeDepenses(self):
