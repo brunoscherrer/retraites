@@ -91,6 +91,9 @@ class SimulateurRetraites:
                                       "+1%/an, Chômage: 7%",
                                       "+1,8%/an, Chômage: 4.5%",
                                       "+1%/an, Chômage: 10%"]
+        
+        # Taux de croissance pour chaque scénario
+        self.scenarios_croissance = [0.0, 1.8, 1.5, 1.3, 1.0, 1.8, 1.0]
 
         self.liste_variables = ["B","NR","NC","G","dP","TPR","TPS","CNV","EV"]
         self.liste_legendes=[u"B: Part des revenus d'activité bruts dans le PIB",
