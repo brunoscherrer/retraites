@@ -11,7 +11,9 @@ import os
 class SimulateurAnalyse:
     ### fonctions pour générer des graphiques
     def __init__(self, T, P, A, S, RNV, REV, Depenses, \
-                 scenarios, annees_EV, annees, dir_image="."):
+                 scenarios, annees_EV, annees, \
+                 scenarios_labels, scenarios_labels_courts, \
+                 dir_image="."):
         """
         Créée une analyse de simulateur de retraites.
         
@@ -27,7 +29,11 @@ class SimulateurAnalyse:
         annees_EV: une liste d'entiers, annees sur lesquelles on a l'espérance de vie
         annees: une liste d'entiers supérieurs ou égaux à 1, les scenarios consideres
         dir_image : le répertoire de sauvegarde des images 
-                    (par défaut, le répertoire courant)
+            (par défaut, le répertoire courant)
+        scenarios_labels : une liste de chaîne de caractères, les étiquettes 
+            des scénarios économiques
+        scenarios_labels_courts : une liste de chaîne de caractères, les étiquettes 
+            courtes des scénarios économiques
         
         Exemple
         simulateur = SimulateurRetraites()
@@ -53,18 +59,8 @@ class SimulateurAnalyse:
         self.liste_annees=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
 
         # Graphiques
-        self.scenarios_labels=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
-                              "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
-                              "Hausse des salaires: +1,3%/an, Taux de chômage: 7%",
-                              "Hausse des salaires: +1%/an, Taux de chômage: 7%",
-                              "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
-                              "Hausse des salaires: +1%/an, Taux de chômage: 10%"]
-        self.scenarios_labels_courts=["+1,8%/an, Taux de chômage: 7%",
-                              "+1,5%/an, Chômage: 7%",
-                              "+1,3%/an, Chômage: 7%",
-                              "+1%/an, Chômage: 7%",
-                              "+1,8%/an, Chômage: 4.5%",
-                              "+1%/an, Chômage: 10%"]
+        self.scenarios_labels = scenarios_labels
+        self.scenarios_labels_courts = scenarios_labels_courts
 
         self.labels_is_long = True # True, si on utilise les labels longs
         
@@ -250,9 +246,9 @@ class SimulateurAnalyse:
             else:
                 y = [ v[s][a] for a in list_annees_dessin ]
             if (self.labels_is_long):
-                label_variable = self.scenarios_labels[s-1]
+                label_variable = self.scenarios_labels[s]
             else:
-                label_variable = self.scenarios_labels_courts[s-1]
+                label_variable = self.scenarios_labels_courts[s]
             pl.plot(list_annees_dessin, y, label=label_variable )
     
         # titres des figures
@@ -309,7 +305,7 @@ class SimulateurAnalyse:
     
         for s in self.scenarios:
             print()
-            print("Scenario",s,": ",self.scenarios_labels[s-1])
+            print("Scenario",s,": ",self.scenarios_labels[s])
             for a in self.liste_annees:
                 print("%d : %.3f"%(a, v[s][a]))
             print("")
@@ -324,7 +320,7 @@ class SimulateurAnalyse:
         
         for s in self.scenarios:
             print("")
-            print("Scenario",s,": ",self.scenarios_labels[s-1] )
+            print("Scenario",s,": ",self.scenarios_labels[s] )
             print("Annéee, Age,      Cotis., Pension:",)
             for a in self.liste_annees:
                 print("%5d : %.1f ans, %.1f %%, %.1f %%"%(a, \
@@ -339,11 +335,10 @@ class SimulateurAnalyse:
         """
         # Juste les légendes
         pl.figure(figsize=(6,2))
-        nb_scenarios = len(self.scenarios_labels)
-        for i in range(nb_scenarios):
-            pl.plot(0.,0.,label=self.scenarios_labels[i])
-        pl.legend(self.scenarios_labels, loc="center")
-        pl.ylim(bottom=0.0,top=0.7)
+        for s in self.scenarios:
+            pl.plot(0., 0., label = self.scenarios_labels[s])
+        pl.legend(loc="center")
+        pl.ylim(bottom=0.0, top=0.7)
         pl.axis('off')
         return None
 
