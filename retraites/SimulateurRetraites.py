@@ -51,9 +51,10 @@ class SimulateurRetraites:
         json_file.close()
         
         # Paramètres constants
-        self.horizon=2070
-        self.annees=range(2005, self.horizon+1)           # annees sur lesquelles on fait les calculs
-        self.annees_futures=range(2020, self.horizon+1)   # annees sur lesquelles on peut changer qqch
+        self.horizon=2070                               # Dernière année du calcul
+        self.annees=range(2005, self.horizon+1)         # annees sur lesquelles on fait les calculs
+        self.annees_futures=range(2020, self.horizon+1) # annees sur lesquelles on peut changer qqch
+        self.annees_standard=[2020, 2025, 2030, 2040, 2050, 2060, 2070] # Années standard dans les calculs simplifiés
         self.annees_EV=range(1930,2011)              # annees sur lesquelles on a l'espérance de vie
         self.scenarios=range(1,7)                    # scenarios consideres
 
