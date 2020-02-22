@@ -627,6 +627,20 @@ class CheckSimulateur(unittest.TestCase):
             for a in simulateur.annees:
                 np.testing.assert_allclose(analyse.PensionBrut[s][a], 20.0, atol=8.0)
         return None
+
+    def test_PilotageParSoldePensionDuree(self):
+        # Pilotage 11 : fixe la durée de vie en retraite
+        simulateur = SimulateurRetraites()
+        REVcible = 0.30
+        Acible = simulateur.calculeAge(REVcible = REVcible)
+        analyse = simulateur.pilotageParSoldePensionAge(Acible = Acible)
+        analyse.graphique("REV")
+        
+        # Vérifie la durée de vie en retraite
+        for s in simulateur.scenarios:
+            for a in simulateur.annees_futures:
+                np.testing.assert_allclose(analyse.REV[s][a], REVcible, rtol = 1.e-2)
+        return None
     
 if __name__=="__main__":
     unittest.main()

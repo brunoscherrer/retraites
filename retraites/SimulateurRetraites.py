@@ -10,6 +10,7 @@ import retraites
 import scipy.optimize as spo
 
 class SimulateurRetraites:
+
     def __init__(self, json_filename = None):
         """
         Crée un simulateur à partir d'un fichier d'hypothèses JSON.
@@ -41,6 +42,9 @@ class SimulateurRetraites:
 
         Exemple :
         simulateur = SimulateurRetraites()
+        simulateur.pilotageParPensionAgeCotisations()
+        simulateur.graphique()
+        simulateur.dessineSimulation()
         """
         
         if (json_filename is None):
@@ -164,10 +168,10 @@ class SimulateurRetraites:
 
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire. 
         """
         # Génère les trajectoires en fonction des paramètres
@@ -192,10 +196,10 @@ class SimulateurRetraites:
             
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire. 
         """
         # Génère les trajectoires en fonction des paramètres
@@ -222,10 +226,10 @@ class SimulateurRetraites:
             
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire. 
         """
         # Génère les trajectoires en fonction des paramètres
@@ -252,10 +256,10 @@ class SimulateurRetraites:
             
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire. 
         """
         # Génère les trajectoires en fonction des paramètres
@@ -282,10 +286,10 @@ class SimulateurRetraites:
             
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire. 
         """
         # Génère les trajectoires en fonction des paramètres
@@ -312,10 +316,10 @@ class SimulateurRetraites:
             
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire. 
         """
         # Génère les trajectoires en fonction des paramètres
@@ -342,10 +346,10 @@ class SimulateurRetraites:
             
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire. 
         """
         # Génère les trajectoires en fonction des paramètres
@@ -372,10 +376,10 @@ class SimulateurRetraites:
             
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire. 
         """
         # Génère les trajectoires en fonction des paramètres
@@ -403,10 +407,10 @@ class SimulateurRetraites:
         
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire. 
         """
         # Génère les trajectoires en fonction des paramètres
@@ -434,10 +438,10 @@ class SimulateurRetraites:
         
         Description
         Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
         COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
         une trajectoire et utilise cette trajectoire.         
         """
         # Génère les trajectoires en fonction des paramètres
@@ -1076,47 +1080,38 @@ class SimulateurRetraites:
                     PIB[s][a] * 1000.0 / (self.NC[s][a] + 0.5 * GdA)
         return pensionBrut
 
-    def pilotageParSoldePensionDuree(self, Scible=None, Pcible=None, REVcible=None):
+    def calculeAge(self, REVcible):
         """
-        pilotage 11 : imposer 1) le bilan financer
-        2) le niveau des pensions par rapport aux salaires
-        3) la durée de vie à la retraite
-            
-        Paramètres
-        Scible : la situation financière en % de PIB
-        Pcible : le niveau de pension des retraites par rapport aux actifs
-        REVcible : la durée de vie à la retraite
-            
-        Description
-        Retourne un objet de type SimulateurAnalyse.
-        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
-        * Si la valeur donnée est un flottant, utilise la trajectoire du 
-        COR pour les années passées et cette valeur pour les années futures. 
-        * Si la valeur donnée est un dictionnaire, considère que c'est 
-        une trajectoire et utilise cette trajectoire. 
-        """
-        # Génère les trajectoires en fonction des paramètres
-        Ss = self.genereTrajectoire("S", Scible)
-        Ps = self.genereTrajectoire("P", Pcible)
-        REVs = self.genereTrajectoire("REV", REVcible)
-        # Calcule le pilotage
-        Ts, Ps, As = self._calcule_fixant_Ss_Ps_REVs(Ss, Ps, REVs)
-        # Simule 
-        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
-        return resultat
-
-    def _calcule_fixant_Ss_Ps_REVs(self, Ss, Ps, REVs):
-        """
-        Pilotage 11 : calcul à pensions et durée de vie à la retraite
+        Calcul de l'âge en fonction de la durée de vie à la retraite
         
-        Paramètres
-        Ss : un dictionnaire, Ss[s][a] est le solde financier 
-        du scénario s à l'année a
-        Ps : un dictionnaire, Ps[s][a] est le niveau de pensions 
-        du scénario s à l'année a
-        REVs : un dictionnaire, SsREVss][a] est la durée de vie à la retraite 
-        du scénario s à l'année a
+        Paramètres :
+        REVcible : la durée de vie à la retraite
+
+        Description :
+        Retourne un dictionnaire représentant une trajectoire d'âge de 
+        départ en retraite.
+        * Si la valeur cible n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur cible donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        
+        Le calcul est réalisé par inversion numérique du ratio de durée  
+        de vie en retraite. 
+        Pour cela, nous utilisons le module scipy.optimize. 
+        
+        La trajectoire d'âge est uniquement déterminée par le ratio de durée 
+        de vie en retraite. 
+        C'est pourquoi on peut combiner la méthode calculeAge avec tout 
+        pilotage prenant en entrée une trajectoire d'âge. 
+        Par exemple, on peut combiner la méthode calculeAge avec la méthode 
+        pilotageParPensionAgeCotisations. 
+
+        Exemple :
+        simulateur = SimulateurRetraites()
+        REVcible = 0.30
+        Acible = simulateur.calculeAge(REVcible = REVcible)
+        analyse = simulateur.pilotageParSoldePensionAge(Acible = Acible)
         """
 
         def _EcartDeREV(As, args):
@@ -1139,15 +1134,15 @@ class SimulateurRetraites:
                 Utilise implicitement les variables simulateur et annee.
             """
             simulateur, scenario, annee, REVcible = args
-
             annee_naissance = round(annee + 0.5 - As)
             age_mort = 60.0 + simulateur.EV[scenario][annee_naissance]
             REV = ( age_mort - As ) / age_mort
             deltaREV = REVcible - REV
             return deltaREV
 
+        REVs = self.genereTrajectoire("REV", REVcible)
+        #
         As = deepcopy(self.A)
-        Ts = deepcopy(self.T)
         for s in self.scenarios:
             for a in self.annees_futures:
                 # Calcul l'âge
@@ -1157,9 +1152,4 @@ class SimulateurRetraites:
                                          args = args, \
                                          rtol = self.rechercheAgeRTol)
                 As[s][a] = result.root
-                # Calcule Ts
-                GdA = self.G[s][a] * ( As[s][a] - self.A[s][a] )
-                K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5*GdA)
-                Ts[s][a] = Ss[s][a] / self.B[s][a] + K * (Ps[s][a] + self.dP[s][a])
-
-        return Ts, Ps, As
+        return As
