@@ -7,6 +7,7 @@ from retraites.SimulateurAnalyse import SimulateurAnalyse
 import pylab as pl
 import os
 import retraites
+import scipy.optimize as spo
 
 class SimulateurRetraites:
     def __init__(self, json_filename = None):
@@ -61,6 +62,7 @@ class SimulateurRetraites:
         self.annees_standard=[2020, 2025, 2030, 2040, 2050, 2060, 2070] # Années standard dans les calculs simplifiés
         self.annees_EV=range(1930,2011)              # annees sur lesquelles on a l'espérance de vie
         self.scenarios=range(1,7)                    # scenarios consideres
+        self.scenario_croissance = [1.8, 1.5, 1.3, 1.0, 1.8, 1.0]  # Taux de croissance dans chaque scénario
 
         # Extrait les variables depuis les données
         self.T = self.get('T')
@@ -120,6 +122,12 @@ class SimulateurRetraites:
         self.ext_image=["png","pdf"]   # types de fichier à générer
 
         self.affiche_quand_ecrit = True # Affiche un message quand on écrit un fichier
+
+        # Paramètres pour l'algorithme d'inversion de la durée de vie en retraite
+        # Bornes de recherche de l'âge
+        self.rechercheAgeBornes = [60.0, 70.0]
+        # Tolérance relative sur l'âge
+        self.rechercheAgeRTol = 1.e-3
         return None
 
     def pilotageCOR(self):
@@ -128,7 +136,17 @@ class SimulateurRetraites:
         Retourne un objet de type SimulateurAnalyse.
         """
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(self.T, self.P, self.A)
-        resultat = SimulateurAnalyse(self.T, self.P, self.A, S, RNV, REV, Depenses, \
+        resultat = self._creerAnalyse(self.T, self.P, self.A, S, RNV, REV, Depenses)
+        return resultat
+    
+    def _creerAnalyse(self, Ts, Ps, As, Ss, RNVs, REVs, Depenses):
+        """
+        Retourne une analyse en fonction des objets essentiels. 
+        """
+        PIB = self._genereTrajectoirePIB()
+        PensionBrut = self._calculePensionAnnuelleDroitDirect(PIB, As)
+        resultat = SimulateurAnalyse(Ts, Ps, As, Ss, RNVs, REVs, Depenses, \
+                                     PIB, PensionBrut, \
                                      self.scenarios, self.annees_EV, self.annees, \
                                      self.scenarios_labels, self.scenarios_labels_courts)
         return resultat
@@ -156,12 +174,9 @@ class SimulateurRetraites:
         Ps = self.genereTrajectoire("P", Pcible)
         As = self.genereTrajectoire("A", Acible)
         Ts = self.genereTrajectoire("T", Tcible)
-
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
     def pilotageParSoldePensionAge(self, Scible=None, Pcible=None, Acible=None):
@@ -187,14 +202,11 @@ class SimulateurRetraites:
         Ss = self.genereTrajectoire("S", Scible)
         Ps = self.genereTrajectoire("P", Pcible)
         As = self.genereTrajectoire("A", Acible)
-
         # Calcule le pilotage
         Ts, Ps, As = self._calcule_fixant_Ss_Ps_As(Ss, Ps, As)
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
     def pilotageParSoldePensionCotisations(self, Scible=None, Pcible=None, Tcible=None):
@@ -220,14 +232,11 @@ class SimulateurRetraites:
         Ss = self.genereTrajectoire("S", Scible)
         Ps = self.genereTrajectoire("P", Pcible)
         Ts = self.genereTrajectoire("T", Tcible)
-
         # Calcule le pilotage
         Ts, Ps, As = self._calcule_fixant_Ss_Ps_Ts(Ss, Ps, Ts)
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat 
 
     def pilotageParSoldeAgeCotisations(self, Scible=None, Acible=None, Tcible=None):
@@ -253,14 +262,11 @@ class SimulateurRetraites:
         Ss = self.genereTrajectoire("S", Scible)
         As = self.genereTrajectoire("A", Acible)
         Ts = self.genereTrajectoire("T", Tcible)
-
         # Calcule le pilotage
         Ts, Ps, As = self._calcule_fixant_Ss_As_Ts(Ss, As, Ts)
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat 
 
     def pilotageParSoldeAgeDepenses(self, Scible=None, Acible=None, Dcible=None):
@@ -286,14 +292,11 @@ class SimulateurRetraites:
         Ss = self.genereTrajectoire("S", Scible)
         As = self.genereTrajectoire("A", Acible)
         Ds = self.genereTrajectoire("Depenses", Dcible)
-
         # Calcule le pilotage
         Ts, Ps, As = self._calcule_fixant_Ss_As_Ds(Ss, As, Ds)
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat 
     
     def pilotageParSoldePensionDepenses(self, Scible=None, Pcible=None, Dcible=None):
@@ -319,14 +322,11 @@ class SimulateurRetraites:
         Ss = self.genereTrajectoire("S", Scible)
         Ps = self.genereTrajectoire("P", Pcible)
         Ds = self.genereTrajectoire("Depenses", Dcible)
-
         # Calcule le pilotage
         Ts, Ps, As = self._calcule_fixant_Ss_Ps_Ds(Ss, Ps, Ds)
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat 
 
     def pilotageParPensionCotisationsDepenses(self, Pcible=None, Tcible=None, Dcible=None):
@@ -352,14 +352,11 @@ class SimulateurRetraites:
         Ps = self.genereTrajectoire("P", Pcible)
         Ts = self.genereTrajectoire("T", Tcible)
         Ds = self.genereTrajectoire("Depenses", Dcible)
-
         # Calcule le pilotage
         Ts, Ps, As = self._calcule_fixant_Ps_Ts_Ds(Ps, Ts, Ds)
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat 
 
     def pilotageParAgeCotisationsDepenses(self, Acible=None, Tcible=None, Dcible=None):
@@ -385,14 +382,11 @@ class SimulateurRetraites:
         As = self.genereTrajectoire("A", Acible)
         Ts = self.genereTrajectoire("T", Tcible)
         Ds = self.genereTrajectoire("Depenses", Dcible)
-
         # Calcule le pilotage
         Ts, Ps, As = self._calcule_fixant_As_Ts_Ds(As, Ts, Ds)
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat 
     
     def pilotageParAgeEtNiveauDeVie(self, Acible=None, RNVcible=None, Scible=None):
@@ -423,9 +417,7 @@ class SimulateurRetraites:
         Ts, Ps, As = self._calcule_fixant_As_RNV_S(As, RNVs, Ss)
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
     
     def pilotageParNiveauDeVieEtCotisations(self, Tcible=None, RNVcible=None, Scible=None):
@@ -456,9 +448,7 @@ class SimulateurRetraites:
         Ts, Ps, As = self._calcule_fixant_Ts_RNV_S(Ts, RNVs, Ss)
         # Simule
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
     
     def get(self, var):
@@ -780,8 +770,12 @@ class SimulateurRetraites:
         """
 
         if type(valeur) is dict:
+            # Si la valeur est un dictionnaire, on suppose que c'est une trajectoire 
+            # et on le copie
             trajectoire = deepcopy(valeur)
         else:
+            # Sinon, on suppose que c'est un flottant 
+            # et on calcule la trajectoire du COR
             if (nom=="A"):
                 trajectoire = deepcopy(self.A)
             elif (nom=="S"):
@@ -797,6 +791,9 @@ class SimulateurRetraites:
             elif (nom=="Depenses"):
                 S_COR, RNV_COR, REV_COR, Depenses_COR = self._calcule_S_RNV_REV(self.T, self.P, self.A)
                 trajectoire = Depenses_COR
+            elif (nom=="REV"):
+                S_COR, RNV_COR, REV_COR, Depenses_COR = self._calcule_S_RNV_REV(self.T, self.P, self.A)
+                trajectoire = REV_COR
             else:
                 raise TypeError('Mauvaise valeur pour le nom : %s' % (nom))
             
@@ -1025,3 +1022,144 @@ class SimulateurRetraites:
         pl.ylim(bottom=0.0, top=0.7)
         pl.axis('off')
         return None
+
+    def _genereTrajectoirePIB(self):
+        """
+        Calcule le PIB dans les différents scénarios. 
+        Source : https://fr.wikipedia.org/wiki/Produit_int%C3%A9rieur_brut_de_la_France
+        """
+        # Historique de PIBs (Milliards EUR)
+        PIB_constate = {
+        2005 : 1772.0, 
+        2006 : 1853.3, 
+        2007 : 1945.7, 
+        2008 : 1995.8, 
+        2009 : 1939.0, 
+        2010 : 1998.5, 
+        2011 : 2059.3, 
+        2012 : 2091.1, 
+        2013 : 2115.7, 
+        2014 : 2141.1, 
+        2015 : 2181.1, 
+        2016 : 2228.9, 
+        2017 : 2291.7, 
+        2018 : 2353.1
+        }
+        # Croissance en fonction du scénario
+        annee_dernier_PIB = 2018
+        # Génère la trajectoire
+        PIB = dict()
+        for s in self.scenarios:
+            PIB[s] = dict()
+            croissance = self.scenario_croissance[s - 1]
+            for a in self.annees:
+                if (a<= annee_dernier_PIB):
+                    PIB[s][a] = PIB_constate[a]
+                else:
+                    PIB[s][a] = (1.0 + croissance/100.0) * PIB[s][a - 1]
+        return PIB
+
+    def _calculePensionAnnuelleDroitDirect(self, PIB, As):
+        """
+        Calcule la pension annuelle de droit direct (brut) en kEUR.
+        
+        Paramètres:
+            PIB : la trajectoire de PIB
+            As : l'âge de départ à la retraite modifié par l'utilisateur
+        """
+        pensionBrut = dict()
+        for s in self.scenarios:
+            pensionBrut[s] = dict()
+            for a in self.annees:
+                GdA = self.G[s][a] * ( As[s][a] - self.A[s][a] )
+                pensionBrut[s][a] = self.B[s][a] * self.P[s][a] * \
+                    PIB[s][a] * 1000.0 / (self.NC[s][a] + 0.5 * GdA)
+        return pensionBrut
+
+    def pilotageParSoldePensionDuree(self, Scible=None, Pcible=None, REVcible=None):
+        """
+        pilotage 11 : imposer 1) le bilan financer
+        2) le niveau des pensions par rapport aux salaires
+        3) la durée de vie à la retraite
+            
+        Paramètres
+        Scible : la situation financière en % de PIB
+        Pcible : le niveau de pension des retraites par rapport aux actifs
+        REVcible : la durée de vie à la retraite
+            
+        Description
+        Retourne un objet de type SimulateurAnalyse.
+        * Si la valeur n'est pas donnée, utilise par défaut la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du 
+        COR pour les années passées et cette valeur pour les années futures. 
+        * Si la valeur donnée est un dictionnaire, considère que c'est 
+        une trajectoire et utilise cette trajectoire. 
+        """
+        # Génère les trajectoires en fonction des paramètres
+        Ss = self.genereTrajectoire("S", Scible)
+        Ps = self.genereTrajectoire("P", Pcible)
+        REVs = self.genereTrajectoire("REV", REVcible)
+        # Calcule le pilotage
+        Ts, Ps, As = self._calcule_fixant_Ss_Ps_REVs(Ss, Ps, REVs)
+        # Simule 
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
+        resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
+        return resultat
+
+    def _calcule_fixant_Ss_Ps_REVs(self, Ss, Ps, REVs):
+        """
+        Pilotage 11 : calcul à pensions et durée de vie à la retraite
+        
+        Paramètres
+        Ss : un dictionnaire, Ss[s][a] est le solde financier 
+        du scénario s à l'année a
+        Ps : un dictionnaire, Ps[s][a] est le niveau de pensions 
+        du scénario s à l'année a
+        REVs : un dictionnaire, SsREVss][a] est la durée de vie à la retraite 
+        du scénario s à l'année a
+        """
+
+        def _EcartDeREV(As, args):
+            """
+            Pour un âge de départ à la retraite donné, 
+            calcule la différence entre la durée de vie à la retraite pour 
+            une année donnée et la durée de vie à la retraite 
+            cible REVcible. 
+            
+            Paramètres :
+                As : un flottant, l'âge de départ à la retraite
+                args : une liste de quatre éléments [simulateur, annee, anneeReference, scenarioReference]
+                simulateur : un SimulateurRetraite
+                annee : un flottant, l'année du calcul de la durée de vie à la retraite
+                anneeReference : un flottant, l'année de référence du calcul de la durée de vie à la retraite
+                scenarioReference : un entier, le scénario de référence
+                deltaREV : un flottant, la différence entre les deux durées de vie à la retraite
+            
+            Description
+                Utilise implicitement les variables simulateur et annee.
+            """
+            simulateur, scenario, annee, REVcible = args
+
+            annee_naissance = round(annee + 0.5 - As)
+            age_mort = 60.0 + simulateur.EV[scenario][annee_naissance]
+            REV = ( age_mort - As ) / age_mort
+            deltaREV = REVcible - REV
+            return deltaREV
+
+        As = deepcopy(self.A)
+        Ts = deepcopy(self.T)
+        for s in self.scenarios:
+            for a in self.annees_futures:
+                # Calcul l'âge
+                args = [self, s, a, REVs[s][a]]
+                result = spo.root_scalar(_EcartDeREV, \
+                                         bracket= self.rechercheAgeBornes, \
+                                         args = args, \
+                                         rtol = self.rechercheAgeRTol)
+                As[s][a] = result.root
+                # Calcule Ts
+                GdA = self.G[s][a] * ( As[s][a] - self.A[s][a] )
+                K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5*GdA)
+                Ts[s][a] = Ss[s][a] / self.B[s][a] + K * (Ps[s][a] + self.dP[s][a])
+
+        return Ts, Ps, As

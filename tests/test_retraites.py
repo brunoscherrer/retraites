@@ -589,5 +589,44 @@ class CheckSimulateur(unittest.TestCase):
 
         return None
 
+    def test_PIB(self):
+        # Calcul du PIB
+        simulateur = SimulateurRetraites()
+        analyse = simulateur.pilotageCOR()
+        analyse.graphique("PIB")
+        
+        # Vérifie quelques valeurs numériques observées
+        # Source : https://fr.wikipedia.org/wiki/Produit_int%C3%A9rieur_brut_de_la_France
+        for s in simulateur.scenarios:
+            np.testing.assert_allclose(analyse.PIB[s][2005], 1772.0)
+            np.testing.assert_allclose(analyse.PIB[s][2018], 2353.1)
+        # Vérifie les ordres de grandeurs des calculs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                np.testing.assert_allclose(analyse.PIB[s][a], 2300.0, atol=4000.0)
+        # Vérifie que la série est croissante dans le futur
+        for s in simulateur.scenarios:
+            for a in simulateur.annees_futures:
+                if a < simulateur.horizon:
+                    self.assertTrue(analyse.PIB[s][a] < analyse.PIB[s][a+1])
+        return None
+    
+    def test_PensionBrutCOR(self):
+        # Calcul de la pension annuelle (brut) de droit direct
+        simulateur = SimulateurRetraites()
+        analyse = simulateur.pilotageCOR()
+        analyse.graphique("PensionBrut")
+        
+        # Vérifie quelques valeurs numériques observées
+        # Source : Les retraités et les retraites, Edition 2017, Panoramas de la DREES
+        for s in simulateur.scenarios:
+            np.testing.assert_allclose(analyse.PensionBrut[s][2005], 1224.0 * 12.0 / 1000.0, rtol = 5.e-2)
+            np.testing.assert_allclose(analyse.PensionBrut[s][2015], 1520.0 * 12.0 / 1000.0, rtol = 5.e-2)
+        # Vérifie les ordres de grandeurs des calculs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                np.testing.assert_allclose(analyse.PensionBrut[s][a], 20.0, atol=8.0)
+        return None
+    
 if __name__=="__main__":
     unittest.main()

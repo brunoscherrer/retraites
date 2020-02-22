@@ -11,6 +11,7 @@ import os
 class SimulateurAnalyse:
     ### fonctions pour générer des graphiques
     def __init__(self, T, P, A, S, RNV, REV, Depenses, \
+                 PIB, PensionBrut, \
                  scenarios, annees_EV, annees, \
                  scenarios_labels, scenarios_labels_courts, \
                  dir_image="."):
@@ -25,6 +26,8 @@ class SimulateurAnalyse:
         RNV: un dictionnaire, Niveau de vie des retraités par rapport à l'ensemble de la population
         REV: un dictionnaire, Durée de la vie passée à la retraite
         Depenses: un dictionnaire, Dépenses de retraites en % PIB
+        PIB : le montant absolu du PIB (Milliard EUR)
+        PensionBrut : la pension annuelle (brut) de droit direct moyenne (kEUR) 
         scenarios: une liste d'indices, les scénarios considérés
         annees_EV: une liste d'entiers, annees sur lesquelles on a l'espérance de vie
         annees: une liste d'entiers supérieurs ou égaux à 1, les scenarios consideres
@@ -54,6 +57,8 @@ class SimulateurAnalyse:
         self.RNV = RNV
         self.REV = REV
         self.Depenses = Depenses
+        self.PIB = PIB
+        self.PensionBrut = PensionBrut
         
         # Liste des années dans le simulateur du COR
         self.liste_annees=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
@@ -81,14 +86,16 @@ class SimulateurAnalyse:
 
         self.affiche_quand_ecrit = True # Affiche un message quand on écrit un fichier
         
-        self.liste_variables = ["S","RNV","REV","T","A","P","Depenses"]
+        self.liste_variables = ["S","RNV","REV","T","A","P","Depenses", "PIB", "PensionBrut"]
         self.liste_legendes=[u"Situation financière du système (% PIB)",
            u"Niveau de vie des retraités p/r à l'ensemble (%)",
            u"Proportion de la vie passée à la retraite (%)",
            u"Taux de cotisation de retraite (% PIB)",
            u"Age de départ effectif moyen à la retraite",
            u"Ratio (pension moyenne)/(salaire moyen) (%)",
-           u"Dépenses de retraites (% PIB)"
+           u"Dépenses de retraites (% PIB)", 
+           u"Produit Intérieur Brut (Milliards EUR)", 
+           u"Pension annuelle (brut) de droit direct (kEUR)"
         ]
         return None
 
@@ -224,6 +231,10 @@ class SimulateurAnalyse:
                 v = self.REV
             elif nom=="Depenses":
                 v = self.Depenses
+            elif nom=="PIB":
+                v = self.PIB
+            elif nom=="PensionBrut":
+                v = self.PensionBrut
             else:
                 raise TypeError('Mauvaise valeur pour le nom : %s' % (nom))
 
