@@ -16,10 +16,19 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         
         Description :
             Crée un modèle de pension permettant d'évaluer le 
-            ratio (pension moyenne) / (salaire moyen).
+            ratio (pension moyenne) / (salaire moyen) pour une année donnée.
         
-            Les entrées de la fonction sont "S", "D", "As", "E", "TauC" 
+            Les entrées de la fonction sont "S", "D", "As", "F", "TauC" 
             et la sortie est "P". 
+            
+            * S : le solde financier du système de retraites (% PIB)
+            * D : le montant des dépenses (% PIB)
+            * As : l'âge moyen de départ à la retraite défini par l'utilisateur
+            * F  : facteur d'élasticité de report de l'âge de départ 
+                (par exemple F=0.5)
+            * TauC : le taux de chômage (par exemple TauC = 4.5)
+            * P : le rapport entre le montant moyen des pensions et le 
+                 montant moyen des salaires
         
             Les autres paramètres B, G, A, NR sont ceux du simulateur, 
             dans le scénario central (i.e. s = 1) à l'année considérée. 
@@ -33,9 +42,9 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
             S = 0.0
             D = 0.14
             As = 63.0
-            E = 0.5
-            TauC = 7.00
-            X = ot.Point([S, D, As, E, TauC])
+            F = 0.5
+            TauC = 7.0
+            X = ot.Point([S, D, As, F, TauC])
             Y = modele(X)
         """
         super(FonctionPension, self).__init__(5, 1)
@@ -44,7 +53,7 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         self.annee = annee
         self.verbose = verbose
         # Configuration de la fonction
-        self.setInputDescription(["S", "D", "As", "E", "TauC"])
+        self.setInputDescription(["S", "D", "As", "F", "TauC"])
         self.setOutputDescription(["P"])
         return
 
@@ -57,7 +66,7 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         S : le solde financier
         D : le montant des dépenses de retraite en part de PIB
         As : l'âge de départ à la retraite de l'utilisateur
-        E : coefficient d'élasticité (par défaut, E = 0.5)
+        F : facteur d'élasticité (par défaut, F = 0.5)
         TauC : taux de chômage (%)
         
         Description
@@ -67,9 +76,9 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         Si l’utilisateur renseigne un âge effectif moyen de départ 
         à la retraite plus élevé que celui
         qui découle de l’évolution spontanée à législation inchangée 
-        (c’est-à-dire si As>A), le nombre de
-        retraités est donc diminué de - G x (As – A) et le nombre 
-        de cotisants augmenté de + E x G x (As – A).
+        (c’est-à-dire si As > A), le nombre de
+        retraités est donc diminué de G x (As – A) et le nombre 
+        de cotisants augmenté de F x G x (As – A).
         
         Le calcul utilise la variable NC :
         NC : Nombre de personnes en emploi (ou nombre de cotisants)
@@ -81,7 +90,7 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         dP : Autres dépenses de retraite rapportées au nombre de retraités 
              de droit direct en % du revenu d'activités brut moyen
         """
-        S, D, As, E, TauC = X
+        S, D, As, F, TauC = X
         # Paramètres
         scenario_central = 1
         B = self.simulateur.B[scenario_central][self.annee]
@@ -93,7 +102,7 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         # Coeur du modèle
         T = (S + D) / B
         g = G * (As - A)
-        K = (NR - g) / (NC + E * g)
+        K = (NR - g) / (NC + F * g)
         P = (T - S / B) / K - dP
         # Affichage
         if self.verbose:
