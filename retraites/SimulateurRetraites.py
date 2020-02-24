@@ -34,9 +34,9 @@ class SimulateurRetraites:
         9 pilotageParAgeEtNiveauDeVie (sous-entendu et par solde financier)
         10 pilotageParNiveauDeVieEtCotisations (sous-entendu et par solde financier)
         
-        Les indices de scénarios vont de 1 à 6, dans l'attribut "scenarios"
-        (contrairement à l'usage Python ordinaire qui voudrait plutôt un 
-        indice de 0 à 5). 
+        Les scénarios sont numérotés de 1 à 6 dans l'attribut "scenarios"
+        (contrairement à l'usage Python ordinaire qui voudrait plutôt que 
+        l'indice aille de 0 à 5). 
 
         Exemple :
         simulateur = SimulateurRetraites()
@@ -1025,4 +1025,3 @@ class SimulateurRetraites:
         pl.ylim(bottom=0.0, top=0.7)
         pl.axis('off')
         return None
-
