@@ -7,21 +7,20 @@ from scipy import interpolate
 from copy import deepcopy
 
 class EtudeImpact:
-    ### fonctions pour générer des graphiques
     def __init__(self, simulateur):
         """
         Créée un simulateur reproduisant l'étude d'impact.
         
-        Paramètres
-        simulateur: un SimulateurRetraites.
+        Paramètres :
+            simulateur: un SimulateurRetraites.
         
-        Exemple
-        simulateur = SimulateurRetraites()
-        etudeImpact = EtudeImpact(simulateur)
-        etudeImpact.calcule()
-        Ds = etudeImpact.getDepenses()
-        Ss = etudeImpact.getSolde()
-        As = etudeImpact.getAge()
+        Exemple :
+            simulateur = SimulateurRetraites()
+            etudeImpact = EtudeImpact(simulateur)
+            etudeImpact.calcule()
+            Ds = etudeImpact.getDepenses()
+            Ss = etudeImpact.getSolde()
+            As = etudeImpact.getAge()
         """
         # Liste des années dans le simulateur du COR
         self.simulateur = simulateur
@@ -105,11 +104,13 @@ class EtudeImpact:
 
     def ageDepartParAnnee(self, a):
         """
+        Calcule l'âge de départ pour une année de départ en retraite donnée.
+
         Paramètres
-        a : année de départ en retraite
+            a : année de départ en retraite
         
-        Description
-        Retourne l'âge de départ en retraite
+        Description :
+            Retourne l'âge de départ en retraite.
         """
         # Interpolation linéaire inverse
         Age1 = self.age_premiere_generation
@@ -121,11 +122,13 @@ class EtudeImpact:
 
     def ageDepartParGeneration(self, an):
         """
-        Paramètres
-        an : année de naissance
+        Calcule l'âge de départ pour une année de naissance donnée. 
         
-        Description
-        Retourne l'âge de départ en retraite
+        Paramètres :
+            an : année de naissance
+        
+        Description :
+            Retourne l'âge de départ en retraite
         """
         # Interpolation linéaire inverse
         Age1 = self.age_premiere_generation

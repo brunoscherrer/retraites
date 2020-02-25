@@ -54,10 +54,9 @@ class CheckSimulateur(unittest.TestCase):
                 np.testing.assert_allclose(analyse.P[s][a], 0.5, atol=0.3)
         return None
     
-    def test_graphiques(self):
-        # génération des graphes pour le statu quo (COR)
+    def test_graphiquesAnalyse(self):
+        # Graphiques de la classe SimulateurAnalyse
         simulateur = SimulateurRetraites()
-        
         
         analyse = simulateur.pilotageCOR()
         analyse.setDirectoryImage(tempfile.gettempdir())
@@ -69,11 +68,11 @@ class CheckSimulateur(unittest.TestCase):
         
         # Teste les options des graphiques
         pl.figure()
-        analyse.graphique("P", analyse.P)
+        analyse.graphique("P")
         pl.close()
 
         pl.figure()
-        analyse.graphique("P")
+        analyse.graphique("P", analyse.P)
         pl.close()
 
         pl.figure()
@@ -128,6 +127,79 @@ class CheckSimulateur(unittest.TestCase):
         pl.close()
 
         analyse.afficheSolutionsSimulateurCOR()
+
+        return None
+    
+    def test_graphiquesSimulateur(self):
+        # Graphiques de la classe SimulateurRetraites
+        simulateur = SimulateurRetraites()
+        
+        simulateur.setDirectoryImage(tempfile.gettempdir())
+
+        pl.figure(figsize=(6,8))
+        pl.suptitle('Projections du COR',fontsize=16)
+        simulateur.dessineConjoncture()
+        pl.close()
+        
+        # Teste les options des graphiques
+        pl.figure()
+        simulateur.graphique("B")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", simulateur.B)
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", dessine_legende = True)
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", scenarios_indices = range(1,5))
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", dessine_annees = range(2020,2041))
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", taille_fonte_titre = 14)
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("G")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("NR")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("NC")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("dP")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("TPR")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("TPS")
+        simulateur.sauveFigure("TPS")
+        pl.close()
+
+        # Configure des longs titres
+        simulateur.setLabelLongs(True)
+        simulateur.graphique("CNV")
+        pl.close()
+        
+        # Dessine la légende
+        simulateur.dessineLegende()
+        simulateur.sauveFigure("EV")    
+        pl.close()
 
         return None
     

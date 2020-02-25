@@ -148,6 +148,25 @@ Le code précédent produit le graphique suivant.
 
 .. image::  fig/cor.jpg
 
+Documentation de l'API
+----------------------
+
+L'interface de programmation est documentée avec des docstrings. 
+
+On y accède avec la fonction ``help``. 
+
+Par exemple, l'exemple suivant génère la documentation de la classe 
+``SimulateurRetraites``. 
+
+.. code-block:: python
+
+	from retraites.SimulateurRetraites import SimulateurRetraites
+	help(SimulateurRetraites)
+
+.. _`APIdoc`: https://github.com/brunoscherrer/retraites/blob/master/doc/API-doc.ipynb
+
+La page `APIdoc`_ présente une version lisible de l'aide.
+
 Documentation
 -------------
 
