@@ -33,6 +33,10 @@ class SimulateurRetraites:
         8 pilotageParAgeCotisationsDepenses
         9 pilotageParAgeEtNiveauDeVie (sous-entendu et par solde financier)
         10 pilotageParNiveauDeVieEtCotisations (sous-entendu et par solde financier)
+        
+        Les scénarios sont numérotés de 1 à 6 dans l'attribut "scenarios"
+        (contrairement à l'usage Python ordinaire qui voudrait plutôt que 
+        l'indice aille de 0 à 5). 
 
         Exemple :
         simulateur = SimulateurRetraites()
@@ -73,18 +77,25 @@ class SimulateurRetraites:
         self.EV = self.get('EV')
         
         # Graphiques
-        self.scenarios_labels=["Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
-                              "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
-                              "Hausse des salaires: +1,3%/an, Taux de chômage: 7%",
-                              "Hausse des salaires: +1%/an, Taux de chômage: 7%",
-                              "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
-                              "Hausse des salaires: +1%/an, Taux de chômage: 10%"]
-        self.scenarios_labels_courts=["+1,8%/an, Taux de chômage: 7%",
-                              "+1,5%/an, Chômage: 7%",
-                              "+1,3%/an, Chômage: 7%",
-                              "+1%/an, Chômage: 7%",
-                              "+1,8%/an, Chômage: 4.5%",
-                              "+1%/an, Chômage: 10%"]
+        self.scenarios_labels=["Scénario inexistant", 
+                               "Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
+                               "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
+                               "Hausse des salaires: +1,3%/an, Taux de chômage: 7%",
+                               "Hausse des salaires: +1%/an, Taux de chômage: 7%",
+                               "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
+                               "Hausse des salaires: +1%/an, Taux de chômage: 10%"]
+        self.scenarios_labels_courts=["Scénario inexistant", 
+                                      "+1,8%/an, Taux de chômage: 7%",
+                                      "+1,5%/an, Chômage: 7%",
+                                      "+1,3%/an, Chômage: 7%",
+                                      "+1%/an, Chômage: 7%",
+                                      "+1,8%/an, Chômage: 4.5%",
+                                      "+1%/an, Chômage: 10%"]
+        
+        # Taux de croissance pour chaque scénario
+        self.scenarios_croissance = [0.0, 1.8, 1.5, 1.3, 1.0, 1.8, 1.0]
+        # Taux de chomage pour chaque scénario
+        self.scenarios_chomage = [0.0, 7.0, 7.0, 7.0, 7.0, 4.5, 10.0]
 
         self.liste_variables = ["B","NR","NC","G","dP","TPR","TPS","CNV","EV"]
         self.liste_legendes=[u"B: Part des revenus d'activité bruts dans le PIB",
@@ -118,7 +129,8 @@ class SimulateurRetraites:
         """
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(self.T, self.P, self.A)
         resultat = SimulateurAnalyse(self.T, self.P, self.A, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat
     
     def pilotageParPensionAgeCotisations(self, Pcible=None, Acible=None, Tcible=None):
@@ -148,7 +160,8 @@ class SimulateurRetraites:
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat
 
     def pilotageParSoldePensionAge(self, Scible=None, Pcible=None, Acible=None):
@@ -180,7 +193,8 @@ class SimulateurRetraites:
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat
 
     def pilotageParSoldePensionCotisations(self, Scible=None, Pcible=None, Tcible=None):
@@ -212,7 +226,8 @@ class SimulateurRetraites:
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat 
 
     def pilotageParSoldeAgeCotisations(self, Scible=None, Acible=None, Tcible=None):
@@ -244,7 +259,8 @@ class SimulateurRetraites:
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat 
 
     def pilotageParSoldeAgeDepenses(self, Scible=None, Acible=None, Dcible=None):
@@ -276,7 +292,8 @@ class SimulateurRetraites:
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat 
     
     def pilotageParSoldePensionDepenses(self, Scible=None, Pcible=None, Dcible=None):
@@ -308,7 +325,8 @@ class SimulateurRetraites:
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat 
 
     def pilotageParPensionCotisationsDepenses(self, Pcible=None, Tcible=None, Dcible=None):
@@ -340,7 +358,8 @@ class SimulateurRetraites:
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat 
 
     def pilotageParAgeCotisationsDepenses(self, Acible=None, Tcible=None, Dcible=None):
@@ -372,7 +391,8 @@ class SimulateurRetraites:
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat 
     
     def pilotageParAgeEtNiveauDeVie(self, Acible=None, RNVcible=None, Scible=None):
@@ -404,7 +424,8 @@ class SimulateurRetraites:
         # Simule 
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat
     
     def pilotageParNiveauDeVieEtCotisations(self, Tcible=None, RNVcible=None, Scible=None):
@@ -436,7 +457,8 @@ class SimulateurRetraites:
         # Simule
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(Ts,Ps,As)
         resultat = SimulateurAnalyse(Ts, Ps, As, S, RNV, REV, Depenses, \
-                                     self.scenarios, self.annees_EV, self.annees)
+                                     self.scenarios, self.annees_EV, self.annees, \
+                                     self.scenarios_labels, self.scenarios_labels_courts)
         return resultat
     
     def get(self, var):
@@ -876,9 +898,9 @@ class SimulateurRetraites:
                 y = [ v[s][a] for a in list_annees_dessin ]
 
             if (self.labels_is_long):
-                label_variable = self.scenarios_labels[s-1]
+                label_variable = self.scenarios_labels[s]
             else:
-                label_variable = self.scenarios_labels_courts[s-1]
+                label_variable = self.scenarios_labels_courts[s]
             pl.plot(list_annees_dessin, y, label=label_variable )
     
         # titres des figures
@@ -997,11 +1019,9 @@ class SimulateurRetraites:
         """
         # Juste les légendes
         pl.figure(figsize=(6,2))
-        nb_scenarios = len(self.scenarios_labels)
-        for i in range(nb_scenarios):
-            pl.plot(0.,0.,label=self.scenarios_labels[i])
-        pl.legend(self.scenarios_labels, loc="center")
-        pl.ylim(bottom=0.0,top=0.7)
+        for s in self.scenarios:
+            pl.plot(0., 0., label = self.scenarios_labels[s])
+        pl.legend(loc="center")
+        pl.ylim(bottom=0.0, top=0.7)
         pl.axis('off')
         return None
-

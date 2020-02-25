@@ -68,10 +68,14 @@ Les projections ci-dessous sont basées sur celles d'un certain nombre d'indicat
 
 .. image::  fig/conjoncture.jpg
 
+.. image::  fig/legende_scenarios.png
+
 Simulation 1: Projections du COR avec le réglage initial
 --------------------------------------------------------
 
 .. image::  fig/cor.jpg
+
+.. image::  fig/legende_scenarios.png
 
 Dans cette première simulation, on observe une baisse légère des cotisations jusque 2070. Le système est globalement (en moyenne sur les différents scénarios conjoncturels) équilibré financièrement. Cet équilibre est possible via la baisse des pensions, de 0.5 fois le salaire moyen (2019) à une fourchette [0.25, 0.45] fois le salaire moyen selon la conjoncture. Le niveau de vie des retraités pourrait en être fortement affecté (jusqu'à une baisse de 30% dans le pire cas).
 
@@ -80,12 +84,16 @@ Simulation 2: Adaptation automatique des cotisations
 
 .. image::  fig/cotisations.jpg
 
+.. image::  fig/legende_scenarios.png
+
 On voit qu'il suffit de prévoir une hausse légère de cotisations, précisément de 31% (aujourd'hui) à 35% (en 2070), c'est-à-dire en moyene +0.25% par an (vu que 1.0025^(2070-2020)=35/31) alors on peut dans le pire scenario assurer un niveau de vie aux retraités équivalent à celui des actifs et le système est équilibré.
 
 Simulation 3: Adaptation automatique des cotisations avec départ à 61 ans
 -------------------------------------------------------------------------
 
 .. image::  fig/61ans.jpg
+
+.. image::  fig/legende_scenarios.png
 
 Dans la troisième figure "Départ à 61 ans et cotisations adaptées", on peut mesurer ce que coûterait collectivement le fait de permettre aux français de partir (effectivement) à la retraite à 61 ans (ce qui correspond à une hypothèse d'un départ possible à 60%). Il faudrait alors porter l'effort de cotisations de 31% à 39% dans le pire cas conjoncturel, soit une augmentation moyenne par an de +0.46% des cotisations.
 
@@ -145,13 +153,13 @@ Documentation
 
 .. _`doc`: https://github.com/brunoscherrer/retraites/blob/master/doc
 .. _`index`: https://github.com/brunoscherrer/retraites/blob/master/index.ipynb
-.. _`simulationCOR`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-COR-juin-2019.ipynb
-.. _`documentationModele`: https://github.com/brunoscherrer/retraites/blob/master/doc/Description-du-composant-retraites.ipynb
-.. _`reformes`: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes.ipynb
-.. _`reformes2`: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes2.ipynb
-.. _`articleEI`: https://github.com/brunoscherrer/retraites/blob/master/doc/Article4/article4-analyse-impact.pdf
-.. _`pilotagesPossibles`: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotages-possibles.ipynb
-.. _`naissanceRetraiteMort`: https://github.com/brunoscherrer/retraites/blob/master/doc/Calcule-naissance-retraite-mort.ipynb
+.. _`SimulationCOR`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-COR-juin-2019.ipynb
+.. _`DocumentationModele`: https://github.com/brunoscherrer/retraites/blob/master/doc/Description-du-composant-retraites.ipynb
+.. _`Reformes`: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes.ipynb
+.. _`Reformes2`: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes2.ipynb
+.. _`ArticleEI`: https://github.com/brunoscherrer/retraites/blob/master/doc/Article4/article4-analyse-impact.pdf
+.. _`PilotagesPossibles`: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotages-possibles.ipynb
+.. _`NaissanceRetraiteMort`: https://github.com/brunoscherrer/retraites/blob/master/doc/Calcule-naissance-retraite-mort.ipynb
 
 La description du modèle mathématique est donnée dans `documentationModele`_. 
 
@@ -159,29 +167,29 @@ Un exemple complet est présenté dans le fichier `index`_.
 
 D'autres exemples sont présentés dans le répertoire `doc`_ :
 
-- `simulationCOR`_ : une simulation du rapport du COR de Juin 2019
-- `pilotagesPossibles`_ : un exemple de tous les pilotages possibles
-- `reformes`_ : une simulation fondée sur l'étude d'impact
-- `reformes2`_ : une simulation fondée sur une modification de l'étude d'impact, avec augmentation des cotisations
-- `naissanceRetraiteMort`_ : une analyse génération par génération de la vie : naissance, retraite et mort
+- `SimulationCOR`_ : une simulation du rapport du COR de Juin 2019
+- `PilotagesPossibles`_ : un exemple de tous les pilotages possibles
+- `Reformes`_ : une simulation fondée sur l'étude d'impact
+- `Reformes2`_ : une simulation fondée sur une modification de l'étude d'impact, avec augmentation des cotisations
+- `NaissanceRetraiteMort`_ : une analyse génération par génération de la vie : naissance, retraite et mort
 
-.. _`simulationEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact.ipynb
-.. _`possiblesEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
-.. _`etudeImpactAge`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-analyse-age.ipynb
-.. _`etudeImpactDepenses`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-budget.ipynb
-.. _`etudeImpactAgePensions`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
-.. _`etudeImpactPensionAnnuelle`: https://github.com/brunoscherrer/retraites/blob/master/doc/CalculePensionAnnuelle/simulation-pension-annuelle.ipynb
-.. _`etudeImpactNumerisation`: https://github.com/brunoscherrer/retraites/blob/master/doc/DigitalisationEI/Numerisation-Etude-Impact.ipynb
+.. _`SimulationEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact.ipynb
+.. _`PossiblesEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
+.. _`EtudeImpactAge`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-analyse-age.ipynb
+.. _`EtudeImpactDepenses`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-budget.ipynb
+.. _`EtudeImpactAgePensions`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
+.. _`EtudeImpactPensionAnnuelle`: https://github.com/brunoscherrer/retraites/blob/master/doc/CalculePensionAnnuelle/simulation-pension-annuelle.ipynb
+.. _`EtudeImpactNumerisation`: https://github.com/brunoscherrer/retraites/blob/master/doc/DigitalisationEI/Numerisation-Etude-Impact.ipynb
 
 Une analyse détaillée de l'étude d'impact de Janvier 2020 :
 
-- `simulationEtudeImpact`_ : une simulation de l'étude d'impact de Janvier 2020
-- `possiblesEtudeImpact`_ : une représentation des trajectoires possibles dans le cadre de l'étude d'impact de Janvier 2020
-- `etudeImpactAge`_ : une analyse de la trajectoire d'âge de l'étude d'impact
-- `etudeImpactDepenses`_ : une analyse de la trajectoire de dépenses de l'étude d'impact
-- `etudeImpactAgePensions`_ : une analyse de l'étude d'impact en fonction de l'âge et du niveau de pensions
-- `etudeImpactPensionAnnuelle`_ : une analyse de l'étude d'impact en termes de pension annuelle
-- `etudeImpactNumerisation`_ : une numérisation de données de l'étude d'impact à partir des graphiques
+- `SimulationEtudeImpact`_ : une simulation de l'étude d'impact de Janvier 2020
+- `PossiblesEtudeImpact`_ : une représentation des trajectoires possibles dans le cadre de l'étude d'impact de Janvier 2020
+- `EtudeImpactAge`_ : une analyse de la trajectoire d'âge de l'étude d'impact
+- `EtudeImpactDepenses`_ : une analyse de la trajectoire de dépenses de l'étude d'impact
+- `EtudeImpactAgePensions`_ : une analyse de l'étude d'impact en fonction de l'âge et du niveau de pensions
+- `EtudeImpactPensionAnnuelle`_ : une analyse de l'étude d'impact en termes de pension annuelle
+- `EtudeImpactNumerisation`_ : une numérisation de données de l'étude d'impact à partir des graphiques
 
 Une analyse détaillée de ce que l'étude d'impact ne dit pas est présentée dans `articleEI`_.
 

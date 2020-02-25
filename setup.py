@@ -16,7 +16,8 @@ from setuptools import (setup, find_packages)
 
 install_requires = ['numpy>=1.16',
                     'matplotlib>=2.1',
-                    'scipy>=1.0'
+                    'scipy>=1.0',
+                    'openturns>=1.14',
                     ]
 extras_require = {'doc': ['jupyter', 'jupyter_client']}
 
