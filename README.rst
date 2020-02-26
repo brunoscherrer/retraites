@@ -60,6 +60,7 @@ Les dépendances sont :
 - `numpy <http://www.numpy.org>`_ >= 0.10
 - `matplotlib <https://matplotlib.org>`_ >= 1.5.3
 - `scipy <https://www.scipy.org/>`_ >= 1.0.0
+- `openturns <https://openturns.github.io/openturns/latest/>`_ >= 1.14
 
 Installation
 ------------
