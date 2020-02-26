@@ -54,10 +54,9 @@ class CheckSimulateur(unittest.TestCase):
                 np.testing.assert_allclose(analyse.P[s][a], 0.5, atol=0.3)
         return None
     
-    def test_graphiques(self):
-        # génération des graphes pour le statu quo (COR)
+    def test_graphiquesAnalyse(self):
+        # Graphiques de la classe SimulateurAnalyse
         simulateur = SimulateurRetraites()
-        
         
         analyse = simulateur.pilotageCOR()
         analyse.setDirectoryImage(tempfile.gettempdir())
@@ -69,11 +68,11 @@ class CheckSimulateur(unittest.TestCase):
         
         # Teste les options des graphiques
         pl.figure()
-        analyse.graphique("P", analyse.P)
+        analyse.graphique("P")
         pl.close()
 
         pl.figure()
-        analyse.graphique("P")
+        analyse.graphique("P", analyse.P)
         pl.close()
 
         pl.figure()
@@ -128,6 +127,79 @@ class CheckSimulateur(unittest.TestCase):
         pl.close()
 
         analyse.afficheSolutionsSimulateurCOR()
+
+        return None
+    
+    def test_graphiquesSimulateur(self):
+        # Graphiques de la classe SimulateurRetraites
+        simulateur = SimulateurRetraites()
+        
+        simulateur.setDirectoryImage(tempfile.gettempdir())
+
+        pl.figure(figsize=(6,8))
+        pl.suptitle('Projections du COR',fontsize=16)
+        simulateur.dessineConjoncture()
+        pl.close()
+        
+        # Teste les options des graphiques
+        pl.figure()
+        simulateur.graphique("B")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", simulateur.B)
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", dessine_legende = True)
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", scenarios_indices = range(1,5))
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", dessine_annees = range(2020,2041))
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("B", taille_fonte_titre = 14)
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("G")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("NR")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("NC")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("dP")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("TPR")
+        pl.close()
+
+        pl.figure()
+        simulateur.graphique("TPS")
+        simulateur.sauveFigure("TPS")
+        pl.close()
+
+        # Configure des longs titres
+        simulateur.setLabelLongs(True)
+        simulateur.graphique("CNV")
+        pl.close()
+        
+        # Dessine la légende
+        simulateur.dessineLegende()
+        simulateur.sauveFigure("EV")    
+        pl.close()
 
         return None
     
@@ -589,5 +661,58 @@ class CheckSimulateur(unittest.TestCase):
 
         return None
 
+    def test_PIB(self):
+        # Calcul du PIB
+        simulateur = SimulateurRetraites()
+        analyse = simulateur.pilotageCOR()
+        analyse.graphique("PIB")
+        
+        # Vérifie quelques valeurs numériques observées
+        # Source : https://fr.wikipedia.org/wiki/Produit_int%C3%A9rieur_brut_de_la_France
+        for s in simulateur.scenarios:
+            np.testing.assert_allclose(analyse.PIB[s][2005], 1772.0)
+            np.testing.assert_allclose(analyse.PIB[s][2018], 2353.1)
+        # Vérifie les ordres de grandeurs des calculs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                np.testing.assert_allclose(analyse.PIB[s][a], 2300.0, atol=4000.0)
+        # Vérifie que la série est croissante dans le futur
+        for s in simulateur.scenarios:
+            for a in simulateur.annees_futures:
+                if a < simulateur.horizon:
+                    self.assertTrue(analyse.PIB[s][a] < analyse.PIB[s][a+1])
+        return None
+    
+    def test_PensionBrutCOR(self):
+        # Calcul de la pension annuelle (brut) de droit direct
+        simulateur = SimulateurRetraites()
+        analyse = simulateur.pilotageCOR()
+        analyse.graphique("PensionBrut")
+        
+        # Vérifie quelques valeurs numériques observées
+        # Source : Les retraités et les retraites, Edition 2017, Panoramas de la DREES
+        for s in simulateur.scenarios:
+            np.testing.assert_allclose(analyse.PensionBrut[s][2005], 1224.0 * 12.0 / 1000.0, rtol = 5.e-2)
+            np.testing.assert_allclose(analyse.PensionBrut[s][2015], 1520.0 * 12.0 / 1000.0, rtol = 5.e-2)
+        # Vérifie les ordres de grandeurs des calculs
+        for s in simulateur.scenarios:
+            for a in simulateur.annees:
+                np.testing.assert_allclose(analyse.PensionBrut[s][a], 20.0, atol=8.0)
+        return None
+
+    def test_PilotageParSoldePensionDuree(self):
+        # Pilotage 11 : fixe la durée de vie en retraite
+        simulateur = SimulateurRetraites()
+        REVcible = 0.30
+        Acible = simulateur.calculeAge(REVcible = REVcible)
+        analyse = simulateur.pilotageParSoldePensionAge(Acible = Acible)
+        analyse.graphique("REV")
+        
+        # Vérifie la durée de vie en retraite
+        for s in simulateur.scenarios:
+            for a in simulateur.annees_futures:
+                np.testing.assert_allclose(analyse.REV[s][a], REVcible, rtol = 1.e-2)
+        return None
+    
 if __name__=="__main__":
     unittest.main()

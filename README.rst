@@ -148,6 +148,25 @@ Le code précédent produit le graphique suivant.
 
 .. image::  fig/cor.jpg
 
+Documentation de l'API
+----------------------
+
+L'interface de programmation est documentée avec des docstrings. 
+
+On y accède avec la fonction ``help``. 
+
+Par exemple, l'exemple suivant génère la documentation de la classe 
+``SimulateurRetraites``. 
+
+.. code-block:: python
+
+	from retraites.SimulateurRetraites import SimulateurRetraites
+	help(SimulateurRetraites)
+
+.. _`APIdoc`: https://github.com/brunoscherrer/retraites/blob/master/doc/API-doc.ipynb
+
+La page `APIdoc`_ présente une version lisible de l'aide.
+
 Documentation
 -------------
 
@@ -160,6 +179,8 @@ Documentation
 .. _`ArticleEI`: https://github.com/brunoscherrer/retraites/blob/master/doc/Article4/article4-analyse-impact.pdf
 .. _`PilotagesPossibles`: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotages-possibles.ipynb
 .. _`NaissanceRetraiteMort`: https://github.com/brunoscherrer/retraites/blob/master/doc/Calcule-naissance-retraite-mort.ipynb
+.. _`PilotageVieEnRetraite`: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotage-vie-en-retraite.ipynb
+
 
 La description du modèle mathématique est donnée dans `documentationModele`_. 
 
@@ -172,6 +193,7 @@ D'autres exemples sont présentés dans le répertoire `doc`_ :
 - `Reformes`_ : une simulation fondée sur l'étude d'impact
 - `Reformes2`_ : une simulation fondée sur une modification de l'étude d'impact, avec augmentation des cotisations
 - `NaissanceRetraiteMort`_ : une analyse génération par génération de la vie : naissance, retraite et mort
+- `PilotageVieEnRetraite`_ : un pilotage par la durée de vie en retraite
 
 .. _`SimulationEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact.ipynb
 .. _`PossiblesEtudeImpact`: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb

@@ -1,44 +1,44 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jan 31 21:37:59 2020
-
-@author: osboxes
+Classe de gestion d'une analyse d'un système de retraites.
 """
 import pylab as pl
 import os
 
 class SimulateurAnalyse:
-    ### fonctions pour générer des graphiques
     def __init__(self, T, P, A, S, RNV, REV, Depenses, \
+                 PIB, PensionBrut, \
                  scenarios, annees_EV, annees, \
                  scenarios_labels, scenarios_labels_courts, \
                  dir_image="."):
         """
-        Créée une analyse de simulateur de retraites.
+        Crée une analyse de simulateur de retraites.
         
-        Paramètres
-        T: un dictionnaire, niveau des cotisations sociales
-        P: un dictionnaire, niveau des pensions par rapport aux salaires
-        A: un dictionnaire, âge moyen de départ à la retraite
-        S: un dictionnaire, Situation financière du système de retraite en \% du PIB
-        RNV: un dictionnaire, Niveau de vie des retraités par rapport à l'ensemble de la population
-        REV: un dictionnaire, Durée de la vie passée à la retraite
-        Depenses: un dictionnaire, Dépenses de retraites en % PIB
-        scenarios: une liste d'indices, les scénarios considérés
-        annees_EV: une liste d'entiers, annees sur lesquelles on a l'espérance de vie
-        annees: une liste d'entiers supérieurs ou égaux à 1, les scenarios consideres
-        dir_image : le répertoire de sauvegarde des images 
-            (par défaut, le répertoire courant)
-        scenarios_labels : une liste de chaîne de caractères, les étiquettes 
-            des scénarios économiques
-        scenarios_labels_courts : une liste de chaîne de caractères, les étiquettes 
-            courtes des scénarios économiques
+        Paramètres :
+            T: un dictionnaire, niveau des cotisations sociales
+            P: un dictionnaire, niveau des pensions par rapport aux salaires
+            A: un dictionnaire, âge moyen de départ à la retraite
+            S: un dictionnaire, Situation financière du système de retraite en \% du PIB
+            RNV: un dictionnaire, Niveau de vie des retraités par rapport à l'ensemble de la population
+            REV: un dictionnaire, Durée de la vie passée à la retraite
+            Depenses: un dictionnaire, Dépenses de retraites en % PIB
+            PIB : le montant absolu du PIB (Milliard EUR)
+            PensionBrut : la pension annuelle (brut) de droit direct moyenne (kEUR) 
+            scenarios: une liste d'indices, les scénarios considérés
+            annees_EV: une liste d'entiers, annees sur lesquelles on a l'espérance de vie
+            annees: une liste d'entiers supérieurs ou égaux à 1, les scenarios consideres
+            dir_image : le répertoire de sauvegarde des images 
+                (par défaut, le répertoire courant)
+            scenarios_labels : une liste de chaîne de caractères, les étiquettes 
+                des scénarios économiques
+            scenarios_labels_courts : une liste de chaîne de caractères, les étiquettes 
+                courtes des scénarios économiques
         
-        Exemple
-        simulateur = SimulateurRetraites()
-        analyse = simulateur.pilotageCOR()
-        analyse.dessineSimulation()
+        Exemple :
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.dessineSimulation()
         """
         self.scenarios = scenarios
         self.annees_EV = annees_EV
@@ -54,6 +54,8 @@ class SimulateurAnalyse:
         self.RNV = RNV
         self.REV = REV
         self.Depenses = Depenses
+        self.PIB = PIB
+        self.PensionBrut = PensionBrut
         
         # Liste des années dans le simulateur du COR
         self.liste_annees=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
@@ -81,14 +83,16 @@ class SimulateurAnalyse:
 
         self.affiche_quand_ecrit = True # Affiche un message quand on écrit un fichier
         
-        self.liste_variables = ["S","RNV","REV","T","A","P","Depenses"]
+        self.liste_variables = ["S","RNV","REV","T","A","P","Depenses", "PIB", "PensionBrut"]
         self.liste_legendes=[u"Situation financière du système (% PIB)",
            u"Niveau de vie des retraités p/r à l'ensemble (%)",
            u"Proportion de la vie passée à la retraite (%)",
            u"Taux de cotisation de retraite (% PIB)",
            u"Age de départ effectif moyen à la retraite",
            u"Ratio (pension moyenne)/(salaire moyen) (%)",
-           u"Dépenses de retraites (% PIB)"
+           u"Dépenses de retraites (% PIB)", 
+           u"Produit Intérieur Brut (Milliards EUR)", 
+           u"Pension annuelle (brut) de droit direct (kEUR)"
         ]
         return None
 
@@ -97,10 +101,12 @@ class SimulateurAnalyse:
         Configure l'affichage d'un message quand on écrit un fichier
         
         Paramètres
-        affiche_quand_ecrit : un booléen (par défaut = True)
+            affiche_quand_ecrit : un booléen (par défaut = True)
         
         Exemple
-        analyse.setAfficheMessageEcriture(False)
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.setAfficheMessageEcriture(False)
         """
         self.affiche_quand_ecrit = affiche_quand_ecrit
         return None
@@ -110,17 +116,19 @@ class SimulateurAnalyse:
         Configure le format de sauvegarde des images
         
         Paramètres
-        ext_image : une liste de chaînes de caractères (par defaut, ext_image=["png","pdf"])
+            ext_image : une liste de chaînes de caractères (par defaut, ext_image=["png","pdf"])
         
         Exemple
-        analyse.setImageFormats(["jpg"])
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.setImageFormats(["jpg"])
         """
         self.ext_image = ext_image
         return None
 
     def getImageFormats(self):
         """
-        Retourne le répertoire contenant les images
+        Retourne la liste des formats de sauvegarde des images.
         """
         return self.ext_image 
 
@@ -130,17 +138,24 @@ class SimulateurAnalyse:
         Configure la longueur des étiquettes
         
         Paramètres
-        labels_is_long : un booléen, True si les labels longs sont utilisés (par défaut = True)
+            labels_is_long : un booléen, True si les labels longs sont utilisés (par défaut = True)
         
         Exemple
-        analyse.setLabelLongs(False)
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.setLabelLongs(False)
         """
         self.labels_is_long = labels_is_long
         return None
 
     def getLabelLongs(self):
         """
-        Retourne le répertoire contenant les images
+        Retourne le booléen de longueur des étiquettes
+        
+        Exemple :
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            labels_is_long = analyse.getLabelLongs()
         """
         return self.labels_is_long 
 
@@ -148,9 +163,15 @@ class SimulateurAnalyse:
         """
         Configure le répertoire contenant les images
         
-        dir_image : une chaîne de caractères, le répertoire contenant les images 
-        (par défaut, dir_image="fig")
-        exportées par sauveFigure.
+        Paramètres :
+            dir_image : une chaîne de caractères, le répertoire contenant les images 
+            (par défaut, dir_image="fig")
+            exportées par sauveFigure.
+        
+        Exemple :
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.setDirectoryImage("/tmp")
         """
         self.dir_image = dir_image
         return None
@@ -158,6 +179,11 @@ class SimulateurAnalyse:
     def getDirectoryImage(self):
         """
         Retourne le répertoire contenant les images
+        
+        Exemple :
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            dir_image = analyse.getDirectoryImage()
         """
         return self.dir_image
 
@@ -166,13 +192,16 @@ class SimulateurAnalyse:
         Sauvegarde l'image dans le répertoire
         
         Paramètres:
-        f : une chaîne de caractères, le nom des fichiers à sauver
+            f : une chaîne de caractères, le nom des fichiers à sauver
         
-        Description
-        Sauvegarde l'image dans les formats définis. 
+        Description :
+            Sauvegarde l'image dans les formats définis. 
         
         Exemple:
-        analyse.sauveFigure("conjoncture")
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.graphique("Depenses")
+            analyse.sauveFigure("depenses")
         """
     
         for ext in self.ext_image:
@@ -191,22 +220,29 @@ class SimulateurAnalyse:
         pour tous les scénarios.
         
         Paramètres:
-        nom : chaîne de caractère, nom de la variable
-        v : variable à dessiner (par défaut, en fonction du nom)
-        taille_fonte_titre : taille de la fonte du titre (par défaut, fs=8)
-        yaxis_lim : une liste de taille 2, les bornes inférieures et supérieures 
-        de l'axe des ordonnées
-        dessine_legende : booleen, True si la légende doit être dessinée
-        scenarios_indices : une liste d'entiers, la liste des indices des scénarios
-        (par défaut, sc = range(1,7))
-        dessine_annees : la liste des années à dessiner
+            nom : chaîne de caractère, nom de la variable
+            v : variable à dessiner (par défaut, en fonction du nom)
+            taille_fonte_titre : taille de la fonte du titre (par défaut, fs=8)
+            yaxis_lim : une liste de taille 2, les bornes inférieures et supérieures 
+            de l'axe des ordonnées
+            dessine_legende : booleen, True si la légende doit être dessinée
+            scenarios_indices : une liste d'entiers, la liste des indices des scénarios
+            (par défaut, sc = range(1,7))
+            dessine_annees : la liste des années à dessiner
+        
+        Description :
+            Le nom peut être une égal à une des chaînes de caractères parmi 
+            les chaînes suivantes : "T", "P", "A", "S", "RNV", "REV", 
+            "Depenses", "PIB", "PensionBrut".
         
         Exemple:
-        analyse.graphique("RNV")
-        analyse.graphique("RNV", dessine_legende = True, scenarios_indices = range(1,5))
-        analyse.graphique("RNV", dessine_annees = range(2020,2041))
-        analyse.graphique("RNV", taille_fonte_titre = 14)
-        analyse.graphique("B", simulateur.B)
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.graphique("RNV")
+            analyse.graphique("RNV", dessine_legende = True, scenarios_indices = range(1,5))
+            analyse.graphique("RNV", dessine_annees = range(2020,2041))
+            analyse.graphique("RNV", taille_fonte_titre = 14)
+            analyse.graphique("B", simulateur.B)
         """
         
         if v is None:
@@ -224,6 +260,10 @@ class SimulateurAnalyse:
                 v = self.REV
             elif nom=="Depenses":
                 v = self.Depenses
+            elif nom=="PIB":
+                v = self.PIB
+            elif nom=="PensionBrut":
+                v = self.PensionBrut
             else:
                 raise TypeError('Mauvaise valeur pour le nom : %s' % (nom))
 
@@ -277,13 +317,16 @@ class SimulateurAnalyse:
         de la conjoncture pour tous les scénarios.
         
         Paramètres:
-        taille_fonte_titre : taille de la fonte (par défaut, fs=8)
+            taille_fonte_titre : taille de la fonte (par défaut, fs=8)
         
-        Description
-        Dessine S, RNV, REV, T, A, P. 
+        Description :
+            Dessine S, RNV, REV, T, A, P. 
         
         Exemple:
-        analyse.graphique(analyse.RNV,"RNV",14,[],True,range(1,6))
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.dessineSimulation()
+            analyse.dessineSimulation(taille_fonte_titre = 4)
         """
     
         for i in range(6):
@@ -297,14 +340,16 @@ class SimulateurAnalyse:
         """
         Affiche les valeurs d'une variable. 
         
-        v : une variable
+        Paramètres :
+            v : un dictionnaire, une trajectoire d'une des variables
         
-        Exemple
-        analyse.afficheVariable(RNV)
+        Exemple :
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.afficheVariable(analyse.RNV)
         """
     
         for s in self.scenarios:
-            print()
             print("Scenario",s,": ",self.scenarios_labels[s])
             for a in self.liste_annees:
                 print("%d : %.3f"%(a, v[s][a]))
@@ -314,6 +359,15 @@ class SimulateurAnalyse:
     def afficheSolutionsSimulateurCOR(self):
         """
         Affiche les paramètres du simulateur. 
+        
+        Description :
+            Les valeurs numériques affichées peuvent être utilisées 
+            dans le simulateur du COR pour reproduire les simulations. 
+        
+        Exemple :
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.afficheSolutionsSimulateurCOR()
         """
     
         print("Valeurs à rentrer sur le simulateur officiel du COR:")
@@ -332,6 +386,11 @@ class SimulateurAnalyse:
     def dessineLegende(self):
         """
         Crée un graphique présentant les légendes des graphiques.
+        
+        Exemple :
+            simulateur = SimulateurRetraites()
+            analyse = simulateur.pilotageCOR()
+            analyse.dessineLegende()
         """
         # Juste les légendes
         pl.figure(figsize=(6,2))
@@ -341,4 +400,3 @@ class SimulateurAnalyse:
         pl.ylim(bottom=0.0, top=0.7)
         pl.axis('off')
         return None
-
