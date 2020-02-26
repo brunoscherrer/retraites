@@ -30,7 +30,7 @@ Ce projet vise a reproduire les résultats et à ajouter un certain nombre de fo
 On utilise les `données de projection du COR`_ et on se base sur la `documentation technique fournie par le COR`_.
 
 Implémentation
-------------
+--------------
 
 Les calculs sont faits dans la classe `SimulateurRetraites.py`_.
 
@@ -51,6 +51,25 @@ Ce simulateur a été utile pour l'écriture de ces articles sur la réforme des
 - `D'après le COR, Philippe vous donne la "liberté" de partir à 62 ans et d'être pauvre`_
 - `D'après le COR, la réforme Philippe/Macron ne sera pas équilibrée financièrement`_
 
+Dépendances
+-----------
+
+Les dépendances sont :
+
+- Python >= 3.4
+- `numpy <http://www.numpy.org>`_ >= 0.10
+- `matplotlib <https://matplotlib.org>`_ >= 1.5.3
+- `scipy <https://www.scipy.org/>`_ >= 1.0.0
+
+Installation
+------------
+
+L'installation se fait avec les commandes suivantes::
+
+    git clone https://github.com/brunoscherrer/retraites.git
+    cd retraites
+    python setup.py install
+
 Exemples de simulations
 -----------------------
 
@@ -62,7 +81,7 @@ On peut utiliser le code pour reproduire exactement les prévisions macroscopiqu
 Cela permet de plus de calculer automatiquement les effets macroscopiques de réformes dont les cotisations seraient ajustées de sorte à équilibrer la situation financière du système. Ci-dessous, voici les prévisions du COR (sans aucune intervention) et deux exemples qui ont en commun de fixer comme objectif un niveau de vie des retraités égal à celui des actifs, le premier gardant les projections du COR en termes de départ à la retraite, le deuxième fixant un départ effectif à 61 ans. Les différentes courbes de couleurs à partir de 2020 correspondent aux différents scenarios conjoncturels (croissance/chômage) considérés par le COR à horizon 2070.
 
 Hypothèses macroéconomiques du COR
-----------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Les projections ci-dessous sont basées sur celles d'un certain nombre d'indicateurs macroscopiques fournis par le COR (voir la `documentation technique fournie par le COR`_ pour plus de détails), par exemple sur le fait qu'en 2070, un retraité moyen qui aurait une pension d'environ la moitié du salarié moyen aurait sensiblement le même niveau de vie.
 
@@ -71,7 +90,7 @@ Les projections ci-dessous sont basées sur celles d'un certain nombre d'indicat
 .. image::  fig/legende_scenarios.png
 
 Simulation 1: Projections du COR avec le réglage initial
---------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image::  fig/cor.jpg
 
@@ -80,7 +99,7 @@ Simulation 1: Projections du COR avec le réglage initial
 Dans cette première simulation, on observe une baisse légère des cotisations jusque 2070. Le système est globalement (en moyenne sur les différents scénarios conjoncturels) équilibré financièrement. Cet équilibre est possible via la baisse des pensions, de 0.5 fois le salaire moyen (2019) à une fourchette [0.25, 0.45] fois le salaire moyen selon la conjoncture. Le niveau de vie des retraités pourrait en être fortement affecté (jusqu'à une baisse de 30% dans le pire cas).
 
 Simulation 2: Adaptation automatique des cotisations
-----------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image::  fig/cotisations.jpg
 
@@ -89,7 +108,7 @@ Simulation 2: Adaptation automatique des cotisations
 On voit qu'il suffit de prévoir une hausse légère de cotisations, précisément de 31% (aujourd'hui) à 35% (en 2070), c'est-à-dire en moyene +0.25% par an (vu que 1.0025^(2070-2020)=35/31) alors on peut dans le pire scenario assurer un niveau de vie aux retraités équivalent à celui des actifs et le système est équilibré.
 
 Simulation 3: Adaptation automatique des cotisations avec départ à 61 ans
--------------------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. image::  fig/61ans.jpg
 
@@ -97,30 +116,8 @@ Simulation 3: Adaptation automatique des cotisations avec départ à 61 ans
 
 Dans la troisième figure "Départ à 61 ans et cotisations adaptées", on peut mesurer ce que coûterait collectivement le fait de permettre aux français de partir (effectivement) à la retraite à 61 ans (ce qui correspond à une hypothèse d'un départ possible à 60%). Il faudrait alors porter l'effort de cotisations de 31% à 39% dans le pire cas conjoncturel, soit une augmentation moyenne par an de +0.46% des cotisations.
 
-Installation
-------------
-
-Dépendances
-...........
-
-Les dépendances sont :
-
-- Python >= 3.4
-- `numpy <http://www.numpy.org>`_ >= 0.10
-- `matplotlib <https://matplotlib.org>`_ >= 1.5.3
-- `scipy <https://www.scipy.org/>`_ >= 1.0.0
-
-Installation
-............
-
-L'installation se fait avec les commandes suivantes::
-
-    git clone https://github.com/brunoscherrer/retraites.git
-    cd retraites
-    python setup.py install
-
-Exemple
--------
+Exemple d'utilisation
+---------------------
 
 La classe ``SimulateurRetraites`` implémente le simulateur qui évalue les résultats 
 du modèle en fonction des hypothèses (conjoncture) et des leviers. 
