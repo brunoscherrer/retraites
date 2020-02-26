@@ -135,7 +135,7 @@ des résultats.
 	simulateur = SimulateurRetraites()
 	analyse = simulateur.pilotageCOR()
 
-La méthode ``graphiques`` permet de produire les graphiques standard dans l'analyse 
+La méthode ``dessineSimulation`` permet de produire les graphiques standard dans l'analyse 
 d'une stratégie de pilotage. 
 
 .. code-block:: python
@@ -159,9 +159,11 @@ Documentation
 .. _`PilotagesPossibles`: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotages-possibles.ipynb
 .. _`NaissanceRetraiteMort`: https://github.com/brunoscherrer/retraites/blob/master/doc/Calcule-naissance-retraite-mort.ipynb
 
+Le document `ArticleEI`_ présente une analyse détaillée de l'étude d'impact de Janvier 2020 réalisée à l'aide du simulateur :  *Ce que l'étude d'impact ne dit pas*.
+
 La description du modèle mathématique est donnée dans `documentationModele`_. 
 
-Un exemple complet est présenté dans le fichier `index`_.
+Un exemple complet d'utilisation du simulateur est présenté dans le fichier `index`_.
 
 D'autres exemples sont présentés dans le répertoire `doc`_ :
 
@@ -179,7 +181,7 @@ D'autres exemples sont présentés dans le répertoire `doc`_ :
 .. _`EtudeImpactPensionAnnuelle`: https://github.com/brunoscherrer/retraites/blob/master/doc/CalculePensionAnnuelle/simulation-pension-annuelle.ipynb
 .. _`EtudeImpactNumerisation`: https://github.com/brunoscherrer/retraites/blob/master/doc/DigitalisationEI/Numerisation-Etude-Impact.ipynb
 
-Une analyse détaillée de l'étude d'impact de Janvier 2020 :
+Les résultats présentés dans l'`articleEI`_ proviennent des cahiers électroniques suivants :
 
 - `SimulationEtudeImpact`_ : une simulation de l'étude d'impact de Janvier 2020
 - `PossiblesEtudeImpact`_ : une représentation des trajectoires possibles dans le cadre de l'étude d'impact de Janvier 2020
@@ -188,6 +190,3 @@ Une analyse détaillée de l'étude d'impact de Janvier 2020 :
 - `EtudeImpactAgePensions`_ : une analyse de l'étude d'impact en fonction de l'âge et du niveau de pensions
 - `EtudeImpactPensionAnnuelle`_ : une analyse de l'étude d'impact en termes de pension annuelle
 - `EtudeImpactNumerisation`_ : une numérisation de données de l'étude d'impact à partir des graphiques
-
-Une analyse détaillée de ce que l'étude d'impact ne dit pas est présentée dans `articleEI`_.
-
