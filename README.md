@@ -74,7 +74,7 @@ Cela permet de plus de calculer automatiquement les effets macroscopiques de ré
 
 ### Hypothèses macroéconomiques du COR
 
-Les projections ci-dessous sont basées sur celles d'un certain nombre d'indicateurs macroscopiques fournis par le COR (voir la `documentation technique fournie par le COR`_ pour plus de détails), par exemple sur le fait qu'en 2070, un retraité moyen qui aurait une pension d'environ la moitié du salarié moyen aurait sensiblement le même niveau de vie.
+Les projections ci-dessous sont basées sur celles d'un certain nombre d'indicateurs macroscopiques fournis par le COR (voir la [documentation technique fournie par le COR] pour plus de détails), par exemple sur le fait qu'en 2070, un retraité moyen qui aurait une pension d'environ la moitié du salarié moyen aurait sensiblement le même niveau de vie.
 
 ![conjoncture.jpg](fig/conjoncture.jpg)
 
@@ -116,16 +116,16 @@ Cette classe permet de produire les graphiques pour réaliser l'analyse
 des résultats. 
 
 ```
-	from retraites.SimulateurRetraites import SimulateurRetraites
-	simulateur = SimulateurRetraites()
-	analyse = simulateur.pilotageCOR()
+    from retraites.SimulateurRetraites import SimulateurRetraites
+    simulateur = SimulateurRetraites()
+    analyse = simulateur.pilotageCOR()
 ```
 
 La méthode ``dessineSimulation`` permet de produire les graphiques standard dans l'analyse 
 d'une stratégie de pilotage.
 
 ```
-	analyse.dessineSimulation()
+    analyse.dessineSimulation()
 ```
 
 Le code précédent produit le graphique suivant.
@@ -142,58 +142,60 @@ Par exemple, l'exemple suivant génère la documentation de la classe
 ``SimulateurRetraites``.
 
 ```
-	from retraites.SimulateurRetraites import SimulateurRetraites
-	help(SimulateurRetraites)
+    from retraites.SimulateurRetraites import SimulateurRetraites
+    help(SimulateurRetraites)
 ```
 
-[APIdoc]: https://github.com/brunoscherrer/retraites/blob/master/doc/API-doc.ipynb
+[Documentation de l'API]: https://github.com/brunoscherrer/retraites/blob/master/doc/API-doc.ipynb
 
 
-La page [APIdoc] présente une version lisible de l'aide.
+La [Documentation de l'API] présente une version lisible de l'aide.
 
 ## Études réalisées avec le simulateur
 
 [doc]: https://github.com/brunoscherrer/retraites/blob/master/doc
-[index]: https://github.com/brunoscherrer/retraites/blob/master/index.ipynb
-[SimulationCOR]: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-COR-juin-2019.ipynb
-[DocumentationModele]: https://github.com/brunoscherrer/retraites/blob/master/doc/Description-du-composant-retraites.ipynb
-[Reformes]: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes.ipynb
-[Reformes2]: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes2.ipynb
+[Simulations numériques]: https://github.com/brunoscherrer/retraites/blob/master/index.ipynb
+[Simulations numériques du rapport du COR de Juin 2019]: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-COR-juin-2019.ipynb
+[Modèle du simulateur officiel du COR]: https://github.com/brunoscherrer/retraites/blob/master/doc/Description-du-composant-retraites.ipynb
+[Essai de détermination des réformes possibles à partir de l'étude d'impact]: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes.ipynb
+[Une autre réforme en augmentant légèrement la part du PIB]: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes2.ipynb
 [Ce que l'étude d'impact ne dit pas]: https://github.com/brunoscherrer/retraites/blob/master/doc/Article4/article4-analyse-impact.pdf
-[PilotagesPossibles]: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotages-possibles.ipynb
-[NaissanceRetraiteMort]: https://github.com/brunoscherrer/retraites/blob/master/doc/Calcule-naissance-retraite-mort.ipynb
-[PilotageVieEnRetraite]: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotage-vie-en-retraite.ipynb
+[Simulations numériques de tous les pilotages possibles]: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotages-possibles.ipynb
+[Dessin de la naissance à la mort d'une génération]: https://github.com/brunoscherrer/retraites/blob/master/doc/Calcule-naissance-retraite-mort.ipynb
+[Pilotage par la durée de vie en retraite]: https://github.com/brunoscherrer/retraites/blob/master/doc/pilotage-vie-en-retraite.ipynb
+[Impact du déficit dans la trajectoire du COR de Juin 2019]: https://github.com/brunoscherrer/retraites/blob/master/doc/impact-deficit-COR-Juin-2019.ipynb
 
 
 L'article "[Ce que l'étude d'impact ne dit pas]" présente une analyse détaillée de l'étude d'impact de Janvier 2020 réalisée à l'aide du simulateur.
 
-La description du modèle mathématique est donnée dans [documentationModele].
+La description du modèle mathématique est donnée dans le [Modèle du simulateur officiel du COR].
 
-Un exemple complet d'utilisation du simulateur est présenté dans le fichier [index].
+Un exemple complet d'utilisation du simulateur est présenté dans [Simulations numériques].
 
 D'autres exemples sont présentés dans le répertoire [doc] :
 
-- [SimulationCOR] : une simulation du rapport du COR de Juin 2019
-- [PilotagesPossibles] : un exemple de tous les pilotages possibles
-- [Reformes] : une simulation fondée sur l'étude d'impact
-- [Reformes2] : une simulation fondée sur une modification de l'étude d'impact, avec augmentation des cotisations
-- [NaissanceRetraiteMort] : une analyse génération par génération de la vie : naissance, retraite et mort
-- [PilotageVieEnRetraite] : un pilotage par la durée de vie en retraite
+- [Simulations numériques du rapport du COR de Juin 2019]
+- [Simulations numériques de tous les pilotages possibles]
+- [Essai de détermination des réformes possibles à partir de l'étude d'impact]
+- [Une autre réforme en augmentant légèrement la part du PIB]
+- [Dessin de la naissance à la mort d'une génération]
+- [Pilotage par la durée de vie en retraite]
+- [Impact du déficit dans la trajectoire du COR de Juin 2019]
 
-[SimulationEtudeImpact]: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact.ipynb
-[PossiblesEtudeImpact]: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
-[EtudeImpactAge]: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-analyse-age.ipynb
-[EtudeImpactDepenses]: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-Etude-Impact-budget.ipynb
-[EtudeImpactAgePensions]: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
-[EtudeImpactPensionAnnuelle]: https://github.com/brunoscherrer/retraites/blob/master/doc/CalculePensionAnnuelle/simulation-pension-annuelle.ipynb
-[EtudeImpactNumerisation]: https://github.com/brunoscherrer/retraites/blob/master/doc/DigitalisationEI/Numerisation-Etude-Impact.ipynb
+[Simulations numériques de l'étude d'impact]: https://github.com/brunoscherrer/retraites/blob/master/doc/EtudeImpact/simulation-Etude-Impact.ipynb
+[Essai de détermination des réformes possibles à partir de l'étude d'impact]: https://github.com/brunoscherrer/retraites/blob/master/doc/reforme-Macron-age-vs-pensions.ipynb
+[Analyse de la trajectoire de l'âge de départ dans l'étude d'impact]: https://github.com/brunoscherrer/retraites/blob/master/doc/EtudeImpact/simulation-Etude-Impact-analyse-age.ipynb
+[La réforme des retraites ne se fera pas à «budget constant»]: https://github.com/brunoscherrer/retraites/blob/master/doc/EtudeImpact/simulation-Etude-Impact-budget.ipynb
+[Simulations numériques du rapport du COR de Juin 2019 - Calcul de pension annuelle (brut)]: https://github.com/brunoscherrer/retraites/blob/master/doc/EtudeImpact/CalculePensionAnnuelle/simulation-pension-annuelle.ipynb
+[Numérisation de l'étude d'impact]: https://github.com/brunoscherrer/retraites/blob/master/doc/EtudeImpact/DigitalisationEI/Numerisation-Etude-Impact.ipynb
+[Analyse de l'étude d'impact]: https://github.com/brunoscherrer/retraites/blob/master/doc/EtudeImpact/analyse-Etude-Impact.ipynb
 
 Les résultats présentés dans "[Ce que l'étude d'impact ne dit pas]" proviennent des cahiers électroniques suivants :
 
-- [SimulationEtudeImpact] : une simulation de l'étude d'impact de Janvier 2020
-- [PossiblesEtudeImpact] : une représentation des trajectoires possibles dans le cadre de l'étude d'impact de Janvier 2020
-- [EtudeImpactAge] : une analyse de la trajectoire d'âge de l'étude d'impact
-- [EtudeImpactDepenses] : une analyse de la trajectoire de dépenses de l'étude d'impact
-- [EtudeImpactAgePensions] : une analyse de l'étude d'impact en fonction de l'âge et du niveau de pensions
-- [EtudeImpactPensionAnnuelle] : une analyse de l'étude d'impact en termes de pension annuelle
-- [EtudeImpactNumerisation] : une numérisation de données de l'étude d'impact à partir des graphiques
+- [Analyse de l'étude d'impact]
+- [Simulations numériques de l'étude d'impact]
+- [Essai de détermination des réformes possibles à partir de l'étude d'impact]
+- [Analyse de la trajectoire de l'âge de départ dans l'étude d'impact]
+- [La réforme des retraites ne se fera pas à «budget constant»]
+- [Simulations numériques du rapport du COR de Juin 2019 - Calcul de pension annuelle (brut)]
+- [Numérisation de l'étude d'impact]
