@@ -21,7 +21,7 @@ install_requires = ['numpy>=1.16',
                     ]
 extras_require = {'doc': ['jupyter', 'jupyter_client']}
 
-with open("README.rst", "r") as fh:
+with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
