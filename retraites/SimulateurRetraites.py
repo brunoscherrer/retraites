@@ -67,13 +67,12 @@ class SimulateurRetraites:
         json_file.close()
         
         # Paramètres constants
+        self.annee_courante=2020                        # Annee correspondant à la date d'aujourd'hui
         self.horizon=2070                               # Dernière année du calcul
         self.annees=range(2005, self.horizon+1)         # annees sur lesquelles on fait les calculs
         self.annees_futures=range(2020, self.horizon+1) # annees sur lesquelles on peut changer qqch
         self.annees_standard=[2020, 2025, 2030, 2040, 2050, 2060, 2070] # Années standard dans les calculs simplifiés
-        self.annees_EV=range(1930,2011)              # annees sur lesquelles on a l'espérance de vie
-        self.scenarios=range(1,7)                    # scenarios consideres
-        self.scenario_croissance = [1.8, 1.5, 1.3, 1.0, 1.8, 1.0]  # Taux de croissance dans chaque scénario
+        self.annees_EV=range(1930,2011)                 # annees sur lesquelles on a l'espérance de vie
 
         # Extrait les variables depuis les données
         self.T = self.get('T')
@@ -98,13 +97,19 @@ class SimulateurRetraites:
                                "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
                                "Hausse des salaires: +1%/an, Taux de chômage: 10%"]
         self.scenarios_labels_courts=["Scénario inexistant", 
-                                      "+1,8%/an, Taux de chômage: 7%",
+                                      "+1,8%/an, Chômage: 7%",
                                       "+1,5%/an, Chômage: 7%",
                                       "+1,3%/an, Chômage: 7%",
                                       "+1%/an, Chômage: 7%",
                                       "+1,8%/an, Chômage: 4.5%",
                                       "+1%/an, Chômage: 10%"]
         
+        # Scénarios
+        self.scenarios=range(1,7)  # Scenarios considérés
+        self.scenario_central = 3    # central    : +1,3%/an, Chômage: 7%
+        self.scenario_pessimiste = 6 # pessimiste :   +1%/an, Chômage: 10%
+        self.scenario_optimiste = 5  # optimiste  : +1,8%/an, Chômage: 4.5%
+
         # Taux de croissance pour chaque scénario
         self.scenarios_croissance = [0.0, 1.8, 1.5, 1.3, 1.0, 1.8, 1.0]
         # Taux de chomage pour chaque scénario

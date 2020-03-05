@@ -3,13 +3,34 @@
 
 import openturns as ot
 from retraites.FonctionPension import FonctionPension
-from retraites.EtudeImpact import EtudeImpact
 
 class ModelePensionProbabiliste():
+    def InterpoleAge(annee, annee_courante, annee_horizon, 
+                   age_courant, age_horizon):
+        """
+        Retourne l'âge pour l'année "annee" par interpolation linéaire 
+        entre l'âge courant et l'âge à l'horizon. 
+        
+        Paramètres :
+            annee : un flottant, l'année où calculer l'âge
+            annee_courante : un flottant, l'année d'aujourd'hui
+            annee_horizon : un flottant, l'année finale de la simulation dans le futur
+            age_courant : un flottant, l'âge de départ en retraite aujourd'hui
+            age_horizon : un flottant, l'âge de départ en retraite à la fin de la simulation
+        
+        Description
+        Utilise une interpolation linéaire entre les deux points suivants :
+        * (annee_courante, age_courant)
+        * (annee_horizon, age_horizon)
+        """
+        age = (annee - annee_courante) / (annee_horizon - annee_courante) * age_horizon + \
+              (annee_horizon - annee) / (annee_horizon - annee_courante) * age_courant
+        return age
+
     def __init__(self, simulateur, annee, S, D, 
                  ageMin = 62.0, ageMax = 66.0, 
                  FMin = 0.25, FMax = 0.75, 
-                 tauxChomageMin = 4.5, tauxChomageMax = 10.0 ,
+                 tauxChomageMin = 4.5, tauxChomageMax = 10.0,
                  bornesAgeConstant = True):
         """
         Crée un modèle de pension probabiliste.
@@ -87,10 +108,10 @@ class ModelePensionProbabiliste():
         # Crée le modèle réduit à partir du modèle complet : entrées = (As, F, TauC)
         indices = ot.Indices([0, 1])
         referencePoint = ot.Point([S, D])
-        self.fonction = ot.ParametricFunction(modelePension, indices, referencePoint)
-        self.bornesAgeConstant = bornesAgeConstant
+        self.fonction = ot.ParametricFunction(modelePension, indices, 
+                                              referencePoint)
         # Distribution
-        self._calculeAge(simulateur, annee, ageMin, ageMax)
+        self._calculeAge(simulateur, annee, ageMin, ageMax, bornesAgeConstant)
         if self.ageMin == self.ageMax:
             As = ot.Dirac(self.ageMin)
         else:
@@ -113,22 +134,39 @@ class ModelePensionProbabiliste():
         """
         return self.inputDistribution
     
-    def _calculeAge(self, simulateur, annee, ageMin, ageMax):
+    def _calculeAge(self, simulateur, annee, ageMin, ageMax, 
+                    bornesAgeConstant):
         """
         Calcule les bornes de l'âge en fonction de l'option bornesAgeConstant.
+        
+        Si bornesAgeConstant est True, alors utilise les arguments 
+        ageMin et ageMax.
+        Sinon, 
+        * si l'année est inférieure à l'année courante, utilise l'âge du COR,
+        * sinon, réalise une interpolation linéaire entre les paramètres 
+        de l'étude d'impact (borne supérieure) et les paramètres du COR (borne
+        inférieure).
         """
-        if self.bornesAgeConstant:
+        if bornesAgeConstant:
             self.ageMin = ageMin
             self.ageMax = ageMax
         else:
             # Pour l'âge de départ en retraite
-            scenario_central = 3
-            etudeImpact = EtudeImpact(simulateur)
-            analyse_EI = etudeImpact.calcule()
             analyse_COR = simulateur.pilotageCOR()
-            ageEI = analyse_EI.A[scenario_central][annee]
-            ageCOR = analyse_COR.A[scenario_central][annee]
-            self.ageMin = min(ageEI, ageCOR)
-            self.ageMax = max(ageEI, ageCOR)
+            if annee <= simulateur.annee_courante:
+                ageCOR = analyse_COR.A[simulateur.scenario_central][annee]
+                self.ageMin = ageCOR
+                self.ageMax = ageCOR
+            else:
+                ageCOR_courant = analyse_COR.A[simulateur.scenario_central][simulateur.annee_courante]
+                ageMin_horizon = ageMin
+                ageMax_horizon = ageMax
+                self.ageMin = ModelePensionProbabiliste.InterpoleAge(annee, 
+                                           simulateur.annee_courante, simulateur.horizon, 
+                                           ageCOR_courant, ageMin_horizon)
+                self.ageMax = ModelePensionProbabiliste.InterpoleAge(annee, 
+                                                simulateur.annee_courante, simulateur.horizon, 
+                                                ageCOR_courant, ageMax_horizon)
         return
         
+    
