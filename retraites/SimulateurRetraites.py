@@ -26,7 +26,8 @@ class SimulateurRetraites:
             pilotage : un entier, la stratégie de pilotage (par défaut, celle du COR)
             
         Attributs :
-            annee_courante : l'année correspondant à la date d'aujourd'hui.
+            annee_courante : 
+                l'année correspondant à la date d'aujourd'hui.
 
             horizon : 
                 la dernière année du calcul. 
@@ -77,6 +78,96 @@ class SimulateurRetraites:
                 Retourne la liste de chaîne de caractère courtes décrivant les 
                 scénarios pour chaque scénario 
                 de la liste retournée par getScenarios().
+                
+            T : 
+                un dictionnaire représentant une trajectoire. 
+                le taux de cotisations retraites
+            
+            P : 
+                un dictionnaire représentant une trajectoire. 
+                le niveau moyen brut des pensions par rapport au 
+                niveau moyen brut des salaires
+            
+            A : 
+                un dictionnaire représentant une trajectoire. 
+                l'âge effectif moyen de départ en retraite
+                
+            G : 
+                un dictionnaire représentant une trajectoire. 
+                Effectif moyen d'une génération arrivant aux âges 
+                de la retraite
+                
+            NR  : 
+                un dictionnaire représentant une trajectoire. 
+                Nombre de retraités de droit direct (tous régimes confondus)
+                
+            NC :
+                un dictionnaire représentant une trajectoire. 
+                Nombre de personnes en emploi (ou nombre de cotisants) 
+        
+            TCR :
+                un dictionnaire représentant une trajectoire. 
+                Taux des prélèvements sociaux sur les pensions de retraite
+                Son nom est TPR dans le composant, TCR dans le fichier json
+        
+            TCS :
+                un dictionnaire représentant une trajectoire. 
+                Taux des prélèvements sociaux sur les salaires et 
+                revenus d'activité ;
+                Son nom est TPR dans le composant, TCR dans le fichier json
+        
+            CNV :
+                un dictionnaire représentant une trajectoire. 
+                Coefficient pour passer du ratio "pensions/salaire moyen" 
+                au ratio "niveau de vie/salaire moyen"
+        
+            dP :
+                un dictionnaire représentant une trajectoire. 
+                Autres dépenses de retraite rapportées au nombre de 
+                retraités de droit direct en % du revenu d'activités brut moyen
+        
+            B :
+                un dictionnaire représentant une trajectoire. 
+                part des revenus d'activités bruts dans le PIB 
+        
+            EV :
+                un dictionnaire représentant une trajectoire. 
+                Espérance de vie à 60 ans par génération
+
+            liste_variables :
+                Une liste de chaînes de caractères. 
+                La liste des variables du modèle : B, NR, etc...
+                
+            liste_legendes
+                Une liste de chaînes de caractères. 
+                La liste des légendes pour chaque variable dans liste_variables
+
+            labels_is_long :
+                un booléen. 
+                True, si on utilise les labels longs dans les graphiques
+        
+            yaxis_lim :
+                un dictionnaire. 
+                Les plages min et max pour l'axe des ordonnées 
+                des variables standard en sortie du simulateur. 
+
+            ext_image :
+                une liste de chaînes de caractères
+                Les types de fichier à générer par la méthode save
+
+            affiche_quand_ecrit :
+                un booléen
+                Si True, alors affiche un message quand on écrit un fichier
+
+            rechercheAgeBornes :
+                une liste de flottants
+                Les bornes de recherches pour l'inversion de l'âge 
+                en fonction du ratio de durée de vie en retraite. 
+
+            rechercheAgeRTol :
+                un flottant
+                La tolérance relative sur l'âge pour l'inversion de l'âge 
+                en fonction du ratio de durée de vie en retraite. 
         
         Description :
             Plusieurs stratégies de pilotage peuvent être utilisées :
