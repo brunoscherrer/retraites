@@ -24,6 +24,59 @@ class SimulateurRetraites:
             (par défaut, charge le fichier "fileProjection.json" fournit par le 
             module)
             pilotage : un entier, la stratégie de pilotage (par défaut, celle du COR)
+            
+        Attributs :
+            annee_courante : l'année correspondant à la date d'aujourd'hui.
+
+            horizon : 
+                la dernière année du calcul. 
+    
+            annees : 
+                la liste des années sur lesquelles on fait les calculs. 
+                Chaque année de cette liste est inférieure à l'année de l'horizon.
+    
+            annees_futures :
+                Retourne la liste des années sur lesquelles on peut changer 
+                quelque chose.
+    
+            annees_standard :
+                Retourne la liste des années standard dans les calculs simplifiés. 
+    
+            annees_EV :
+                Retourne la liste des années de naissance pour lesquelles on a l'espérance de vie. 
+    
+            scenarios :
+                Retourne la liste des scénarios considérés. 
+                Ces scénarios sont des indices dans les tables de scénarios de 
+                chomage, de croissance ainsi que les labels. 
+    
+            scenario_central :
+                Retourne l'indice du scénario central, 
+                +1,3%/an, Chômage: 7%. 
+    
+            scenario_pessimiste :
+                Retourne l'indice du scénario pessimiste +1%/an, Chômage: 10%. 
+        
+            scenario_optimiste :
+                Retourne l'indice du scénario optimiste : +1,8%/an, Chômage: 4.5%.
+    
+            scenarios_croissance :
+                Retourne la liste des taux de croissance pour chaque scénario 
+                de la liste retournée par getScenarios().
+    
+            scenarios_chomage :
+                Retourne la liste des taux de chomage pour chaque scénario 
+                de la liste retournée par getScenarios().
+    
+            scenarios_labels :
+                Retourne la liste de chaîne de caractère décrivant les 
+                scénarios pour chaque scénario 
+                de la liste retournée par getScenarios().
+    
+            scenarios_labels_courts :
+                Retourne la liste de chaîne de caractère courtes décrivant les 
+                scénarios pour chaque scénario 
+                de la liste retournée par getScenarios().
         
         Description :
             Plusieurs stratégies de pilotage peuvent être utilisées :
@@ -67,27 +120,22 @@ class SimulateurRetraites:
         json_file.close()
         
         # Paramètres constants
-        self.annee_courante=2020                        # Annee correspondant à la date d'aujourd'hui
-        self.horizon=2070                               # Dernière année du calcul
+        self.annee_courante = 2020  # Annee correspondant à la date d'aujourd'hui
+        self.horizon = 2070         # Dernière année du calcul
+        self.annees_futures=range(self.annee_courante, self.horizon+1) # annees sur lesquelles on peut changer qqch
         self.annees=range(2005, self.horizon+1)         # annees sur lesquelles on fait les calculs
-        self.annees_futures=range(2020, self.horizon+1) # annees sur lesquelles on peut changer qqch
         self.annees_standard=[2020, 2025, 2030, 2040, 2050, 2060, 2070] # Années standard dans les calculs simplifiés
         self.annees_EV=range(1930,2011)                 # annees sur lesquelles on a l'espérance de vie
 
-        # Extrait les variables depuis les données
-        self.T = self.get('T')
-        self.P = self.get('P')
-        self.A = self.get('A')
-        self.G = self.get('G')
-        self.NR = self.get('NR')
-        self.NC = self.get('NC')
-        self.TCR = self.get('TCR') # Son nom est TPR dans le composant, TCR dans le fichier json
-        self.TCS = self.get('TCS') # Son nom est TCS dans le composant, TCS dans le fichier json
-        self.CNV = self.get('CNV')
-        self.dP = self.get('dP')
-        self.B = self.get('B')
-        self.EV = self.get('EV')
-        
+        # Scénarios
+        self.scenarios = range(1,7)  # Scenarios considérés
+        self.scenario_central = 3    # central    : +1,3%/an, Chômage: 7%
+        self.scenario_pessimiste = 6 # pessimiste :   +1%/an, Chômage: 10%
+        self.scenario_optimiste = 5  # optimiste  : +1,8%/an, Chômage: 4.5%
+        # Taux de croissance pour chaque scénario
+        self.scenarios_croissance = [0.0, 1.8, 1.5, 1.3, 1.0, 1.8, 1.0]
+        # Taux de chomage pour chaque scénario
+        self.scenarios_chomage = [0.0, 7.0, 7.0, 7.0, 7.0, 4.5, 10.0]
         # Graphiques
         self.scenarios_labels=["Scénario inexistant", 
                                "Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
@@ -103,17 +151,20 @@ class SimulateurRetraites:
                                       "+1%/an, Chômage: 7%",
                                       "+1,8%/an, Chômage: 4.5%",
                                       "+1%/an, Chômage: 10%"]
-        
-        # Scénarios
-        self.scenarios=range(1,7)  # Scenarios considérés
-        self.scenario_central = 3    # central    : +1,3%/an, Chômage: 7%
-        self.scenario_pessimiste = 6 # pessimiste :   +1%/an, Chômage: 10%
-        self.scenario_optimiste = 5  # optimiste  : +1,8%/an, Chômage: 4.5%
 
-        # Taux de croissance pour chaque scénario
-        self.scenarios_croissance = [0.0, 1.8, 1.5, 1.3, 1.0, 1.8, 1.0]
-        # Taux de chomage pour chaque scénario
-        self.scenarios_chomage = [0.0, 7.0, 7.0, 7.0, 7.0, 4.5, 10.0]
+        # Extrait les variables depuis les données
+        self.T = self.get('T')
+        self.P = self.get('P')
+        self.A = self.get('A')
+        self.G = self.get('G')
+        self.NR = self.get('NR')
+        self.NC = self.get('NC')
+        self.TCR = self.get('TCR') # Son nom est TPR dans le composant, TCR dans le fichier json
+        self.TCS = self.get('TCS') # Son nom est TCS dans le composant, TCS dans le fichier json
+        self.CNV = self.get('CNV')
+        self.dP = self.get('dP')
+        self.B = self.get('B')
+        self.EV = self.get('EV')
 
         self.liste_variables = ["B","NR","NC","G","dP","TPR","TPS","CNV","EV"]
         self.liste_legendes=[u"B: Part des revenus d'activité bruts dans le PIB",
@@ -1159,7 +1210,7 @@ class SimulateurRetraites:
         PIB = dict()
         for s in self.scenarios:
             PIB[s] = dict()
-            croissance = self.scenario_croissance[s - 1]
+            croissance = self.scenarios_croissance[s]
             for a in self.annees:
                 if (a<= annee_dernier_PIB):
                     PIB[s][a] = PIB_constate[a]
