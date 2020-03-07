@@ -9,9 +9,9 @@ import os
 class SimulateurAnalyse:
     def __init__(self, T, P, A, S, RNV, REV, Depenses, \
                  PIB, PensionBrut, \
-                 scenarios, annees_EV, annees, \
+                 scenarios, annees_EV, annees, annees_standard, \
                  scenarios_labels, scenarios_labels_courts, \
-                 dir_image="."):
+                 dir_image, ext_image):
         """
         Crée une analyse de simulateur de retraites.
         
@@ -28,12 +28,112 @@ class SimulateurAnalyse:
             scenarios: une liste d'indices, les scénarios considérés
             annees_EV: une liste d'entiers, annees sur lesquelles on a l'espérance de vie
             annees: une liste d'entiers supérieurs ou égaux à 1, les scenarios consideres
-            dir_image : le répertoire de sauvegarde des images 
-                (par défaut, le répertoire courant)
+            annees_standard: une liste d'entiers supérieurs ou égaux à 1, les années futures standard
             scenarios_labels : une liste de chaîne de caractères, les étiquettes 
                 des scénarios économiques
             scenarios_labels_courts : une liste de chaîne de caractères, les étiquettes 
                 courtes des scénarios économiques
+            dir_image : le répertoire de sauvegarde des images
+            ext_image : la liste des formats de sauvegarde des images
+            
+        Attributs :
+            scenarios :
+                Une liste d'entiers.
+                la liste des scénarios considérés. 
+                Ces scénarios sont des indices dans les tables de scénarios de 
+                chomage, de croissance ainsi que les labels. 
+
+            annees_EV :
+                Une liste d'entiers.
+                La liste des années de naissance pour lesquelles on a l'espérance de vie. 
+    
+            annees : 
+                Une liste d'entiers.
+                La liste des années sur lesquelles on fait les calculs. 
+                Chaque année de cette liste est inférieure à l'année de l'horizon.
+    
+            annees_standard :
+                Une liste d'entiers.
+                La liste d'une sélection des années futures standard dans les calculs simplifiés. 
+    
+            T : 
+                Un dictionnaire représentant une trajectoire. 
+                Le taux de cotisations retraites.
+            
+            P : 
+                Un dictionnaire représentant une trajectoire. 
+                Le niveau moyen brut des pensions par rapport au 
+                niveau moyen brut des salaires.
+            
+            A : 
+                Un dictionnaire représentant une trajectoire. 
+                L'âge effectif moyen de départ en retraite.
+            
+            S : 
+                Un dictionnaire représentant une trajectoire. 
+                Le solde financier du système de retraites en part de PIB. 
+
+            RNV :
+                Un dictionnaire représentant une trajectoire. 
+                Niveau de vie des retraités par rapport à l'ensemble de la population. 
+
+            REV :
+                Un dictionnaire représentant une trajectoire. 
+                Durée de la vie passée à la retraite.
+
+            Depenses : 
+                Un dictionnaire représentant une trajectoire. 
+                Le montant des dépenses de retraites en part de PIB. 
+
+            PIB : 
+                Un dictionnaire représentant une trajectoire. 
+                Le produit intérieur brut. 
+
+            PensionBrut : 
+                Un dictionnaire représentant une trajectoire. 
+                Le montant annuel moyen brut de pension de droit direct. 
+    
+            scenarios_labels :
+                La liste de chaîne de caractère décrivant les 
+                scénarios pour chaque scénario 
+                de la liste retournée par getScenarios().
+    
+            scenarios_labels_courts :
+                La liste de chaîne de caractère courtes décrivant les 
+                scénarios pour chaque scénario 
+                de la liste retournée par getScenarios().
+
+            labels_is_long :
+                Un booléen. 
+                True, si on utilise les labels longs dans les graphiques
+        
+            dir_image :
+                Une chaîne de caractère. 
+                Le répertoire de sauvegarde des images. 
+                Par défaut, la chaîne de caractère vide. 
+
+            ext_image :
+                Une liste de chaînes de caractères. 
+                Les types de fichier à générer par la méthode sauveFigure. 
+                
+            affiche_quand_ecrit :
+                Un booléen.
+                Si True, alors affiche un message quand la méthode sauveFigure 
+                écrit un fichier.
+        
+            yaxis_lim :
+                Un dictionnaire. 
+                Les plages min et max pour l'axe des ordonnées 
+                des variables en sortie de l'analyse. 
+        
+
+            liste_variables :
+                Une liste de chaînes de caractère. 
+                La liste des variables de l'analyse. 
+                
+            liste_legendes :
+                Une liste de chaînes de caractère. 
+                La liste des légendes des variables de l'analyse. 
         
         Exemple :
             simulateur = SimulateurRetraites()
@@ -43,6 +143,9 @@ class SimulateurAnalyse:
         self.scenarios = scenarios
         self.annees_EV = annees_EV
         self.annees = annees
+        
+        # Liste des années dans le simulateur du COR
+        self.annees_standard = annees_standard
 
         # initialisations diverses
         # chargement des donnees du COR pour les 6 scenarios
@@ -56,9 +159,6 @@ class SimulateurAnalyse:
         self.Depenses = Depenses
         self.PIB = PIB
         self.PensionBrut = PensionBrut
-        
-        # Liste des années dans le simulateur du COR
-        self.liste_annees=[2020, 2025, 2030, 2040, 2050, 2060, 2070]
 
         # Graphiques
         self.scenarios_labels = scenarios_labels
@@ -66,9 +166,9 @@ class SimulateurAnalyse:
 
         self.labels_is_long = True # True, si on utilise les labels longs
         
-        self.dir_image=dir_image # répertoire pour les images
+        self.dir_image = dir_image # répertoire pour les images
 
-        self.ext_image=["png","pdf"]   # types de fichier à générer
+        self.ext_image = ext_image   # types de fichier à générer
         
         # Configure les plages min et max pour l'axe des ordonnées 
         # des variables standard en sortie du simulateur
@@ -351,7 +451,7 @@ class SimulateurAnalyse:
     
         for s in self.scenarios:
             print("Scenario",s,": ",self.scenarios_labels[s])
-            for a in self.liste_annees:
+            for a in self.annees_standard:
                 print("%d : %.3f"%(a, v[s][a]))
             print("")
         return None
@@ -376,7 +476,7 @@ class SimulateurAnalyse:
             print("")
             print("Scenario",s,": ",self.scenarios_labels[s] )
             print("Annéee, Age,      Cotis., Pension:",)
-            for a in self.liste_annees:
+            for a in self.annees_standard:
                 print("%5d : %.1f ans, %.1f %%, %.1f %%"%(a, \
                                                          self.A[s][a], \
                                                          100*self.T[s][a], \

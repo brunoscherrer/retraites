@@ -27,111 +27,121 @@ class SimulateurRetraites:
             
         Attributs :
             annee_courante : 
-                l'année correspondant à la date d'aujourd'hui.
+                Un entier. 
+                L'année correspondant à la date d'aujourd'hui.
 
             horizon : 
-                la dernière année du calcul. 
+                Un entier. 
+                La dernière année du calcul. 
     
             annees : 
-                la liste des années sur lesquelles on fait les calculs. 
+                Une liste d'entiers.
+                La liste des années sur lesquelles on fait les calculs. 
                 Chaque année de cette liste est inférieure à l'année de l'horizon.
     
             annees_futures :
-                Retourne la liste des années sur lesquelles on peut changer 
+                Une liste d'entiers.
+                La liste des années sur lesquelles on peut changer 
                 quelque chose.
     
             annees_standard :
-                Retourne la liste des années standard dans les calculs simplifiés. 
+                Une liste d'entiers.
+                La liste d'une sélection des années futures standard dans les calculs simplifiés. 
     
             annees_EV :
-                Retourne la liste des années de naissance pour lesquelles on a l'espérance de vie. 
+                Une liste d'entiers.
+                La liste des années de naissance pour lesquelles on a l'espérance de vie. 
     
             scenarios :
-                Retourne la liste des scénarios considérés. 
+                Une liste d'entiers.
+                la liste des scénarios considérés. 
                 Ces scénarios sont des indices dans les tables de scénarios de 
                 chomage, de croissance ainsi que les labels. 
     
             scenario_central :
-                Retourne l'indice du scénario central, 
+                Un entier. 
+                L'indice du scénario central, 
                 +1,3%/an, Chômage: 7%. 
     
             scenario_pessimiste :
-                Retourne l'indice du scénario pessimiste +1%/an, Chômage: 10%. 
+                L'indice du scénario pessimiste +1%/an, Chômage: 10%. 
         
             scenario_optimiste :
-                Retourne l'indice du scénario optimiste : +1,8%/an, Chômage: 4.5%.
+                L'indice du scénario optimiste : +1,8%/an, Chômage: 4.5%.
     
             scenarios_croissance :
-                Retourne la liste des taux de croissance pour chaque scénario 
+                Une liste de flottants. 
+                La liste des taux de croissance pour chaque scénario 
                 de la liste retournée par getScenarios().
     
             scenarios_chomage :
-                Retourne la liste des taux de chomage pour chaque scénario 
+                Une liste de flottants. 
+                La liste des taux de chomage pour chaque scénario 
                 de la liste retournée par getScenarios().
     
             scenarios_labels :
-                Retourne la liste de chaîne de caractère décrivant les 
+                La liste de chaîne de caractère décrivant les 
                 scénarios pour chaque scénario 
                 de la liste retournée par getScenarios().
     
             scenarios_labels_courts :
-                Retourne la liste de chaîne de caractère courtes décrivant les 
+                La liste de chaîne de caractère courtes décrivant les 
                 scénarios pour chaque scénario 
                 de la liste retournée par getScenarios().
                 
             T : 
-                un dictionnaire représentant une trajectoire. 
-                le taux de cotisations retraites
+                Un dictionnaire représentant une trajectoire. 
+                Le taux de cotisations retraites
             
             P : 
-                un dictionnaire représentant une trajectoire. 
-                le niveau moyen brut des pensions par rapport au 
+                Un dictionnaire représentant une trajectoire. 
+                Le niveau moyen brut des pensions par rapport au 
                 niveau moyen brut des salaires
             
             A : 
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 l'âge effectif moyen de départ en retraite
                 
             G : 
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 Effectif moyen d'une génération arrivant aux âges 
                 de la retraite
                 
             NR  : 
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 Nombre de retraités de droit direct (tous régimes confondus)
                 
             NC :
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 Nombre de personnes en emploi (ou nombre de cotisants) 
         
             TCR :
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 Taux des prélèvements sociaux sur les pensions de retraite
                 Son nom est TPR dans le composant, TCR dans le fichier json
         
             TCS :
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 Taux des prélèvements sociaux sur les salaires et 
                 revenus d'activité ;
                 Son nom est TPR dans le composant, TCR dans le fichier json
         
             CNV :
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 Coefficient pour passer du ratio "pensions/salaire moyen" 
                 au ratio "niveau de vie/salaire moyen"
         
             dP :
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 Autres dépenses de retraite rapportées au nombre de 
                 retraités de droit direct en % du revenu d'activités brut moyen
         
             B :
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 part des revenus d'activités bruts dans le PIB 
         
             EV :
-                un dictionnaire représentant une trajectoire. 
+                Un dictionnaire représentant une trajectoire. 
                 Espérance de vie à 60 ans par génération
 
             liste_variables :
@@ -143,29 +153,35 @@ class SimulateurRetraites:
                 La liste des légendes pour chaque variable dans liste_variables
 
             labels_is_long :
-                un booléen. 
+                Un booléen. 
                 True, si on utilise les labels longs dans les graphiques
         
             yaxis_lim :
-                un dictionnaire. 
+                Un dictionnaire. 
                 Les plages min et max pour l'axe des ordonnées 
-                des variables standard en sortie du simulateur. 
+                des variables en sortie du simulateur. 
+
+            dir_image :
+                Une chaîne de caractère. 
+                Le répertoire de sauvegarde des images. 
+                Par défaut, le répertoire courant. 
 
             ext_image :
-                une liste de chaînes de caractères
-                Les types de fichier à générer par la méthode save
-
+                Une liste de chaînes de caractères. 
+                Les types de fichier à générer par la méthode sauveFigure. 
+                
             affiche_quand_ecrit :
-                un booléen
-                Si True, alors affiche un message quand on écrit un fichier
+                Un booléen.
+                Si True, alors affiche un message quand la méthode sauveFigure 
+                écrit un fichier.
 
             rechercheAgeBornes :
-                une liste de flottants
+                Une liste de flottants.
                 Les bornes de recherches pour l'inversion de l'âge 
                 en fonction du ratio de durée de vie en retraite. 
 
             rechercheAgeRTol :
-                un flottant
+                Un flottant.
                 La tolérance relative sur l'âge pour l'inversion de l'âge 
                 en fonction du ratio de durée de vie en retraite. 
         
@@ -278,6 +294,9 @@ class SimulateurRetraites:
         self.yaxis_lim["REV"] = [20.0,40.0]
 
         self.ext_image=["png","pdf"]   # types de fichier à générer
+        
+        # Le répertoire de sauvegarde des images
+        self.dir_image = "."
 
         self.affiche_quand_ecrit = True # Affiche un message quand on écrit un fichier
 
@@ -311,8 +330,9 @@ class SimulateurRetraites:
         PensionBrut = self._calculePensionAnnuelleDroitDirect(PIB, As)
         resultat = SimulateurAnalyse(Ts, Ps, As, Ss, RNVs, REVs, Depenses, \
                                      PIB, PensionBrut, \
-                                     self.scenarios, self.annees_EV, self.annees, \
-                                     self.scenarios_labels, self.scenarios_labels_courts)
+                                     self.scenarios, self.annees_EV, self.annees, self.annees_standard, \
+                                     self.scenarios_labels, self.scenarios_labels_courts, 
+                                     self.dir_image, self.ext_image)
         return resultat
     
     def pilotageParPensionAgeCotisations(self, Pcible=None, Acible=None, Tcible=None):

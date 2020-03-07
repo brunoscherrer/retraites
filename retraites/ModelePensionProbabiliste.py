@@ -55,7 +55,26 @@ class ModelePensionProbabiliste():
             ageMin et ageMax quelque soit l'année. 
             Sinon, utilise un âge situé entre l'âge du COR et l'âge de 
             l'étude d'impact.
+            
+        Attributs :
+            fonction : 
+                Une ot.Function. 
+                Le modèle. 
         
+            inputDistribution : 
+                Une ot.Distribution. 
+                La distribution des variables d'entrée. 
+                
+            ageMin :
+                Un flottant. 
+                La borne inférieure de la distribution de l'âge moyen 
+                effectif de départ en retraite pour l'année. 
+                
+            ageMax :
+                Un flottant. 
+                La borne supérieure de la distribution de l'âge moyen 
+                effectif de départ en retraite pour l'année. 
+                
         Description :
             Crée un modèle de pension probabiliste pour le 
             ratio (pension moyenne) / (salaire moyen).
@@ -84,10 +103,13 @@ class ModelePensionProbabiliste():
             Sinon, alors l'âge suit une distribution qui dépend de l'année 
             et dont les bornes sont entre l'âge du COR et l'âge de l'étude 
             d'impact. 
+
             * Avant 2020, la distribution de l'âge est un Dirac centré 
             sur l'âge du COR. 
+
             * De 2020 à 2038, l'âge du COR et l'âge de l'étude d'impact sont les mêmes.
             La distribution est un Dirac. 
+
             * De 2038 à 2044, l'âge de l'étude d'impact est inférieur à celui du COR. 
             L'étude d'impact prévoit une avance de l'âge de départ à la retraite sur cette période. 
             La distribution est uniforme. 
