@@ -23,6 +23,8 @@
 
 \maketitle
 
+\tableofcontents
+
 \section{Résumé}
 
 Le 24 Janvier 2020, le gouvernement a rendu public une 
@@ -35,29 +37,31 @@ Nous montrons pourquoi les simulations montrent que l'âge de départ à la
 retraite augmente et que le niveau des pensions diminue, contrairement à ce que laisse 
 penser l'étude d'impact. 
 Ainsi, l'étude d'impact ne présente pas de résultat techniquement faux : 
-elle se content de dissimuler l'effet de la réforme \emph{par omission}, 
+elle se contente de dissimuler l'effet de la réforme \emph{par omission}, 
 laissant penser ce qu'elle ne dit, en fait, pas. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Modèle du simulateur officiel du COR}
 
+\subsection{Présentation du modèle}
+
 Dans le but de pouvoir comprendre l'influence des changements indiqués par 
 l'étude d'impact, nous souhaiterions pouvoir utiliser le simulateur du COR 
 (\url{https://www.cor-retraites.fr/simulateur}). 
 Comme nous allons le voir, l'exercice de reproduction des résultats 
-de l'étude d'impact révèle les intentions des auteurs de l'étude d'impact. 
+de l'étude d'impact révèle les intentions de ses auteurs. 
 
 Ce simulateur tient compte de deux variables permettant de définir un scénario :
 \begin{itemize}
 \item le taux de hausse des salaires : +1\%, +1.3\%, +1.5\%, +1.8\%, 
-\item le taux de chômage : 4.5%, 7\%, 10\%.
+\item le taux de chômage : 4.5\%, 7\%, 10\%.
 \end{itemize}
 
 Les scénarios de base sont les suivants :
 \begin{itemize}
 \item taux de chômage : 7\%, taux de hausse des salaires : +1\%, 
-\item taux de chômage : 7\%, taux de hausse des salaires : +1.3\%, 
+\item taux de chômage : 7\%, taux de hausse des salaires : +1.3\% - scénario "central", 
 \item taux de chômage : 7\%, taux de hausse des salaires : +1.5\%, 
 \item taux de chômage : 7\%, taux de hausse des salaires : +1.8\%.
 \end{itemize}
@@ -69,10 +73,10 @@ De plus, deux scénarios complémentaires sont présentés :
 
 Les rapports du COR s'appuient la plupart du temps sur le taux 
 de chômage de 7\% et prennent en compte les différents taux de hausse 
-des salaires de +1\%, +1.3\%, +1.5\% à +1.8\%. 
+des salaires de +1\% à +1.8\%. 
 Au contraire, l'étude d'impact ne présente généralement qu'une seule 
-courbe, correspondant au taux de chômage de 7% avec une hausse des 
-salaires de +1.3%. 
+courbe, correspondant au scénario central avec un taux de chômage de 7\% et une hausse des 
+salaires de +1.3\%. 
 Ainsi, on ne peut pas connaître l'influence de ce paramètre sur les calculs 
 de l'étude d'impact. 
 Cela constitue un premier étonnement. 
@@ -105,11 +109,13 @@ Reproduire les simulations de l'étude d'impact avec le simulateur du COR
 est donc impossible à priori. 
 D'une part, le simulateur ne présente pas le niveau de dépenses du système 
 de retraites. 
-Or l'objectif du gouvernement est d'abaisser ce niveau de dépenses 
-(proche de 14\% en 2020) jusqu'au niveau moyen européen (proche de 12.5\%). 
-D'autre part, le simulateur ne permet pas d'imposer l'équilibre financier du système 
-de retraites. 
-Or cet équilibre financier est l'objet du projet de loi organique. 
+Etant donné le niveau de dépenses actuel, égal à 13.6\% en 2020, 
+l'objectif du gouvernement est d'abaisser ce niveau de dépenses 
+en direction du niveau moyen européen. 
+D'autre part, le simulateur permet d'observer le solde financier du système de retraites, 
+mais ne permet pas facilement d'imposer l'équilibre, c'est à dire un solde nul. 
+Or cet équilibre financier est l'objet du projet de loi organique de la réforme 
+des retraites. 
 
 C'est pourquoi une inversion mathématique est nécessaire pour pouvoir reproduire 
 les résultats de l'étude d'impact. 
@@ -131,9 +137,9 @@ hypothèses sur les variables imposées entre 2050 et 2070.
 
 Dans ce paragraphe, nous détaillons la différence entre 
 l'ensemble de la population à une date donnée et la génération d'une année 
-donnée. 
+de naissance donnée. 
 
-Lorsqu'on cherche à reproduire les simulation de l'étude d'impact, nous 
+En effet, lorsqu'on cherche à reproduire les simulation de l'étude d'impact, nous 
 avons besoin de données relatives à l'année de départ en retraite. 
 Une difficulté importante vient du fait que les graphiques de l'étude 
 d'impact sont réalisés, au contraire, par génération. 
@@ -212,11 +218,12 @@ La figure \ref{fig-solde-etude-impact} est extraite de l'étude d'impact
 \begin{center}
 \includegraphics[width=0.9\textwidth]{../Figures-Etude-Impact/EtudeImpact-Graphique-63-situation-financiere.png}
 \end{center}
-\caption{Solde financier d'après l'étude d'impact.}
+\caption{Solde financier avant et après réforme d'après l'étude d'impact.}
 \label{fig-solde-etude-impact}
 \end{figure}
 
-Le texte indique : "Compte tenu des hypothèses décrites plus haut 
+Le texte précise la trajectoire du "système universel de retraites" (SUR) : 
+"Compte tenu des hypothèses décrites plus haut 
 et en y ajoutant une mesure conventionnelle de redressement à court 
 terme afin d’être à l’équilibre en 2027, le graphique ci-après présente 
 la trajectoire du solde du SUR en la comparant à la trajectoire 
@@ -230,18 +237,18 @@ C'est pourquoi nous devons considérer un solde financier :
 \end{itemize}
 
 Nous avons imposé ce solde financier dans notre propre simulateur. 
-Les résultats que nous obtenons présentés dans la figure \ref{fig-solde-simulation}. 
+Les résultats que nous obtenons sont présentés dans la figure \ref{fig-solde-simulation}. 
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.7\textwidth]{Simulation-Solde-Financier.pdf}
 \end{center}
-\caption{Solde financier dans notre simulation.}
+\caption{Solde financier dans notre simulation de la réforme des retraites.}
 \label{fig-solde-simulation}
 \end{figure}
 
-Insistons sur le fait que 
-le système doit être à l'équilibre financier \emph{quelque soit la 
+Insistons sur le fait que le système doit être à 
+l'équilibre financier \emph{quelque soit la 
 conjoncture économique}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -267,17 +274,58 @@ Elles sont présentées dans la figure \ref{fig-depenses-etude-impact}.
 \label{fig-depenses-etude-impact}
 \end{figure}
 
-Pour cette trajectoire de dépenses, nous considérons les mêmes 
+Pour comparaison, la figure \ref{fig-depenses-UE-15-2020} présente les dépenses de retraites 
+publiques en \% du PIB en 2015 de 15 pays de la zone Euro.  
+On observe que le montant des dépenses est parmi les plus élevés de ces pays. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.95\textwidth]{Depenses-retraites-2015-UE-15.png}
+\end{center}
+\caption{Dépenses de retraite publiques en \% du PIB en 2015 de 15 pays de la zone Euro. 
+OCDE (2020). }
+\label{fig-depenses-UE-15-2020}
+\end{figure}
+
+Pour obtenir une valeur de référence en 2070, nous pouvons projetter les dépenses de 
+retraites dans le futur dans d'autres pays de l'union européenne.  
+La figure \ref{fig-depenses-France-Allemagne} extraite 
+d'un rapport au Sénat de 2011 par Bernard Angels présente une analyse 
+comparée du montant des dépenses en France et en Allemagne en 2060. 
+Ces estimations réalisées en 2009 ne tiennent pas compte des réformes, 
+notamment celles des retraites, adoptées depuis. 
+On observe que le montant des dépenses de retraites prévues en 2060 
+en Union Européenne des 27 est de 12.5 \% de PIB.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Depenses-retraites-2010-2060-France-Allemagne.png}
+\end{center}
+\caption{}
+\label{fig-depenses-France-Allemagne}
+\end{figure}
+
+La trajectoire de dépenses que nous considérons consiste à utiliser les mêmes 
 niveaux de dépenses que l'étude d'impact de 2020 à 2050. 
 Pour la période 2050-2070, nous faisons l'hypothèse que le niveau 
-de dépense s'abaisse jusqu'à la moyenne 12,6 \% du PIB dans l’UE-15. 
+de dépense s'abaisse jusqu'à 12,6 \% du PIB en 2070. 
+Nous utilisons pour cela une interpolation de degré 2 fondée sur une spline. 
+Cette méthode permet d'assurer la continuité de la trajectoire ainsi que la continuité 
+de la dérivée première. 
+L'hypothèse générale de cette trajectoire est que le montant des dépenses 
+va baisser en direction de la moyenne européenne. 
+La valeur numérique que nous avons retenue, c'est à dire 12.6\%, est fondée premièrement 
+sur le fait que ce montant est mentionné dans l'étude d'impact, même si celui-ci ne peut pas 
+être considéré comme un montant exactement comparable puisqu'il porte 
+sur un périmètre plus "large que les dépenses du seul système de retraite". 
+C'est pourquoi, nous avons considéré que c'est une hypothèse plutôt optimiste. 
 La figure \ref{fig-dépenses-simulation} présente le résultat. 
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.7\textwidth]{Simulation-Depenses.pdf}
 \end{center}
-\caption{Dépenses dans notre simulation.}
+\caption{Dépenses dans notre simulation de l'étude d'impact.}
 \label{fig-dépenses-simulation}
 \end{figure}
 
@@ -362,19 +410,47 @@ La trajectoire de l'âge de départ en retraite est discontinue car l'âge prév
 
 Nous avons calculé l'âge de départ en retraite moyen pour l'ensemble des retraités partant en retraite en 2038 en fonction seulement de l'âge de départ en retraite de la génération 1975. Notre calcul n'est donc qu'une approximation, puisque les personnes partant en retraite en 2038 ne sont pas toutes de la génération 1975. L'étude d'impact ne donnant pas d'information sur l'âge moyen de départ en retraite en 2038, il ne semble pas facile de faire un calcul plus précis. 
 
-La figure \ref{fig-simulation-A-vs-COR} compare l'âge utilisé 
-dans l'étude d'impact comparé à l'âge utilisé dans le rapport du COR 
-de Juin 2019.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Résultats}
+
+\subsection{Effets de la réforme}
+
+Dans ce paragraphe, nous étudions les effets de la réforme Macron-Philippe dans 
+le scénario central d'un taux de chômage égal à 7\% 
+et d'un taux de hausse des salaires égal à +1.3\%. 
+La trajectoire avant réforme est celle du COR et la trajectoire après réforme est celle 
+que nous avons calculé avec notre simulateur dans le but de reproduire les 
+résultats de l'étude d'impact. 
+
+Dans la figure \ref{fig-solde-avant-apres-reforme}, nous présentons le 
+solde financier avant et après réforme. 
+On observe que après réforme, le solde est rigoureusement nul, 
+alors que, avant réforme, le solde peut être négatif dans ce scénario. 
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.7\textwidth]{Simulation-Age-vs-COR.pdf}
+\includegraphics[width=0.7\textwidth]{Simulation-vs-avant-reforme-Solde.pdf}
 \end{center}
-\caption{L'âge de départ en retraite moyen dans l'étude d'impact comparé 
-au calcul du COR.}
-\label{fig-simulation-A-vs-COR}
+\caption{Solde financier avant et après réforme.}
+\label{fig-solde-avant-apres-reforme}
 \end{figure}
 
+Dans la figure \ref{fig-depenses-avant-apres-reforme}, nous présentons les 
+dépenses de retraites avant et après réforme. 
+On observe que après réforme, les dépenses sont inférieures à ce qu'elles 
+étaient avant réforme. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Simulation-vs-avant-reforme-Depenses.pdf}
+\end{center}
+\caption{Dépenses de retraite avant et après réforme.}
+\label{fig-depenses-avant-apres-reforme}
+\end{figure}
+
+La figure \ref{fig-simulation-A-vs-COR} compare l'âge effectif moyen 
+de départ à la retraite avant et après réforme. 
 On observe que l'âge de départ à la retraite est donc 
 significativement supérieur dans l'étude d'impact comparé au calcul du COR de Juin 2019. 
 Notre extrapolation a mené à un âge de départ à la retraite égal à 
@@ -389,9 +465,15 @@ obtiendrons en conséquence seront inférieures à celles que nous avons
 simulées. 
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Simulation-vs-avant-reforme-Age.pdf}
+\end{center}
+\caption{L'âge de départ en retraite moyen dans l'étude d'impact comparé 
+au calcul du COR.}
+\label{fig-simulation-A-vs-COR}
+\end{figure}
 
-\section{Résultats}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -406,8 +488,8 @@ La figure \ref{fig-simulation-P} présente le rapport entre la pension moyenne e
 \includegraphics[width=0.7\textwidth]{Simulation-legende.pdf}
 \end{center}
 
-\caption{Le niveau de pensions par rapport aux actifs d'après notre simulation, 
-avec les hypothèses de l'étude d'impact.}
+\caption{Le niveau de pensions par rapport aux actifs après réforme 
+d'après notre simulation, avec les hypothèses de l'étude d'impact.}
 \label{fig-simulation-P}
 \end{figure}
 
@@ -429,6 +511,18 @@ Page 80 de l'étude d'impact, le texte indique que la réforme
 réduit "l’exposition du système aux fluctuations économiques et démographiques". 
 On constate que c'est faux, dans la mesure où le niveau des pensions 
 dépend fortement du taux de chômage.
+
+La figure \ref{fig-simulation-P-vs-COR} compare le niveau des pensions par rapport 
+aux salaires avant et après réforme. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Simulation-vs-avant-reforme-Pensions.pdf}
+\end{center}
+\caption{Le niveau des pensions par rapport aux salaires 
+avant et après réforme.}
+\label{fig-simulation-P-vs-COR}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -485,26 +579,37 @@ De plus, on observe que les pensions peuvent temporairement baisser dans certain
 des scénarios économiques, comme lorsque la hausse des salaires n'est que 
 de +1\%. 
 
-Dans le but de comparer les situations avec et sans réforme, nous 
-avons fait la comparaison avec les hypothèses du COR. 
-La figure \ref{fig-pension-annuelle-simulation-vs-COR} présente le résultat. 
+La figure \ref{fig-pension-annuelle-simulation-vs-COR} présente la pension 
+annuelle moyenne brut avec et sans réforme. 
+Nous observons que les montants sont similaires: la réforme ne présente donc pas 
+d'avantage de ce point de vue. 
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.7\textwidth]{Simulation-pension-annuelle-moyenne-3.pdf}
-
-\includegraphics[width=0.7\textwidth]{Simulation-legende.pdf}
 \end{center}
-
 \caption{Pension annuelle moyenne dans le scénario central 
-d'après notre simulation avec les hypothèses de l'étude d'impact 
-et d'après notre simulation avec les hypothèses du COR.}
+avant et après réforme.}
 \label{fig-pension-annuelle-simulation-vs-COR}
 \end{figure}
 
-Nous observons que le montant de pension annuelle de droit direct 
-du système universel est inférieur à celle du COR jusqu'en 2060 environ, 
-puis devient légèrement supérieure ensuite. 
+La figure \ref{fig-pension-annuelle-avant-apres-salaires} présente la pension 
+annuelle moyenne brut avec et sans réforme, comparé aux salaires. 
+Il n'est pas possible, en toute rigueur, de comparer des salaires et 
+des pensions en valeur absolue, puisque les pensions sont inférieures aux 
+salaires. 
+C'est pourquoi nous avons rapporté ces montants absolus à une base 100 en 2020.  
+On observe que, sur la période 2020-2070, les salaires augmentent de plus de 80\% 
+alors que les pensions annuelles brutes n'augmentent que de 30\%. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{Simulation-pension-vs-salaires-3.pdf}
+\end{center}
+\caption{Pension annuelle moyenne dans le scénario central 
+avant et après réforme, comparé aux salaires.}
+\label{fig-pension-annuelle-avant-apres-salaires}
+\end{figure}
 
 Ainsi, en changeant d'indicateur, l'étude d'impact peut montrer une situation 
 dont l'apparence est favorable. 
@@ -559,10 +664,10 @@ De plus, nous avons observé ce qui nous était caché dans l'étude
 d'impact, c'est à dire ce qui se passe entre 2050 et 2070 ainsi que 
 la sensibilité du niveau de pension en fonction des scénarios 
 de conjoncture. 
+Nous avons vu comment le montant des dépenses de retraites avec la réforme 
+des retraites est en baisse par rapport au niveau actuel. 
 Enfin, nous avons vu comment la réforme est fallacieusement 
-montrée comme avantageuse pour des niveaux de pensions 
-objectivement désavantageux par rapport à la situation 
-actuelle. 
+montrée comme avantageuse du point de vue du montant des pensions. 
 
 Les citoyens que nous sommes peuvent comprendre qu'une proposition de loi 
 aille dans un sens politique que nous ne partageons pas : c'est le 
@@ -607,6 +712,10 @@ simulateur du collectifs "Nos retraites" \url{https://nosretraites.github.io/roc
 \item Simulateur du COR / Documentation technique - juillet 2016
 \item \url{https://github.com/brunoscherrer/retraites}
 \item \url{https://nosretraites.github.io/roc-retraites/}
+\item Prospective du couple franco-allemand
+Repères. 22 juin 2011. 
+Prospective du couple franco-allemand (rapport d'information). 
+Bernard ANGELS, Rapport d'information numéro 663.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

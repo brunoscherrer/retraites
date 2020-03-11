@@ -92,7 +92,7 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         """
         S, D, As, F, TauC = X
         # Paramètres
-        scenario_central = 1
+        scenario_central = self.simulateur.scenario_central
         B = self.simulateur.B[scenario_central][self.annee]
         G = self.simulateur.G[scenario_central][self.annee]
         A = self.simulateur.A[scenario_central][self.annee]
@@ -131,9 +131,9 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
             Les valeurs numériques du simulateur correspondant à 
             ces taux de chômage sont utilisées. 
         """
-        scenario_central = 1
-        scenario_optimiste = 5
-        scenario_pessimiste = 6
+        scenario_central = self.simulateur.scenario_central
+        scenario_optimiste = self.simulateur.scenario_optimiste
+        scenario_pessimiste = self.simulateur.scenario_pessimiste
         # Table des taux de chômages
         table_TauC = [self.simulateur.scenarios_chomage[scenario_optimiste], \
                       self.simulateur.scenarios_chomage[scenario_central], \
