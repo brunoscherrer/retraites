@@ -9,6 +9,8 @@ export PYTHONPATH="$PWD:$PYTHONPATH"
 # Doc Latex 2
 cd doc/Article4
 pdflatex article4-analyse-impact.tex
+bibtex article4-analyse-impact
+pdflatex article4-analyse-impact.tex
 pdflatex article4-analyse-impact.tex
 cd ../..
 
