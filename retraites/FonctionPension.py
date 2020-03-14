@@ -30,12 +30,39 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
             * P : le rapport entre le montant moyen des pensions et le 
                  montant moyen des salaires
         
-            Les autres paramètres B, G, A, NR sont ceux du simulateur, 
+            Les autres paramètres  sont ceux du simulateur, 
             dans le scénario central (i.e. s = 1) à l'année considérée. 
         
-            Le modèle calcule le nombre de cotisants NC et les autres dépenses 
-            de retraites dP en fonction du taux de chômage TauC par 
-            évalution de la méthode calculeNCetDP. 
+            Le modèle calcule NC, dP, B, G, A, NR en fonction du taux 
+            de chômage TauC par interpolation dans les données 
+            du COR. 
+            
+        Attributs :
+            simulateur : 
+                un SimulateurRetraites
+            annee : 
+                un entier. L'année de calcul.
+            verbose : 
+                un booléen. Si vrai, affiche les calculs intermédiaires.
+            interpolateur_NC : 
+                une fonction. 
+                L'interpolateur du nombre de cotisants. 
+            interpolateur_dP : 
+                une fonction. 
+                L'interpolateur des autres dépenses de retraite.
+            interpolateur_B : 
+                une fonction. 
+                L'interpolateur de la part des revenus d'activités bruts dans le PIB. 
+            interpolateur_NR : 
+                une fonction. 
+                L'interpolateur du nombre de retraités. 
+            interpolateur_G : 
+                une fonction. 
+                L'interpolateur de l'effectif moyen d'une génération 
+                arrivant aux âges de la retraite. 
+            interpolateur_A : 
+                une fonction. 
+                L'interpolateur de l'âge effectif moyen de départ en retraite. 
 
         Exemple :
             modele = FonctionPension(simulateur, 2050)
