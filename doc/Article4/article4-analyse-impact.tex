@@ -74,10 +74,33 @@ moins sur sa faim.
 En fait, comme nous allons le voir, ce ne sera que la première d'une longue 
 série d'étonnements. 
 
+Sous l'effet de différentes réformes passées, l'équilibre financier du système 
+de retraite a été géré en agissant sur différents 
+leviers : par exemple, l'âge minimum de liquidation a été progressivement augmenté. 
+Parmi les éléments les plus importants se trouve les deux désindexations 
+des pensions portées aux comptes et de la revalorisation des pensions de retraites. 
+Dans \cite{Gannon2019}, les auteurs soulignent que les 
+projections du COR révèlent un défaut créé par les désindexations. 
+En effet, si la croissance est forte, alors le solde financier 
+du système de retraite est positif, mais les salaires augmentent plus vite que 
+les pensions de retraites de telle sorte que le niveau des pensions se dégrade. 
+Au contraire, si la croissance est faible, alors le solde financier du système 
+de retraite se dégrade. 
+
+Le projet du gouvernement s'appuie sur les propositions d'Antoine 
+Bozio et Thomas Piketty \cite{Bozio2008}. 
+Le système à point définit la clé de répartition du montant des dépenses 
+parmi les pensionnés mais ne définit pas le niveau des dépenses. 
+Ce point essentiel est mentionné par \cite{Bozio2008}, dans la note de 
+bas de page 18 : "La générosité globale du système français de retraite 
+peut se mesurer alternativement par le taux global de cotisation (25 \% du salaire brut) 
+ou par le poids des dépenses de retraite (13 \% du PIB).". 
+C'est pourquoi notre étude attache un importance primordiale, au sens où elle 
+détermine les autres points, à la trajectoire de dépenses du système. 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Modèle du simulateur officiel du COR}
-
 
 \subsection{Présentation du modèle}
 
@@ -119,9 +142,9 @@ Cela constitue un premier étonnement.
 Une fois le scénario choisi dans le simulateur du COR, 
 l'utilisateur doit ajuster trois leviers : 
 \begin{itemize}
-\item l'âge de départ effectif moyen à la retraite, 
-\item le taux de cotisation retraites, 
-\item le niveau moyen brut des pensions par rapport au niveau moyen brut des salaires. 
+\item $T$ : le niveau des cotisations retraites ;
+\item $P$ : le niveau moyen brut des pensions par rapport au niveau moyen brut des salaires ;
+\item $A$ : l'âge de départ effectif moyen à la retraite, 
 \end{itemize}
 
 D'après la documentation technique du simulateur, 
@@ -141,25 +164,120 @@ En conséquence, il s'agit d'une variable qui permet d'observer le résultat du 
 moyen des retraités du point de vue de la date de la liquidation de leurs droits à la 
 retraite. 
 
+Un changement des leviers par l'utilisateur implique des changements 
+dans les résultats. 
+La notation consiste à ajouter l'indice "s" lorsque les entrées ou sorties 
+sont modifiées par l'utilisateur. 
+Lorsque les leviers $T$, $P$ et $A$ du COR sont modifiés par l'utilisateur, les nouvelles valeurs sont notées $T_s$, $P_s$ et $A_s$. 
+Lorsque le résultats $S$ du COR sont modifiés par l'utilisateur, 
+la nouvelle valeur est notée $S_s$.
+
 En sortie, le simulateur du COR calcule :
 \begin{itemize}
-\item la situation financière du système de retraites c'est à dire la différence 
+\item $S_s$ : la situation financière du système de retraites c'est à dire la différence 
 entre les ressources et les dépenses, exprimée en pourcentage du PIB, 
-\item le niveau de vie des retraités par rapport à l’ensemble de la population, 
-\item la durée de vie passée à la retraite, relativement à la durée de la vie totale 
+\item $R_{NVs}$ : le niveau de vie des retraités par rapport à l’ensemble de la population, 
+\item $R_{EVs}$ : la durée de vie passée à la retraite, relativement à la durée de la vie totale 
 de la naissance à la mort. 
 \end{itemize}
+Dans ce document, nous nous concentrons sur le solde financier. 
 
-La documentation technique du simulateur du COR précise que : "le niveau de vie est défini 
-par l’INSEE, au niveau de chaque ménage, comme le revenu disponible (tenant
-compte de l’ensemble des ressources et après prélèvements et transferts sociaux) divisé par le nombre
-d’unités de consommation dans le ménage (qui dépend du nombre de personnes qui le composent, cf.
-page 4).". 
+% La documentation technique du simulateur du COR précise que : "le niveau de vie est défini 
+% par l’INSEE, au niveau de chaque ménage, comme le revenu disponible (tenant
+% compte de l’ensemble des ressources et après prélèvements et transferts sociaux) divisé par le nombre
+% d’unités de consommation dans le ménage (qui dépend du nombre de personnes qui le composent, cf.
+% page 4).". 
 
 On peut utiliser ce simulateur de différentes manières, mais la 
 logique qui a dominé dans le passé a consisté à se fixer un objectif 
 de niveau de vie des retraités, puis à augmenter l'âge de départ ou 
 le taux de cotisations, tout en élevant progressivement le niveau des pensions. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Analyse mathématique}
+
+Les hypothèses de calcul sont constituées des 5 variables suivantes définissant la conjoncture :
+\begin{itemize}
+\item $B$: part des revenus d'activités bruts dans le PIB ;
+\item $N_R$: Nombre de retraités de droit direct (tous régimes confondus) ;
+\item $N_C$: Nombre de personnes en emploi (ou nombre de cotisants) ;
+\item $G$: Effectif moyen d'une génération arrivant aux âges de la retraite ;
+\item $dP$: Autres dépenses de retraite rapportées au nombre de retraités 
+de droit direct en \% du revenu d'activités brut moyen.
+\end{itemize}
+
+Dans ce cadre, le solde financier du système de retraite est :
+\begin{eqnarray}
+S_s =  B [T_s - K (P_s + dP)] \label{eq-S}
+\end{eqnarray}
+
+où
+
+\begin{eqnarray}
+K = \frac{N_R - G(A_s - A)}{N_C + 0.5 G(A_s - A)}. \label{eq-K}
+\end{eqnarray}
+
+Le nombre $K$ est le ratio entre le nombre de retraités et le nombre de cotisants. 
+
+Les équations \ref{eq-S} et \ref{eq-K} forment ce que l'on pourrait 
+nommer le \emph{théorème fondamental de l'équilibre financier du système de retraites}. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Dépenses de retraite}
+
+La somme des dépenses de retraite en \% du PIB, notée $D$ ($D_s$ quand elle est modifiée par l'utilisateur), ne fait pas partie des variables intervenant dans le modèle du COR, alors que le gouvernement se donne des objectifs concernant son évolution.
+
+Les dépenses de retraite sont données par l'équation :
+
+\begin{eqnarray}
+D_s =  B K(P_s + dP). \label{eq-D}
+\end{eqnarray}
+
+On injecte cette équation dans la définition du bilan financier, et on obtient :
+
+$$
+S_s =  B T_s - D_s.
+$$
+
+En particulier, si le solde $S_s$ est nul, alors 
+$B T_s = D_s$.
+Dans ce cas, on peut directement évaluer le taux de cotisation 
+$T_s$ en fonction des dépenses et du coefficient $B$ :
+
+$$
+T_s = \frac{D_s}{B}.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Inversion}
+\label{section-inversion}
+
+Dans le calcul de l'étude d'impact, le pilotage du système de retraite impose 
+le bilan financier $S_s$, l'âge de départ à la retraite $A_s$ et 
+un niveau de dépenses $D_s$. 
+Les résultats de ce calcul sont le montant des pensions par rapport aux actifs $P_s$ et le taux de cotisations $T_s$.
+
+Ce pilotage correspond à une réforme \emph{financée} 
+(le bilan financier $S_s$ est prévu) avec un âge de départ 
+à la retraite garanti (par exemple 60 ans) et un niveau de 
+dépenses défini (par exemple pour le limiter à 12\% du PIB).
+
+On inverse l'équation \ref{eq-D}, ce qui mène au taux de cotisations :
+
+$$
+T_s = \frac{S_s + D_s}{B}.
+$$
+
+On inverse l'équation \ref{eq-S}, ce qui mène au niveau des pensions :
+
+$$
+P_s = \frac{T_s - S_s / B}{K} - dP
+$$
+
+où $K$ est défini par l'équation \ref{eq-K}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -177,8 +295,8 @@ mais ne permet pas facilement d'imposer l'équilibre, c'est à dire un solde nul
 Or cet équilibre financier est l'objet du projet de loi organique de la réforme 
 des retraites. 
 
-C'est pourquoi une inversion mathématique est nécessaire pour pouvoir reproduire 
-les résultats de l'étude d'impact. 
+C'est pourquoi l'inversion mathématique présentée dans la section \ref{section-inversion} 
+est nécessaire pour pouvoir reproduire les résultats de l'étude d'impact. 
 C'est la raison pour laquelle nous avons développé un simulateur Open Source 
 \cite{SimulateurScherrer} fondé sur les mêmes équations mathématiques 
 que le simulateur du COR, mais dont nous avons inversé les relations pour 
@@ -538,8 +656,6 @@ au calcul du COR.}
 
 \subsection{Le niveau des pensions par rapport aux salaires}
 
-La figure \ref{fig-simulation-P} présente le rapport entre la pension moyenne et le salaire moyen. 
-
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.8\textwidth]{Simulation-P.pdf}
@@ -552,6 +668,7 @@ d'après notre simulation, avec les hypothèses de l'étude d'impact.}
 \label{fig-simulation-P}
 \end{figure}
 
+La figure \ref{fig-simulation-P} présente le rapport entre la pension moyenne et le salaire moyen. 
 Pour les quatre scénarios principaux (associés au taux de chômage 
 de 7\%), on observe que le niveau des pensions par rapport aux actifs 
 baisse de 50\% en 2020 jusqu'en 2050 autour de 39\%, puis se stabilise ensuite. 
@@ -573,6 +690,16 @@ dépend fortement du taux de chômage.
 
 La figure \ref{fig-simulation-P-vs-COR} compare le niveau des pensions par rapport 
 aux salaires avant et après réforme. 
+On constate que le niveau des pensions avant et après réforme est 
+relativement proche. 
+Toutefois, une différence importante entre le système actuel 
+et le SUR est que cette trajectoire de pensions est une certitude dans le SUR, 
+alors que c'est une possibilité dans le système actuel. 
+Ainsi, la réforme rend certaine une baisse des pensions qui n'est que 
+possible avant la réforme. 
+De plus, nous avons vu que, compte tenu de la baisse du niveau des dépenses, 
+cette trajectoire du niveau des pensions n'est possible qu'au prix d'une 
+d'une importante augmentation de l'âge moyen effectif de départ en retraite. 
 
 \begin{figure}
 \begin{center}
@@ -750,13 +877,13 @@ le scénario hausse des salaires: +1,3 \%/an, taux de chômage: 7\%.
 \begin{tabular}{l|lll}
 \textbf{Année} & \textbf{Age} & \textbf{Cotis.} & \textbf{Pension} \\
 \hline
- 2020 & 62.2 ans & 30.8 \% & 50.2 \% \\
- 2025 & 62.6 ans & 30.9 \% & 48.4 \% \\
- 2030 & 63.0 ans & 30.7 \% & 45.7 \% \\
- 2040 & 63.9 ans & 30.2 \% & 42.4 \% \\
- 2050 & 64.5 ans & 29.3 \% & 39.7 \% \\
- 2060 & 65.2 ans & 28.8 \% & 39.0 \% \\
- 2070 & 65.8 ans & 28.6 \% & 38.8 \%
+2020 & 62.2 ans & 30.8 \% & 50.2 \% \\
+2025 & 62.6 ans & 30.9 \% & 48.4 \% \\
+2030 & 63.0 ans & 30.7 \% & 45.7 \% \\
+2040 & 63.7 ans & 30.2 \% & 41.8 \% \\
+2050 & 64.3 ans & 29.3 \% & 39.1 \% \\
+2060 & 64.9 ans & 29.0 \% & 38.6 \% \\
+2070 & 65.5 ans & 28.6 \% & 38.0 \%
 \end{tabular}
 \end{center}
 
@@ -776,33 +903,6 @@ Nous remercions Joseph Muré pour son travail de relecture.
 \bibliographystyle{plain}
 \bibliography{article4-analyse-impact}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Annexes}
-
-\subsection{Le niveau de vie des retraités par rapport à l'ensemble de la population}
-
-La figure \ref{fig-simulation-RNV-vs-pensions} présente 
-le niveau de vie des retraités par rapport aux actifs. 
-D'après la documentation technique du COR : "Le niveau de vie est défini 
-par l’INSEE, au niveau de chaque ménage, comme le revenu disponible (tenant
-compte de l’ensemble des ressources et après prélèvements et transferts sociaux) 
-divisé par le nombre d’unités de consommation dans le ménage 
-(qui dépend du nombre de personnes qui le composent, cf. page 4)."
-
-\begin{figure}
-\begin{center}
-\includegraphics[width=0.8\textwidth]{Simulation-RNV.pdf}
-
-\includegraphics[width=0.6\textwidth]{Simulation-legende.pdf}
-\end{center}
-
-\caption{Le niveau de pensions en fonction de l'âge et de l'année.}
-\label{fig-simulation-RNV-vs-pensions}
-\end{figure}
-
-On observe que le niveau de vie des retraités 
-baisse de 105\% en 2020 jusqu'en 2050 entre 85\% et 90\%, puis se stabilise ensuite. 
 
 \end{document}
 

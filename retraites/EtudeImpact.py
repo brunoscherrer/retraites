@@ -21,6 +21,81 @@ class EtudeImpact:
             Ds = etudeImpact.getDepenses()
             Ss = etudeImpact.getSolde()
             As = etudeImpact.getAge()
+            
+        Attributs :
+            simulateur : 
+                un SimulateurRetraites
+            depenses_annee_transition :
+                un entier. 
+                L'année de transition de l'étude d'impact.
+            depenses_annee_extrapolation :
+                un entier.
+                La première année d'extrapolation au delà des données 
+                de l'étude d'imact. 
+            depenses_annees : 
+                une liste d'entiers. 
+                La liste des années où le montant des dépenses est connu 
+                dans l'étude d'impact. 
+            depenses_valeurs : 
+                une liste de flottants.
+                La liste des montants des dépenses d'après le tableau 39 
+                de l'étude d'impact. 
+            analyse : 
+                un SimulateurAnalyse. 
+                L'analyse du pilotage du COR. 
+            Ds :
+                un dictionnaire. 
+                Le montant des dépenses dans chaque scénario, 
+                pour chaque année. 
+            Ss :
+                un dictionnaire. 
+                Le solde financier dans chaque scénario, 
+                pour chaque année.
+            As :
+                un dictionnaire. 
+                L'âge effectif moyen de départ en retraite dans chaque scénario, 
+                pour chaque année. 
+            premiere_generation : 
+                Un entier. 
+                L'année de naissance de la première génération affectée 
+                par la transition. 
+            age_premiere_generation :
+                Un flottant. 
+                L'âge moyen de départ à la retraite de la première 
+                génération affectée par la transition. 
+            derniere_generation :
+                Un entier. 
+                L'année de naissance la plus grande détaillée dans l'étude 
+                d'impact relatif à l'âge effectif moyen de départ en retraite. 
+            age_derniere_generation :
+                Un flottant. 
+                L'âge effectif moyen de départ en retraite de la dernière 
+                génération évoquée dans l'étude d'impact.
+            age_annee_transition : 
+                un entier. 
+                L'année où la première génération de la transition 
+                part en retraite. 
+            age_annee_extrapolation : 
+                un entier. 
+                L'année où la dernière génération évoquée dans l'étude d'impact 
+                part en retraite. 
+            solde_annee_transition : 
+                Un entier. 
+                La première année de transition pour le solde.
+            solde_annee_equilibre : 
+                Un entier. 
+                La première année d'équilibre pour le solde.
+            epaisseur_ligne : 
+                Un entier. 
+                L'épaisseur de la ligne pour reproduire graphiquement 
+                l'étude d'impact.
+            couleur_HR : 
+                Une chaîne de caractère. 
+                La couleur d'une courbe "Hors réforme" ou "Avant réforme".
+            couleur_SUR : 
+                Une chaîne de caractère. 
+                La couleur d'une courbe "SUR" ou "Après réforme".
+            
         """
         # Liste des années dans le simulateur du COR
         self.simulateur = simulateur

@@ -30,12 +30,39 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
             * P : le rapport entre le montant moyen des pensions et le 
                  montant moyen des salaires
         
-            Les autres paramètres B, G, A, NR sont ceux du simulateur, 
+            Les autres paramètres  sont ceux du simulateur, 
             dans le scénario central (i.e. s = 1) à l'année considérée. 
         
-            Le modèle calcule le nombre de cotisants NC et les autres dépenses 
-            de retraites dP en fonction du taux de chômage TauC par 
-            évalution de la méthode calculeNCetDP. 
+            Le modèle calcule NC, dP, B, G, A, NR en fonction du taux 
+            de chômage TauC par interpolation dans les données 
+            du COR. 
+            
+        Attributs :
+            simulateur : 
+                un SimulateurRetraites
+            annee : 
+                un entier. L'année de calcul.
+            verbose : 
+                un booléen. Si vrai, affiche les calculs intermédiaires.
+            interpolateur_NC : 
+                une fonction. 
+                L'interpolateur du nombre de cotisants. 
+            interpolateur_dP : 
+                une fonction. 
+                L'interpolateur des autres dépenses de retraite.
+            interpolateur_B : 
+                une fonction. 
+                L'interpolateur de la part des revenus d'activités bruts dans le PIB. 
+            interpolateur_NR : 
+                une fonction. 
+                L'interpolateur du nombre de retraités. 
+            interpolateur_G : 
+                une fonction. 
+                L'interpolateur de l'effectif moyen d'une génération 
+                arrivant aux âges de la retraite. 
+            interpolateur_A : 
+                une fonction. 
+                L'interpolateur de l'âge effectif moyen de départ en retraite. 
 
         Exemple :
             modele = FonctionPension(simulateur, 2050)
@@ -55,6 +82,44 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         # Configuration de la fonction
         self.setInputDescription(["S", "D", "As", "F", "TauC"])
         self.setOutputDescription(["P"])
+        # Calcul des interpolateurs
+        scenario_central = self.simulateur.scenario_central
+        scenario_optimiste = self.simulateur.scenario_optimiste
+        scenario_pessimiste = self.simulateur.scenario_pessimiste
+        # Table des taux de chômages
+        table_TauC = [self.simulateur.scenarios_chomage[scenario_optimiste], \
+                      self.simulateur.scenarios_chomage[scenario_central], \
+                      self.simulateur.scenarios_chomage[scenario_pessimiste]]
+        # Table de NC
+        table_NC = [self.simulateur.NC[scenario_optimiste][self.annee], \
+                    self.simulateur.NC[scenario_central][self.annee], \
+                    self.simulateur.NC[scenario_pessimiste][self.annee]]
+        self.interpolateur_NC = sp.interpolate.interp1d(table_TauC, table_NC)
+        # Table de dP
+        table_dP = [self.simulateur.dP[scenario_optimiste][self.annee], \
+                    self.simulateur.dP[scenario_central][self.annee], \
+                    self.simulateur.dP[scenario_pessimiste][self.annee]]
+        self.interpolateur_dP = sp.interpolate.interp1d(table_TauC, table_dP)
+        # Table de B
+        table_B = [self.simulateur.B[scenario_optimiste][self.annee], \
+                   self.simulateur.B[scenario_central][self.annee], \
+                   self.simulateur.B[scenario_pessimiste][self.annee]]
+        self.interpolateur_B = sp.interpolate.interp1d(table_TauC, table_B)
+        # Table de NR
+        table_NR = [self.simulateur.NR[scenario_optimiste][self.annee], \
+                    self.simulateur.NR[scenario_central][self.annee], \
+                    self.simulateur.NR[scenario_pessimiste][self.annee]]
+        self.interpolateur_NR = sp.interpolate.interp1d(table_TauC, table_NR)
+        # Table de G
+        table_G = [self.simulateur.G[scenario_optimiste][self.annee], \
+                   self.simulateur.G[scenario_central][self.annee], \
+                   self.simulateur.G[scenario_pessimiste][self.annee]]
+        self.interpolateur_G = sp.interpolate.interp1d(table_TauC, table_G)
+        # Table de A
+        table_A = [self.simulateur.A[scenario_optimiste][self.annee], \
+                   self.simulateur.A[scenario_central][self.annee], \
+                   self.simulateur.A[scenario_pessimiste][self.annee]]
+        self.interpolateur_A = sp.interpolate.interp1d(table_TauC, table_A)
         return
 
     def _exec(self, X):
@@ -92,13 +157,13 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         """
         S, D, As, F, TauC = X
         # Paramètres
-        scenario_central = self.simulateur.scenario_central
-        B = self.simulateur.B[scenario_central][self.annee]
-        G = self.simulateur.G[scenario_central][self.annee]
-        A = self.simulateur.A[scenario_central][self.annee]
-        NR = self.simulateur.NR[scenario_central][self.annee]
         # Influence du taux de chômage
-        NC, dP = self.calculeNCetDP(TauC)
+        G = self.interpolateur_G(TauC)
+        A = self.interpolateur_A(TauC)
+        NC = self.interpolateur_NC(TauC)
+        dP = self.interpolateur_dP(TauC)
+        B = self.interpolateur_B(TauC)
+        NR = self.interpolateur_NR(TauC)
         # Coeur du modèle
         T = (S + D) / B
         g = G * (As - A)
@@ -106,7 +171,12 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         P = (T - S / B) / K - dP
         # Affichage
         if self.verbose:
+            print("G=", G)
+            print("A=", A)
             print("NC =", NC)
+            print("dP =", dP)
+            print("B=", B)
+            print("NR=", NR)
             print("T =", T)
             print("g =", g)
             print("K =", K)
@@ -114,47 +184,3 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         # Sortie
         Y = [P]
         return Y
-
-    def calculeNCetDP(self, TauC):
-        """
-        Calcule le nombre de cotisants et 
-        des autres dépenses de retraites en fonction du taux 
-        de chômage et de l'année. 
-        
-        Paramètres:
-            TauC : taux de chômage
-        
-        Description:
-            Le calcul repose sur une interpolation linéaire par morceaux 
-            entre les scénarios optimiste (TauC = 4.5), 
-            central (TauC = 7.0) et pessimiste (TauC = 10.0). 
-            Les valeurs numériques du simulateur correspondant à 
-            ces taux de chômage sont utilisées. 
-        """
-        scenario_central = self.simulateur.scenario_central
-        scenario_optimiste = self.simulateur.scenario_optimiste
-        scenario_pessimiste = self.simulateur.scenario_pessimiste
-        # Table des taux de chômages
-        table_TauC = [self.simulateur.scenarios_chomage[scenario_optimiste], \
-                      self.simulateur.scenarios_chomage[scenario_central], \
-                      self.simulateur.scenarios_chomage[scenario_pessimiste]]
-        #
-        premiereAnneeFuture = self.simulateur.annees_futures[0]
-        if (self.annee <= premiereAnneeFuture):
-            NC = self.simulateur.NC[scenario_central][self.annee]
-            dP = self.simulateur.dP[scenario_central][self.annee]
-        else:
-            # Table des taux de nombres de cotisants
-            table_NC = [self.simulateur.NC[scenario_optimiste][self.annee], \
-                        self.simulateur.NC[scenario_central][self.annee], \
-                        self.simulateur.NC[scenario_pessimiste][self.annee]]
-            interpolateur = sp.interpolate.interp1d(table_TauC, table_NC)
-            NC = interpolateur(TauC)
-            # Table des autres dépenses
-            table_dP = [self.simulateur.dP[scenario_optimiste][self.annee], \
-                        self.simulateur.dP[scenario_central][self.annee], \
-                        self.simulateur.dP[scenario_pessimiste][self.annee]]
-            interpolateur = sp.interpolate.interp1d(table_TauC, table_dP)
-            dP = interpolateur(TauC)
-        return [NC, dP]
-
