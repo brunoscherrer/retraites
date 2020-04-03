@@ -14,10 +14,10 @@ Usage
 """
 from setuptools import (setup, find_packages)
 
-install_requires = ['numpy>=1.16',
-                    'matplotlib>=2.1',
-                    'scipy>=1.0',
-                    'openturns>=1.14',
+install_requires = ['numpy',
+                    'matplotlib',
+                    'scipy',
+                    'openturns',
                     ]
 extras_require = {'doc': ['jupyter', 'jupyter_client']}
 
@@ -27,7 +27,7 @@ with open("README.md", "r") as fh:
 setup(
     name='retraites',
     keywords=("graphics"),
-    version='0.0.1',
+    version='0.0.2',
     packages=find_packages(exclude=['doc']),
     install_requires=install_requires,
     extras_require=extras_require,

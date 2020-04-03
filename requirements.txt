@@ -1,5 +1,5 @@
-numpy>=1.16.*
-matplotlib>=2.*
-scipy>=1.*
-openturns>=1.14
+numpy
+matplotlib
+scipy
+openturns
 
