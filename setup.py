@@ -27,7 +27,7 @@ with open("README.md", "r") as fh:
 setup(
     name='retraites',
     keywords=("graphics"),
-    version='0.0.2',
+    version='0.0.1',
     packages=find_packages(exclude=['doc']),
     install_requires=install_requires,
     extras_require=extras_require,
