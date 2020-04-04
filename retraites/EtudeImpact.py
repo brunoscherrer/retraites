@@ -15,6 +15,8 @@ class EtudeImpact:
             simulateur: un SimulateurRetraites.
         
         Exemple :
+            from retraites.SimulateurRetraites import SimulateurRetraites
+            from retraites.EtudeImpact import EtudeImpact
             simulateur = SimulateurRetraites()
             etudeImpact = EtudeImpact(simulateur)
             etudeImpact.calcule()

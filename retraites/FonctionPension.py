@@ -65,6 +65,7 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
                 L'interpolateur de l'âge effectif moyen de départ en retraite. 
 
         Exemple :
+            from retraites.FonctionPension import FonctionPension
             modele = FonctionPension(simulateur, 2050)
             S = 0.0
             D = 0.14

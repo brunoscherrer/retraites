@@ -18,10 +18,7 @@ cd ../..
 python demo.py
 
 # Tests unitaires
-cd tests
-python test_retraites.py
-python test_etudeimpact.py
-cd ..
+python -m unittest discover tests
 
 # Notebooks in all subdirectories
 python tests/find-ipynb-files.py
