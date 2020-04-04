@@ -21,6 +21,8 @@ python demo.py
 cd tests
 python test_retraites.py
 python test_etudeimpact.py
+python test_FonctionPension.py
+python test_ModelePensionProbabiliste.py
 cd ..
 
 # Notebooks in all subdirectories
