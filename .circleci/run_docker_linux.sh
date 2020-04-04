@@ -18,12 +18,7 @@ cd ../..
 python demo.py
 
 # Tests unitaires
-cd tests
-python test_retraites.py
-python test_etudeimpact.py
-python test_FonctionPension.py
-python test_ModelePensionProbabiliste.py
-cd ..
+python -m unittest discover tests
 
 # Notebooks in all subdirectories
 python tests/find-ipynb-files.py
