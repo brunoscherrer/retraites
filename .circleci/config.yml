@@ -44,6 +44,13 @@ jobs:
             rm -r tmp
             rm -r venv
       - run:
+          name: Create package source distribution
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            python setup.py sdist
+            rm -r venv
+      - run:
           name: Build and test - global
           command: ./.circleci/run_docker_linux.sh
 
