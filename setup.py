@@ -14,10 +14,10 @@ Usage
 """
 from setuptools import (setup, find_packages)
 
-install_requires = ['numpy>=1.16',
-                    'matplotlib>=2.1',
-                    'scipy>=1.0',
-                    'openturns>=1.14',
+install_requires = ['numpy',
+                    'matplotlib',
+                    'scipy',
+                    'openturns',
                     ]
 extras_require = {'doc': ['jupyter', 'jupyter_client']}
 
@@ -27,13 +27,13 @@ with open("README.md", "r") as fh:
 setup(
     name='retraites',
     keywords=("graphics"),
-    version='1',
+    version='0.0.1',
     packages=find_packages(exclude=['doc']),
-    python_requires='>=3.4',
     install_requires=install_requires,
     extras_require=extras_require,
     description="retraites: Simulateur d'équilibre financier du système de retraites",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     classifiers=['Development Status :: 5 - Production/Stable',
                  'Environment :: Console',
                  'License :: OSI Approved',
@@ -42,10 +42,6 @@ setup(
                  'Natural Language :: English',
                  'Operating System :: Unix',
                  'Programming Language :: Python :: 3',
-                 'Programming Language :: Python :: 3.4',
-                 'Programming Language :: Python :: 3.5',
-                 'Programming Language :: Python :: 3.6',
-                 'Programming Language :: Python :: 3.7',
                  'Topic :: Documentation :: Sphinx',
                  'Topic :: Software Development',
                  'Topic :: Scientific/Engineering',

@@ -18,3 +18,7 @@ __pycache__/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+build/
+dist/
+retraites.egg-info/
+
