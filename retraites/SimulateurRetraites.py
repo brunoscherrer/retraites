@@ -204,6 +204,7 @@ class SimulateurRetraites:
             l'indice aille de 0 à 5). 
 
         Exemple :
+            from retraites.SimulateurRetraites import SimulateurRetraites
             simulateur = SimulateurRetraites()
             simulateur.dessineConjoncture()
             simulateur.dessineLegende()

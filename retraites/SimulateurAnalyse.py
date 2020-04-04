@@ -336,6 +336,7 @@ class SimulateurAnalyse:
             "Depenses", "PIB", "PensionBrut".
         
         Exemple:
+            from retraites.SimulateurRetraites import SimulateurRetraites
             simulateur = SimulateurRetraites()
             analyse = simulateur.pilotageCOR()
             analyse.graphique("RNV")
