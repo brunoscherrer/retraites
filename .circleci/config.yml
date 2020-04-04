@@ -31,12 +31,17 @@ jobs:
             pip install -r requirements.txt
             rm -r venv
       - run:
-          name: Install Python deps in a venv with setup
+          name: Install Python package in a venv with setup
           command: |
             python3 -m venv venv
             . venv/bin/activate
             python setup.py install
+            mkdir tmp
+            cp demo.py tmp
+            cd tmp
             python demo.py
+            cd ..
+            rm -r tmp
             rm -r venv
       - run:
           name: Build and test - global
