@@ -14,7 +14,6 @@ import scipy.optimize as spo
 
 
 class SimulateurRetraites:
-
     def __init__(self, json_filename=None):
         """
         Crée un simulateur à partir d'un fichier d'hypothèses JSON.
@@ -221,10 +220,11 @@ class SimulateurRetraites:
             analyse.dessineLegende()
         """
 
-        if (json_filename is None):
+        if json_filename is None:
             # Loading default JSON data
-            json_filename = os.path.join(retraites.__path__[0],
-                                         "fileProjection.json")
+            json_filename = os.path.join(
+                retraites.__path__[0], "fileProjection.json"
+            )
 
         # initialisations diverses
         # chargement des donnees du COR pour les 6 scenarios
@@ -240,9 +240,9 @@ class SimulateurRetraites:
         # Dernière année du calcul
         self.horizon = 2070
         # annees sur lesquelles on peut changer qqch
-        self.annees_futures = range(self.annee_courante, self.horizon+1)
+        self.annees_futures = range(self.annee_courante, self.horizon + 1)
         # annees sur lesquelles on fait les calculs
-        self.annees = range(2005, self.horizon+1)
+        self.annees = range(2005, self.horizon + 1)
         # Années standard dans les calculs simplifiés
         self.annees_standard = [2020, 2025, 2030, 2040, 2050, 2060, 2070]
         # annees sur lesquelles on a l'espérance de vie
@@ -250,60 +250,71 @@ class SimulateurRetraites:
 
         # Scénarios
         self.scenarios = range(1, 7)  # Scenarios considérés
-        self.scenario_central = 3     # central    : +1,3%/an, Chômage: 7%
+        self.scenario_central = 3  # central    : +1,3%/an, Chômage: 7%
         self.scenario_pessimiste = 6  # pessimiste :   +1%/an, Chômage: 10%
-        self.scenario_optimiste = 5   # optimiste  : +1,8%/an, Chômage: 4.5%
+        self.scenario_optimiste = 5  # optimiste  : +1,8%/an, Chômage: 4.5%
         # Taux de croissance pour chaque scénario
         self.scenarios_croissance = [0.0, 1.8, 1.5, 1.3, 1.0, 1.8, 1.0]
         # Taux de chomage pour chaque scénario
         self.scenarios_chomage = [0.0, 7.0, 7.0, 7.0, 7.0, 4.5, 10.0]
         # Graphiques
         self.scenarios_labels = [
-                "Scénario inexistant",
-                "Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
-                "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
-                "Hausse des salaires: +1,3%/an, Taux de chômage: 7%",
-                "Hausse des salaires: +1%/an, Taux de chômage: 7%",
-                "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
-                "Hausse des salaires: +1%/an, Taux de chômage: 10%"
-                ]
-        self.scenarios_labels_courts = ["Scénario inexistant",
-                                        "+1,8%/an, Chômage: 7%",
-                                        "+1,5%/an, Chômage: 7%",
-                                        "+1,3%/an, Chômage: 7%",
-                                        "+1%/an, Chômage: 7%",
-                                        "+1,8%/an, Chômage: 4.5%",
-                                        "+1%/an, Chômage: 10%"]
+            "Scénario inexistant",
+            "Hausse des salaires: +1,8%/an, Taux de chômage: 7%",
+            "Hausse des salaires: +1,5%/an, Taux de chômage: 7%",
+            "Hausse des salaires: +1,3%/an, Taux de chômage: 7%",
+            "Hausse des salaires: +1%/an, Taux de chômage: 7%",
+            "Hausse des salaires: +1,8%/an, Taux de chômage: 4.5%",
+            "Hausse des salaires: +1%/an, Taux de chômage: 10%",
+        ]
+        self.scenarios_labels_courts = [
+            "Scénario inexistant",
+            "+1,8%/an, Chômage: 7%",
+            "+1,5%/an, Chômage: 7%",
+            "+1,3%/an, Chômage: 7%",
+            "+1%/an, Chômage: 7%",
+            "+1,8%/an, Chômage: 4.5%",
+            "+1%/an, Chômage: 10%",
+        ]
 
         # Extrait les variables depuis les données
-        self.T = self.get('T')
-        self.P = self.get('P')
-        self.A = self.get('A')
-        self.G = self.get('G')
-        self.NR = self.get('NR')
-        self.NC = self.get('NC')
+        self.T = self.get("T")
+        self.P = self.get("P")
+        self.A = self.get("A")
+        self.G = self.get("G")
+        self.NR = self.get("NR")
+        self.NC = self.get("NC")
         # Son nom est TPR dans le composant, TCR dans le fichier json
-        self.TCR = self.get('TCR')
+        self.TCR = self.get("TCR")
         # Son nom est TCS dans le composant, TCS dans le fichier json
-        self.TCS = self.get('TCS')
-        self.CNV = self.get('CNV')
-        self.dP = self.get('dP')
-        self.B = self.get('B')
-        self.EV = self.get('EV')
+        self.TCS = self.get("TCS")
+        self.CNV = self.get("CNV")
+        self.dP = self.get("dP")
+        self.B = self.get("B")
+        self.EV = self.get("EV")
 
-        self.liste_variables = ["B", "NR", "NC", "G", "dP", "TPR", "TPS",
-                                "CNV", "EV"]
+        self.liste_variables = [
+            "B",
+            "NR",
+            "NC",
+            "G",
+            "dP",
+            "TPR",
+            "TPS",
+            "CNV",
+            "EV",
+        ]
         self.liste_legendes = [
-                u"B: Part des revenus d'activité bruts dans le PIB",
-                u"NR: Nombre de retraités",
-                u"NC: Nombre de cotisants",
-                u"G: Effectif d'une génération à l'âge de la retraite",
-                u"dP: Autres dépenses de retraites",
-                u"TPR: Taux de prélèvement sur les retraites",
-                u"TPS: Taux de prélèvement sur les salaires",
-                u"CNV: (niveau de vie)/[(pension moy))/(salaire moy)]",
-                u"EV: Espérance de vie à 60 ans"
-                ]
+            u"B: Part des revenus d'activité bruts dans le PIB",
+            u"NR: Nombre de retraités",
+            u"NC: Nombre de cotisants",
+            u"G: Effectif d'une génération à l'âge de la retraite",
+            u"dP: Autres dépenses de retraites",
+            u"TPR: Taux de prélèvement sur les retraites",
+            u"TPS: Taux de prélèvement sur les salaires",
+            u"CNV: (niveau de vie)/[(pension moy))/(salaire moy)]",
+            u"EV: Espérance de vie à 60 ans",
+        ]
 
         self.labels_is_long = True  # True, si on utilise les labels longs
 
@@ -313,7 +324,7 @@ class SimulateurRetraites:
         self.yaxis_lim["RNV"] = [60.0, 120.0]
         self.yaxis_lim["REV"] = [20.0, 40.0]
 
-        self.ext_image = ["png", "pdf"]   # types de fichier à générer
+        self.ext_image = ["png", "pdf"]  # types de fichier à générer
 
         # Le répertoire de sauvegarde des images
         self.dir_image = "."
@@ -325,7 +336,7 @@ class SimulateurRetraites:
         # Bornes de recherche de l'âge
         self.rechercheAgeBornes = [60.0, 70.0]
         # Tolérance relative sur l'âge
-        self.rechercheAgeRTol = 1.e-3
+        self.rechercheAgeRTol = 1.0e-3
         return None
 
     def pilotageCOR(self):
@@ -339,10 +350,10 @@ class SimulateurRetraites:
             simulateur = SimulateurRetraites()
             simulateur.pilotageCOR()
         """
-        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(self.T,
-                                                        self.P, self.A)
-        resultat = self._creerAnalyse(self.T, self.P, self.A,
-                                      S, RNV, REV, Depenses)
+        S, RNV, REV, Depenses = self._calcule_S_RNV_REV(self.T, self.P, self.A)
+        resultat = self._creerAnalyse(
+            self.T, self.P, self.A, S, RNV, REV, Depenses
+        )
         return resultat
 
     def _creerAnalyse(self, Ts, Ps, As, Ss, RNVs, REVs, Depenses):
@@ -351,17 +362,30 @@ class SimulateurRetraites:
         """
         PIB = self._genereTrajectoirePIB()
         PensionBrut = self._calculePensionAnnuelleDroitDirect(PIB, As)
-        resultat = SimulateurAnalyse(Ts, Ps, As, Ss, RNVs, REVs, Depenses,
-                                     PIB, PensionBrut,
-                                     self.scenarios, self.annees_EV,
-                                     self.annees, self.annees_standard,
-                                     self.scenarios_labels,
-                                     self.scenarios_labels_courts,
-                                     self.dir_image, self.ext_image)
+        resultat = SimulateurAnalyse(
+            Ts,
+            Ps,
+            As,
+            Ss,
+            RNVs,
+            REVs,
+            Depenses,
+            PIB,
+            PensionBrut,
+            self.scenarios,
+            self.annees_EV,
+            self.annees,
+            self.annees_standard,
+            self.scenarios_labels,
+            self.scenarios_labels_courts,
+            self.dir_image,
+            self.ext_image,
+        )
         return resultat
 
-    def pilotageParPensionAgeCotisations(self, Pcible=None,
-                                         Acible=None, Tcible=None):
+    def pilotageParPensionAgeCotisations(
+        self, Pcible=None, Acible=None, Tcible=None
+    ):
         """
         pilotage 1 : imposer 1) le niveau des pensions par rapport aux salaires
         2) l'âge de départ à la retraite
@@ -407,8 +431,9 @@ class SimulateurRetraites:
         resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
-    def pilotageParSoldePensionAge(self, Scible=None, Pcible=None,
-                                   Acible=None):
+    def pilotageParSoldePensionAge(
+        self, Scible=None, Pcible=None, Acible=None
+    ):
         """
         pilotage 2 : imposer 1) le bilan financer
         2) le niveau des pensions par rapport aux salaires
@@ -444,8 +469,9 @@ class SimulateurRetraites:
         resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
-    def pilotageParSoldePensionCotisations(self, Scible=None, Pcible=None,
-                                           Tcible=None):
+    def pilotageParSoldePensionCotisations(
+        self, Scible=None, Pcible=None, Tcible=None
+    ):
         """
         pilotage 3 : imposer 1) le bilan financer
         2) le niveau des pensions par rapport aux salaires
@@ -481,8 +507,9 @@ class SimulateurRetraites:
         resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
-    def pilotageParSoldeAgeCotisations(self, Scible=None, Acible=None,
-                                       Tcible=None):
+    def pilotageParSoldeAgeCotisations(
+        self, Scible=None, Acible=None, Tcible=None
+    ):
         """
         pilotage 4 : imposer 1) le bilan financer
         2) l'âge de départ à la retraite
@@ -518,8 +545,9 @@ class SimulateurRetraites:
         resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
-    def pilotageParSoldeAgeDepenses(self, Scible=None, Acible=None,
-                                    Dcible=None):
+    def pilotageParSoldeAgeDepenses(
+        self, Scible=None, Acible=None, Dcible=None
+    ):
         """
         pilotage 5 : imposer 1) le bilan financer
         2) l'âge de départ à la retraite
@@ -555,8 +583,9 @@ class SimulateurRetraites:
         resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
-    def pilotageParSoldePensionDepenses(self, Scible=None, Pcible=None,
-                                        Dcible=None):
+    def pilotageParSoldePensionDepenses(
+        self, Scible=None, Pcible=None, Dcible=None
+    ):
         """
         pilotage 6 : imposer 1) le bilan financer
         2) le niveau des pensions par rapport aux salaires
@@ -592,8 +621,9 @@ class SimulateurRetraites:
         resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
-    def pilotageParPensionCotisationsDepenses(self, Pcible=None, Tcible=None,
-                                              Dcible=None):
+    def pilotageParPensionCotisationsDepenses(
+        self, Pcible=None, Tcible=None, Dcible=None
+    ):
         """
         pilotage 7 : imposer 1) le niveau des pensions par rapport aux salaires
         2) le taux de cotisations
@@ -629,8 +659,9 @@ class SimulateurRetraites:
         resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
-    def pilotageParAgeCotisationsDepenses(self, Acible=None, Tcible=None,
-                                          Dcible=None):
+    def pilotageParAgeCotisationsDepenses(
+        self, Acible=None, Tcible=None, Dcible=None
+    ):
         """
         pilotage 8 : imposer 1) l'âge de départ à la retraite
         2) le taux de cotisations
@@ -666,8 +697,9 @@ class SimulateurRetraites:
         resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
-    def pilotageParAgeEtNiveauDeVie(self, Acible=None,
-                                    RNVcible=None, Scible=None):
+    def pilotageParAgeEtNiveauDeVie(
+        self, Acible=None, RNVcible=None, Scible=None
+    ):
         """
         pilotage 9 : imposer 1) l'âge de départ à la retraite,
         2) le niveau de vie par rapport à l'ensemble de la population et
@@ -704,8 +736,9 @@ class SimulateurRetraites:
         resultat = self._creerAnalyse(Ts, Ps, As, S, RNV, REV, Depenses)
         return resultat
 
-    def pilotageParNiveauDeVieEtCotisations(self, Tcible=None,
-                                            RNVcible=None, Scible=None):
+    def pilotageParNiveauDeVieEtCotisations(
+        self, Tcible=None, RNVcible=None, Scible=None
+    ):
         """
         pilotage 10 : imposer 1) le taux de cotisations,
         2) le niveau de vie par rapport à l'ensemble de la population et
@@ -754,7 +787,7 @@ class SimulateurRetraites:
         Exemple :
             T = simulateur.get("T")
         """
-        if var == 'EV':
+        if var == "EV":
             an = self.annees_EV
         else:
             an = self.annees
@@ -786,9 +819,10 @@ class SimulateurRetraites:
         for s in self.scenarios:
             for a in self.annees_futures:
                 GdA = self.G[s][a] * (As[s][a] - self.A[s][a])
-                K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5*GdA)
-                Ts[s][a] = Ss[s][a] / self.B[s][a] + \
-                    K * (Ps[s][a] + self.dP[s][a])
+                K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5 * GdA)
+                Ts[s][a] = Ss[s][a] / self.B[s][a] + K * (
+                    Ps[s][a] + self.dP[s][a]
+                )
 
         return Ts, Ps, As
 
@@ -809,10 +843,15 @@ class SimulateurRetraites:
         As = deepcopy(self.A)
         for s in self.scenarios:
             for a in self.annees_futures:
-                K = (Ts[s][a] - Ss[s][a] / self.B[s][a]) \
-                    / (Ps[s][a] + self.dP[s][a])
-                As[s][a] = self.A[s][a] + (self.NR[s][a] - K * self.NC[s][a]) \
-                    / (0.5 * K + 1) / self.G[s][a]
+                K = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / (
+                    Ps[s][a] + self.dP[s][a]
+                )
+                As[s][a] = (
+                    self.A[s][a]
+                    + (self.NR[s][a] - K * self.NC[s][a])
+                    / (0.5 * K + 1)
+                    / self.G[s][a]
+                )
 
         return Ts, Ps, As
 
@@ -835,8 +874,9 @@ class SimulateurRetraites:
             for a in self.annees_futures:
                 GdA = self.G[s][a] * (As[s][a] - self.A[s][a])
                 K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5 * GdA)
-                Ps[s][a] = (Ts[s][a] - Ss[s][a] /
-                            self.B[s][a]) / K - self.dP[s][a]
+                Ps[s][a] = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / K - self.dP[
+                    s
+                ][a]
 
         return Ts, Ps, As
 
@@ -860,8 +900,9 @@ class SimulateurRetraites:
                 Ts[s][a] = (Ss[s][a] + Ds[s][a]) / self.B[s][a]
                 GdA = self.G[s][a] * (As[s][a] - self.A[s][a])
                 K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5 * GdA)
-                Ps[s][a] = (Ts[s][a] - Ss[s][a] /
-                            self.B[s][a]) / K - self.dP[s][a]
+                Ps[s][a] = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / K - self.dP[
+                    s
+                ][a]
 
         return Ts, Ps, As
 
@@ -883,8 +924,12 @@ class SimulateurRetraites:
         for s in self.scenarios:
             for a in self.annees_futures:
                 K = Ds[s][a] / self.B[s][a] / (Ps[s][a] + self.dP[s][a])
-                As[s][a] = self.A[s][a] + (self.NR[s][a] - K * self.NC[s][a]) \
-                    / (0.5 * K + 1) / self.G[s][a]
+                As[s][a] = (
+                    self.A[s][a]
+                    + (self.NR[s][a] - K * self.NC[s][a])
+                    / (0.5 * K + 1)
+                    / self.G[s][a]
+                )
                 Ts[s][a] = (Ss[s][a] + Ds[s][a]) / self.B[s][a]
 
         return Ts, Ps, As
@@ -907,8 +952,12 @@ class SimulateurRetraites:
         for s in self.scenarios:
             for a in self.annees_futures:
                 K = Ds[s][a] / self.B[s][a] / (Ps[s][a] + self.dP[s][a])
-                As[s][a] = self.A[s][a] + (self.NR[s][a] - K * self.NC[s][a]) \
-                    / (0.5 * K + 1) / self.G[s][a]
+                As[s][a] = (
+                    self.A[s][a]
+                    + (self.NR[s][a] - K * self.NC[s][a])
+                    / (0.5 * K + 1)
+                    / self.G[s][a]
+                )
 
         return Ts, Ps, As
 
@@ -981,14 +1030,21 @@ class SimulateurRetraites:
         Ps, As = deepcopy(self.P), deepcopy(self.A)
         for s in self.scenarios:
             for a in self.annees_futures:
-                Ps[s][a] = RNVs[s][a] * (1.0 - (self.TCS[s][a] +
-                                         Ts[s][a] - self.T[s][a])) \
-                      / self.CNV[s][a] / (1.0 - self.TCR[s][a])
-                K = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / \
-                    (Ps[s][a]+self.dP[s][a])
-                As[s][a] = self.A[s][a] + (self.NR[s][a]
-                                           - K * self.NC[s][a])\
-                    / (0.5 * K + 1.0) / self.G[s][a]
+                Ps[s][a] = (
+                    RNVs[s][a]
+                    * (1.0 - (self.TCS[s][a] + Ts[s][a] - self.T[s][a]))
+                    / self.CNV[s][a]
+                    / (1.0 - self.TCR[s][a])
+                )
+                K = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / (
+                    Ps[s][a] + self.dP[s][a]
+                )
+                As[s][a] = (
+                    self.A[s][a]
+                    + (self.NR[s][a] - K * self.NC[s][a])
+                    / (0.5 * K + 1.0)
+                    / self.G[s][a]
+                )
 
         return Ts, Ps, As
 
@@ -1009,10 +1065,11 @@ class SimulateurRetraites:
         Ps = deepcopy(self.P)
         for s in self.scenarios:
             for a in self.annees_futures:
-                GdA = self.G[s][a] * (As[s][a]-self.A[s][a])
+                GdA = self.G[s][a] * (As[s][a] - self.A[s][a])
                 K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5 * GdA)
-                Ps[s][a] = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / K \
-                    - self.dP[s][a]
+                Ps[s][a] = (Ts[s][a] - Ss[s][a] / self.B[s][a]) / K - self.dP[
+                    s
+                ][a]
 
         return Ts, Ps, As
 
@@ -1035,14 +1092,19 @@ class SimulateurRetraites:
 
             for a in self.annees:
 
-                GdA = self.G[s][a] * (As[s][a]-self.A[s][a])
+                GdA = self.G[s][a] * (As[s][a] - self.A[s][a])
                 K = (self.NR[s][a] - GdA) / (self.NC[s][a] + 0.5 * GdA)
                 U = 1.0 - (self.TCS[s][a] - self.T[s][a])
                 Depenses[s][a] = self.B[s][a] * K * (Ps[s][a] + self.dP[s][a])
-                S[s][a] = self.B[s][a] * (Ts[s][a] - K * (Ps[s][a]
-                                                          + self.dP[s][a]))
-                RNV[s][a] = Ps[s][a] * (1.0 - self.TCR[s][a]) / \
-                    (U - Ts[s][a]) * self.CNV[s][a]
+                S[s][a] = self.B[s][a] * (
+                    Ts[s][a] - K * (Ps[s][a] + self.dP[s][a])
+                )
+                RNV[s][a] = (
+                    Ps[s][a]
+                    * (1.0 - self.TCR[s][a])
+                    / (U - Ts[s][a])
+                    * self.CNV[s][a]
+                )
 
                 annee_naissance = round(a + 0.5 - As[s][a])
                 age_mort = 60.0 + self.EV[s][annee_naissance]
@@ -1090,30 +1152,46 @@ class SimulateurRetraites:
         else:
             # Sinon, on suppose que c'est un flottant
             # et on calcule la trajectoire du COR
-            if (nom == "A"):
+            if nom == "A":
                 trajectoire = deepcopy(self.A)
-            elif (nom == "S"):
-                S_COR, RNV_COR, REV_COR, Depenses_COR = \
-                    self._calcule_S_RNV_REV(self.T, self.P, self.A)
+            elif nom == "S":
+                (
+                    S_COR,
+                    RNV_COR,
+                    REV_COR,
+                    Depenses_COR,
+                ) = self._calcule_S_RNV_REV(self.T, self.P, self.A)
                 trajectoire = S_COR
-            elif (nom == "P"):
+            elif nom == "P":
                 trajectoire = deepcopy(self.P)
-            elif (nom == "T"):
+            elif nom == "T":
                 trajectoire = deepcopy(self.T)
-            elif (nom == "RNV"):
-                S_COR, RNV_COR, REV_COR, Depenses_COR =\
-                    self._calcule_S_RNV_REV(self.T, self.P, self.A)
+            elif nom == "RNV":
+                (
+                    S_COR,
+                    RNV_COR,
+                    REV_COR,
+                    Depenses_COR,
+                ) = self._calcule_S_RNV_REV(self.T, self.P, self.A)
                 trajectoire = RNV_COR
-            elif (nom == "Depenses"):
-                S_COR, RNV_COR, REV_COR, Depenses_COR =\
-                    self._calcule_S_RNV_REV(self.T, self.P, self.A)
+            elif nom == "Depenses":
+                (
+                    S_COR,
+                    RNV_COR,
+                    REV_COR,
+                    Depenses_COR,
+                ) = self._calcule_S_RNV_REV(self.T, self.P, self.A)
                 trajectoire = Depenses_COR
-            elif (nom == "REV"):
-                S_COR, RNV_COR, REV_COR, Depenses_COR =\
-                    self._calcule_S_RNV_REV(self.T, self.P, self.A)
+            elif nom == "REV":
+                (
+                    S_COR,
+                    RNV_COR,
+                    REV_COR,
+                    Depenses_COR,
+                ) = self._calcule_S_RNV_REV(self.T, self.P, self.A)
                 trajectoire = REV_COR
             else:
-                raise TypeError('Mauvaise valeur pour le nom : %s' % (nom))
+                raise TypeError("Mauvaise valeur pour le nom : %s" % (nom))
 
             if valeur is not None:
                 # Propage la valeur constante dans la trajectoire
@@ -1124,9 +1202,13 @@ class SimulateurRetraites:
 
         return trajectoire
 
-    def dessineConjoncture(self, taille_fonte_titre=8,
-                           dessine_legende=False, scenarios_indices=None,
-                           dessine_annees=None):
+    def dessineConjoncture(
+        self,
+        taille_fonte_titre=8,
+        dessine_legende=False,
+        scenarios_indices=None,
+        dessine_annees=None,
+    ):
         """
         Dessine les hypothèses de conjoncture.
 
@@ -1146,18 +1228,28 @@ class SimulateurRetraites:
         pl.figure(figsize=(10, 8))
         pl.suptitle(u"Projections du COR (hypothèses)", fontsize=16)
         for c in range(9):
-            pl.subplot(3, 3, c+1)
+            pl.subplot(3, 3, c + 1)
             nom = self.liste_variables[c]
-            self.graphique(nom, taille_fonte_titre=taille_fonte_titre,
-                           dessine_legende=dessine_legende,
-                           scenarios_indices=scenarios_indices,
-                           dessine_annees=dessine_annees)
+            self.graphique(
+                nom,
+                taille_fonte_titre=taille_fonte_titre,
+                dessine_legende=dessine_legende,
+                scenarios_indices=scenarios_indices,
+                dessine_annees=dessine_annees,
+            )
         pl.tight_layout(rect=[0, 0.03, 1, 0.95])
         return None
 
-    def graphique(self, nom, v=None, taille_fonte_titre=8, yaxis_lim=None,
-                  dessine_legende=False, scenarios_indices=None,
-                  dessine_annees=None):
+    def graphique(
+        self,
+        nom,
+        v=None,
+        taille_fonte_titre=8,
+        yaxis_lim=None,
+        dessine_legende=False,
+        scenarios_indices=None,
+        dessine_annees=None,
+    ):
         """
         Dessine un graphique associé à une variable donnée
         pour tous les scénarios.
@@ -1205,7 +1297,7 @@ class SimulateurRetraites:
             elif nom == "EV":
                 v = self.EV
             else:
-                raise TypeError('Mauvaise valeur pour le nom : %s' % (nom))
+                raise TypeError("Mauvaise valeur pour le nom : %s" % (nom))
 
         if scenarios_indices is None:
             scenarios_indices = self.scenarios
@@ -1219,13 +1311,13 @@ class SimulateurRetraites:
                 list_annees_dessin = self.annees
 
         for s in scenarios_indices:
-            if (nom == "RNV"):
+            if nom == "RNV":
                 # Ce sont des % : multiplie par 100.0
                 y = [100.0 * v[s][a] for a in list_annees_dessin]
             else:
                 y = [v[s][a] for a in list_annees_dessin]
 
-            if (self.labels_is_long):
+            if self.labels_is_long:
                 label_variable = self.scenarios_labels[s]
             else:
                 label_variable = self.scenarios_labels_courts[s]
@@ -1377,7 +1469,7 @@ class SimulateurRetraites:
             pl.plot(0.0, 0.0, label=self.scenarios_labels[s])
         pl.legend(loc="center")
         pl.ylim(bottom=0.0, top=0.7)
-        pl.axis('off')
+        pl.axis("off")
         return None
 
     def _genereTrajectoirePIB(self):
@@ -1389,21 +1481,21 @@ class SimulateurRetraites:
         """
         # Historique de PIBs (Milliards EUR)
         PIB_constate = {
-                2005: 1772.0,
-                2006: 1853.3,
-                2007: 1945.7,
-                2008: 1995.8,
-                2009: 1939.0,
-                2010: 1998.5,
-                2011: 2059.3,
-                2012: 2091.1,
-                2013: 2115.7,
-                2014: 2141.1,
-                2015: 2181.1,
-                2016: 2228.9,
-                2017: 2291.7,
-                2018: 2353.1
-                }
+            2005: 1772.0,
+            2006: 1853.3,
+            2007: 1945.7,
+            2008: 1995.8,
+            2009: 1939.0,
+            2010: 1998.5,
+            2011: 2059.3,
+            2012: 2091.1,
+            2013: 2115.7,
+            2014: 2141.1,
+            2015: 2181.1,
+            2016: 2228.9,
+            2017: 2291.7,
+            2018: 2353.1,
+        }
         # Croissance en fonction du scénario
         annee_dernier_PIB = 2018
         # Génère la trajectoire
@@ -1412,7 +1504,7 @@ class SimulateurRetraites:
             PIB[s] = dict()
             croissance = self.scenarios_croissance[s]
             for a in self.annees:
-                if (a <= annee_dernier_PIB):
+                if a <= annee_dernier_PIB:
                     PIB[s][a] = PIB_constate[a]
                 else:
                     PIB[s][a] = (1.0 + croissance / 100.0) * PIB[s][a - 1]
@@ -1431,8 +1523,13 @@ class SimulateurRetraites:
             pensionBrut[s] = dict()
             for a in self.annees:
                 GdA = self.G[s][a] * (As[s][a] - self.A[s][a])
-                pensionBrut[s][a] = self.B[s][a] * self.P[s][a] * \
-                    PIB[s][a] * 1000.0 / (self.NC[s][a] + 0.5 * GdA)
+                pensionBrut[s][a] = (
+                    self.B[s][a]
+                    * self.P[s][a]
+                    * PIB[s][a]
+                    * 1000.0
+                    / (self.NC[s][a] + 0.5 * GdA)
+                )
         return pensionBrut
 
     def calculeAge(self, REVcible):
@@ -1508,9 +1605,11 @@ class SimulateurRetraites:
             for a in self.annees_futures:
                 # Calcul l'âge
                 args = [self, s, a, REVs[s][a]]
-                result = spo.root_scalar(_EcartDeREV,
-                                         bracket=self.rechercheAgeBornes,
-                                         args=args,
-                                         rtol=self.rechercheAgeRTol)
+                result = spo.root_scalar(
+                    _EcartDeREV,
+                    bracket=self.rechercheAgeBornes,
+                    args=args,
+                    rtol=self.rechercheAgeRTol,
+                )
                 As[s][a] = result.root
         return As
