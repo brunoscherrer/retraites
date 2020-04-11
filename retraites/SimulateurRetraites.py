@@ -1489,7 +1489,7 @@ class SimulateurRetraites:
         for c in range(9):
             pl.subplot(3, 3, c + 1)
             nom = self.liste_variables[c]
-            self.graphique(
+            self.dessineVariable(
                 nom,
                 taille_fonte_titre=taille_fonte_titre,
                 dessine_legende=dessine_legende,
@@ -1499,7 +1499,7 @@ class SimulateurRetraites:
         pl.tight_layout(rect=[0, 0.03, 1, 0.95])
         return None
 
-    def graphique(
+    def dessineVariable(
         self,
         nom,
         v=None,
@@ -1540,7 +1540,7 @@ class SimulateurRetraites:
         Examples
         --------
         >>> simulateur = SimulateurRetraites()
-        >>> simulateur.graphique("B")
+        >>> simulateur.dessineVariable("B")
         """
         if v is None:
             if nom == "B":

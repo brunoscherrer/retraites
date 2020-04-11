@@ -71,57 +71,57 @@ class CheckSimulateur(unittest.TestCase):
 
         # Teste les options des graphiques
         pl.figure()
-        analyse.graphique("P")
+        analyse.dessineVariable("P")
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", analyse.P)
+        analyse.dessineVariable("P", analyse.P)
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", dessine_legende=True)
+        analyse.dessineVariable("P", dessine_legende=True)
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", scenarios_indices=range(1, 5))
+        analyse.dessineVariable("P", scenarios_indices=range(1, 5))
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", dessine_annees=range(2020, 2041))
+        analyse.dessineVariable("P", dessine_annees=range(2020, 2041))
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", taille_fonte_titre=14)
+        analyse.dessineVariable("P", taille_fonte_titre=14)
         pl.close()
 
         pl.figure()
-        analyse.graphique("A")
+        analyse.dessineVariable("A")
         pl.close()
 
         pl.figure()
-        analyse.graphique("S")
+        analyse.dessineVariable("S")
         pl.close()
 
         pl.figure()
-        analyse.graphique("T")
+        analyse.dessineVariable("T")
         pl.close()
 
         pl.figure()
-        analyse.graphique("RNV")
+        analyse.dessineVariable("RNV")
         pl.close()
 
         pl.figure()
-        analyse.graphique("REV")
+        analyse.dessineVariable("REV")
         pl.close()
 
         pl.figure()
-        analyse.graphique("Depenses")
+        analyse.dessineVariable("Depenses")
         analyse.sauveFigure("Depenses")
         pl.close()
 
         # Configure des longs titres
         analyse.setLabelLongs(True)
-        analyse.graphique("P", analyse.P)
+        analyse.dessineVariable("P", analyse.P)
         pl.close()
 
         # Dessine la légende
@@ -146,57 +146,57 @@ class CheckSimulateur(unittest.TestCase):
 
         # Teste les options des graphiques
         pl.figure()
-        simulateur.graphique("B")
+        simulateur.dessineVariable("B")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", simulateur.B)
+        simulateur.dessineVariable("B", simulateur.B)
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", dessine_legende=True)
+        simulateur.dessineVariable("B", dessine_legende=True)
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", scenarios_indices=range(1, 5))
+        simulateur.dessineVariable("B", scenarios_indices=range(1, 5))
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", dessine_annees=range(2020, 2041))
+        simulateur.dessineVariable("B", dessine_annees=range(2020, 2041))
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", taille_fonte_titre=14)
+        simulateur.dessineVariable("B", taille_fonte_titre=14)
         pl.close()
 
         pl.figure()
-        simulateur.graphique("G")
+        simulateur.dessineVariable("G")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("NR")
+        simulateur.dessineVariable("NR")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("NC")
+        simulateur.dessineVariable("NC")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("dP")
+        simulateur.dessineVariable("dP")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("TPR")
+        simulateur.dessineVariable("TPR")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("TPS")
+        simulateur.dessineVariable("TPS")
         simulateur.sauveFigure("TPS")
         pl.close()
 
         # Configure des longs titres
         simulateur.setLabelLongs(True)
-        simulateur.graphique("CNV")
+        simulateur.dessineVariable("CNV")
         pl.close()
 
         # Dessine la légende
@@ -383,7 +383,7 @@ class CheckSimulateur(unittest.TestCase):
         analyse.setDirectoryImage(tempfile.gettempdir())
 
         pl.figure(figsize=(9, 6))
-        analyse.graphique("A")
+        analyse.dessineVariable("A")
         pl.suptitle(
             u"Modèle du COR: Réforme Macron (éq."
             "financier & niveau de vie maintenu)",
@@ -393,7 +393,7 @@ class CheckSimulateur(unittest.TestCase):
         analyse.sauveFigure("macron_68_ans")
 
         pl.figure(figsize=(9, 6))
-        analyse.graphique("A")
+        analyse.dessineVariable("A")
         pl.suptitle(
             u"Modèle du COR: Réforme Macron (éq."
             "financier & niveau de vie maintenu)",
@@ -450,13 +450,13 @@ class CheckSimulateur(unittest.TestCase):
         )
 
         pl.figure(figsize=(9, 6))
-        analyse.graphique("RNV")
+        analyse.dessineVariable("RNV")
         pl.suptitle(titre, fontsize=14)
         pl.legend(loc="best")
         analyse.sauveFigure("macron_62_ans_nv")
 
         pl.figure(figsize=(9, 6))
-        analyse.graphique("P")
+        analyse.dessineVariable("P")
         pl.suptitle(titre, fontsize=14)
         pl.legend(loc="best")
         analyse.sauveFigure("macron_62_ans_p")
@@ -505,7 +505,7 @@ class CheckSimulateur(unittest.TestCase):
 
         pl.figure()
         analyse.setLabelLongs(False)
-        analyse.graphique("Depenses")
+        analyse.dessineVariable("Depenses")
 
         analyse.dessineLegende()
 
@@ -554,7 +554,7 @@ class CheckSimulateur(unittest.TestCase):
 
         pl.figure()
         analyse.setLabelLongs(False)
-        analyse.graphique("Depenses")
+        analyse.dessineVariable("Depenses")
 
         analyse.dessineLegende()
 
@@ -836,7 +836,7 @@ class CheckSimulateur(unittest.TestCase):
         # Calcul du PIB
         simulateur = SimulateurRetraites()
         analyse = simulateur.pilotageCOR()
-        analyse.graphique("PIB")
+        analyse.dessineVariable("PIB")
 
         # Vérifie quelques valeurs numériques observées
         # Source :
@@ -861,7 +861,7 @@ class CheckSimulateur(unittest.TestCase):
         # Calcul de la pension annuelle (brut) de droit direct
         simulateur = SimulateurRetraites()
         analyse = simulateur.pilotageCOR()
-        analyse.graphique("PensionBrut")
+        analyse.dessineVariable("PensionBrut")
 
         # Vérifie quelques valeurs numériques observées
         # Source : Les retraités et les retraites, Edition 2017,
@@ -891,7 +891,7 @@ class CheckSimulateur(unittest.TestCase):
         REVcible = 0.30
         Acible = simulateur.calculeAge(REVcible=REVcible)
         analyse = simulateur.pilotageParSoldePensionAge(Acible=Acible)
-        analyse.graphique("REV")
+        analyse.dessineVariable("REV")
 
         # Vérifie la durée de vie en retraite
         for s in simulateur.scenarios:

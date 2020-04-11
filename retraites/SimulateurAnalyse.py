@@ -360,7 +360,7 @@ class SimulateurAnalyse:
         --------
         >>> simulateur = SimulateurRetraites()
         >>> analyse = simulateur.pilotageCOR()
-        >>> analyse.graphique("Depenses")
+        >>> analyse.dessineVariable("Depenses")
         >>> analyse.sauveFigure("depenses")
         """
 
@@ -372,7 +372,7 @@ class SimulateurAnalyse:
             pl.savefig(filename)
         return None
 
-    def graphique(
+    def dessineVariable(
         self,
         nom,
         v=None,
@@ -415,12 +415,12 @@ class SimulateurAnalyse:
         >>> from retraites.SimulateurRetraites import SimulateurRetraites
         >>> simulateur = SimulateurRetraites()
         >>> analyse = simulateur.pilotageCOR()
-        >>> analyse.graphique("RNV")
-        >>> analyse.graphique("RNV", dessine_legende = True,
+        >>> analyse.dessineVariable("RNV")
+        >>> analyse.dessineVariable("RNV", dessine_legende = True,
                               scenarios_indices = range(1,5))
-        >>> analyse.graphique("RNV", dessine_annees = range(2020,2041))
-        >>> analyse.graphique("RNV", taille_fonte_titre = 14)
-        >>> analyse.graphique("B", simulateur.B)
+        >>> analyse.dessineVariable("RNV", dessine_annees = range(2020,2041))
+        >>> analyse.dessineVariable("RNV", taille_fonte_titre = 14)
+        >>> analyse.dessineVariable("B", simulateur.B)
         """
 
         if v is None:
@@ -520,7 +520,7 @@ class SimulateurAnalyse:
         for i in range(6):
             pl.subplot(3, 2, i + 1)
             nom = self.liste_variables[i]
-            self.graphique(nom, taille_fonte_titre=taille_fonte_titre)
+            self.dessineVariable(nom, taille_fonte_titre=taille_fonte_titre)
         pl.tight_layout(rect=[0, 0.03, 1, 0.95])
         return None
 
