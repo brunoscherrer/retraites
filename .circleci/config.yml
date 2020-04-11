@@ -54,13 +54,17 @@ jobs:
             python setup.py sdist
             rm -r venv
       - run:
-          name: Check style with black
+          name: Check style of Python Scripts with black
           command: |
             black --check retraites
       - run:
-          name: Check style with flake8
+          name: Check style of Python Scripts with flake8
           command: |
             flake8 retraites
+      - run:
+          name: Check style of Notebooks with black-nb
+          command: |
+            black-nb --check .
       - run:
           name: Build and test - global
           command: ./.circleci/run_docker_linux.sh
