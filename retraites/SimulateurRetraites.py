@@ -18,206 +18,193 @@ class SimulateurRetraites:
         """
         Crée un simulateur à partir d'un fichier d'hypothèses JSON.
 
-        Paramètres :
-            json_filename : une chaîne de caractère, le nom du fichier JSON
-            contenant les hypothèses
-            (par défaut, charge le fichier "fileProjection.json" fournit
+        Plusieurs stratégies de pilotage peuvent être utilisées :
+
+        1) pilotageCOR, avec les paramètres du COR ou
+           pilotageParPensionAgeCotisations
+        2) pilotageParSoldePensionAge
+        3) pilotageParSoldePensionCotisations
+        4) pilotageParSoldeAgeCotisations
+        5) pilotageParSoldeAgeDepenses
+        6) pilotageParSoldePensionDepenses
+        7) pilotageParPensionCotisationsDepenses
+        8) pilotageParAgeCotisationsDepenses
+        9) pilotageParAgeEtNiveauDeVie (sous-entendu et par solde financier)
+        10) pilotageParNiveauDeVieEtCotisations (sous-entendu et
+            par solde financier)
+
+        Les scénarios sont numérotés de 1 à 6 dans l'attribut "scenarios"
+        (contrairement à l'usage Python ordinaire qui voudrait plutôt que
+        l'indice aille de 0 à 5).
+
+        Beaucoup de variables du modèle sont des trajectoires qui sont
+        implémentées grâce à des dictionnaires.
+        Une trajectoire est donnée dans tous les scénarios et pour
+        toutes les années :
+        trajectoire[s][a] est la valeur numérique du
+        scénario s à l'année a
+
+        Parameters
+        ----------
+        json_filename : str
+            le nom du fichier JSON contenant les hypothèses
+            (par défaut, charge le fichier "fileProjection.json" fourni
             par le module)
-            pilotage : un entier, la stratégie de pilotage (par défaut,
-            celle du COR)
 
-        Attributs :
-            annee_courante :
-                Un entier.
-                L'année correspondant à la date d'aujourd'hui.
+        Attributes
+        ----------
+        annee_courante : int
+            L'année correspondant à la date d'aujourd'hui.
 
-            horizon :
-                Un entier.
-                La dernière année du calcul.
+        horizon : int
+            La dernière année du calcul.
 
-            annees :
-                Une liste d'entiers.
-                La liste des années sur lesquelles on fait les calculs.
-                Chaque année de cette liste est inférieure à l'année de
-                l'horizon.
+        annees : list of int
+            La liste des années sur lesquelles on fait les calculs.
+            Chaque année de cette liste est inférieure à l'année de
+            l'horizon.
 
-            annees_futures :
-                Une liste d'entiers.
-                La liste des années sur lesquelles on peut changer
-                quelque chose.
+        annees_futures : list of int
+            La liste des années sur lesquelles on peut changer
+            quelque chose.
 
-            annees_standard :
-                Une liste d'entiers.
-                La liste d'une sélection des années futures standard dans
-                les calculs simplifiés.
+        annees_standard : list of int
+            La liste d'une sélection des années futures standard dans
+            les calculs simplifiés.
 
-            annees_EV :
-                Une liste d'entiers.
-                La liste des années de naissance pour lesquelles on a
-                l'espérance de vie.
+        annees_EV : list of int
+            La liste des années de naissance pour lesquelles on a
+            l'espérance de vie.
 
-            scenarios :
-                Une liste d'entiers.
-                la liste des scénarios considérés.
-                Ces scénarios sont des indices dans les tables de scénarios de
-                chomage, de croissance ainsi que les labels.
+        scenarios : list of int
+            la liste des scénarios considérés.
+            Ces scénarios sont des indices dans les tables de scénarios de
+            chomage, de croissance ainsi que les labels.
 
-            scenario_central :
-                Un entier.
-                L'indice du scénario central,
-                +1,3%/an, Chômage: 7%.
+        scenario_central : int
+            L'indice du scénario central,
+            +1,3%/an, Chômage: 7%.
 
-            scenario_pessimiste :
-                L'indice du scénario pessimiste +1%/an, Chômage: 10%.
+        scenario_pessimiste : int
+            L'indice du scénario pessimiste +1%/an, Chômage: 10%.
 
-            scenario_optimiste :
-                L'indice du scénario optimiste : +1,8%/an, Chômage: 4.5%.
+        scenario_optimiste : int
+            L'indice du scénario optimiste : +1,8%/an, Chômage: 4.5%.
 
-            scenarios_croissance :
-                Une liste de flottants.
-                La liste des taux de croissance pour chaque scénario
-                de la liste retournée par getScenarios().
+        scenarios_croissance : list of float
+            La liste des taux de croissance pour chaque scénario
+            de la liste retournée par getScenarios().
 
-            scenarios_chomage :
-                Une liste de flottants.
-                La liste des taux de chomage pour chaque scénario
-                de la liste retournée par getScenarios().
+        scenarios_chomage : list of float
+            La liste des taux de chomage pour chaque scénario
+            de la liste retournée par getScenarios().
 
-            scenarios_labels :
-                La liste de chaîne de caractère décrivant les
-                scénarios pour chaque scénario
-                de la liste retournée par getScenarios().
+        scenarios_labels : list of str
+            Les scénarios pour chaque scénario
+            de la liste retournée par getScenarios().
 
-            scenarios_labels_courts :
-                La liste de chaîne de caractère courtes décrivant les
-                scénarios pour chaque scénario
-                de la liste retournée par getScenarios().
+        scenarios_labels_courts : list of str
+            Les scénarios pour chaque scénario
+            de la liste retournée par getScenarios().
 
-            T :
-                Un dictionnaire représentant une trajectoire.
-                Le taux de cotisations retraites
+        T : dict
+            Une trajectoire.
+            Le taux de cotisations retraites
 
-            P :
-                Un dictionnaire représentant une trajectoire.
-                Le niveau moyen brut des pensions par rapport au
-                niveau moyen brut des salaires
+        P : dict
+            Une trajectoire.
+            Le niveau moyen brut des pensions par rapport au
+            niveau moyen brut des salaires
 
-            A :
-                Un dictionnaire représentant une trajectoire.
-                l'âge effectif moyen de départ en retraite
+        A : dict
+            Une trajectoire.
+            L'âge effectif moyen de départ en retraite
 
-            G :
-                Un dictionnaire représentant une trajectoire.
-                Effectif moyen d'une génération arrivant aux âges
-                de la retraite
+        G : dict
+            Une trajectoire.
+            Effectif moyen d'une génération arrivant aux âges
+            de la retraite
 
-            NR  :
-                Un dictionnaire représentant une trajectoire.
-                Nombre de retraités de droit direct (tous régimes confondus)
+        NR  : dict
+            Une trajectoire.
+            Nombre de retraités de droit direct (tous régimes confondus)
 
-            NC :
-                Un dictionnaire représentant une trajectoire.
-                Nombre de personnes en emploi (ou nombre de cotisants)
+        NC : dict
+            Une trajectoire.
+            Nombre de personnes en emploi (ou nombre de cotisants)
 
-            TCR :
-                Un dictionnaire représentant une trajectoire.
-                Taux des prélèvements sociaux sur les pensions de retraite
-                Son nom est TPR dans le composant, TCR dans le fichier json
+        TCR : dict
+            Une trajectoire.
+            Taux des prélèvements sociaux sur les pensions de retraite
+            Son nom est TPR dans le composant, TCR dans le fichier json
 
-            TCS :
-                Un dictionnaire représentant une trajectoire.
-                Taux des prélèvements sociaux sur les salaires et
-                revenus d'activité ;
-                Son nom est TPR dans le composant, TCR dans le fichier json
+        TCS : dict
+            Une trajectoire.
+            Taux des prélèvements sociaux sur les salaires et
+            revenus d'activité ;
+            Son nom est TPR dans le composant, TCR dans le fichier json
 
-            CNV :
-                Un dictionnaire représentant une trajectoire.
-                Coefficient pour passer du ratio "pensions/salaire moyen"
-                au ratio "niveau de vie/salaire moyen"
+        CNV : dict
+            Une trajectoire.
+            Coefficient pour passer du ratio "pensions/salaire moyen"
+            au ratio "niveau de vie/salaire moyen"
 
-            dP :
-                Un dictionnaire représentant une trajectoire.
-                Autres dépenses de retraite rapportées au nombre de
-                retraités de droit direct en % du revenu d'activités brut moyen
+        dP : dict
+            Une trajectoire.
+            Autres dépenses de retraite rapportées au nombre de
+            retraités de droit direct en % du revenu d'activités brut moyen
 
-            B :
-                Un dictionnaire représentant une trajectoire.
-                part des revenus d'activités bruts dans le PIB
+        B : dict
+            Une trajectoire.
+            part des revenus d'activités bruts dans le PIB
 
-            EV :
-                Un dictionnaire représentant une trajectoire.
-                Espérance de vie à 60 ans par génération
+        EV : dict
+            Une trajectoire.
+            Espérance de vie à 60 ans par génération
 
-            liste_variables :
-                Une liste de chaînes de caractères.
-                La liste des variables du modèle : B, NR, etc...
+        liste_variables : list of str
+            La liste des variables du modèle : B, NR, etc...
 
-            liste_legendes
-                Une liste de chaînes de caractères.
-                La liste des légendes pour chaque variable dans liste_variables
+        liste_legendes : list of str
+            La liste des légendes pour chaque variable dans liste_variables
 
-            labels_is_long :
-                Un booléen.
-                True, si on utilise les labels longs dans les graphiques
+        labels_is_long : bool
+            True, si on utilise les labels longs dans les graphiques
 
-            yaxis_lim :
-                Un dictionnaire.
-                Les plages min et max pour l'axe des ordonnées
-                des variables en sortie du simulateur.
+        yaxis_lim : dict
+            Les plages min et max pour l'axe des ordonnées
+            des variables en sortie du simulateur.
 
-            dir_image :
-                Une chaîne de caractère.
-                Le répertoire de sauvegarde des images.
-                Par défaut, le répertoire courant.
+        dir_image : str
+            Le répertoire de sauvegarde des images.
+            Par défaut, le répertoire courant.
 
-            ext_image :
-                Une liste de chaînes de caractères.
-                Les types de fichier à générer par la méthode sauveFigure.
+        ext_image : list of str
+            Les types de fichier à générer par la méthode sauveFigure.
 
-            affiche_quand_ecrit :
-                Un booléen.
-                Si True, alors affiche un message quand la méthode sauveFigure
-                écrit un fichier.
+        affiche_quand_ecrit : bool
+            Si True, alors affiche un message quand la méthode sauveFigure
+            écrit un fichier.
 
-            rechercheAgeBornes :
-                Une liste de flottants.
-                Les bornes de recherches pour l'inversion de l'âge
-                en fonction du ratio de durée de vie en retraite.
+        rechercheAgeBornes : list of float
+            Les bornes de recherches pour l'inversion de l'âge
+            en fonction du ratio de durée de vie en retraite.
 
-            rechercheAgeRTol :
-                Un flottant.
-                La tolérance relative sur l'âge pour l'inversion de l'âge
-                en fonction du ratio de durée de vie en retraite.
+        rechercheAgeRTol : float
+            La tolérance relative sur l'âge pour l'inversion de l'âge
+            en fonction du ratio de durée de vie en retraite.
 
-        Description :
-            Plusieurs stratégies de pilotage peuvent être utilisées :
-            1 pilotageCOR, avec les paramètres du COR
-            1 pilotageParPensionAgeCotisations
-            2 pilotageParSoldePensionAge
-            3 pilotageParSoldePensionCotisations
-            4 pilotageParSoldeAgeCotisations
-            5 pilotageParSoldeAgeDepenses
-            6 pilotageParSoldePensionDepenses
-            7 pilotageParPensionCotisationsDepenses
-            8 pilotageParAgeCotisationsDepenses
-            9 pilotageParAgeEtNiveauDeVie (sous-entendu et par solde financier)
-            10 pilotageParNiveauDeVieEtCotisations (sous-entendu et
-               par solde financier)
+        Examples
+        --------
+        >>> from retraites.SimulateurRetraites import SimulateurRetraites
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.dessineConjoncture()
+        >>> simulateur.dessineLegende()
 
-            Les scénarios sont numérotés de 1 à 6 dans l'attribut "scenarios"
-            (contrairement à l'usage Python ordinaire qui voudrait plutôt que
-            l'indice aille de 0 à 5).
-
-        Exemple :
-            from retraites.SimulateurRetraites import SimulateurRetraites
-            simulateur = SimulateurRetraites()
-            simulateur.dessineConjoncture()
-            simulateur.dessineLegende()
-
-            simulateur = SimulateurRetraites()
-            analyse = simulateur.pilotageCOR()
-            analyse.dessineSimulation()
-            analyse.dessineLegende()
+        >>> simulateur = SimulateurRetraites()
+        >>> analyse = simulateur.pilotageCOR()
+        >>> analyse.dessineSimulation()
+        >>> analyse.dessineLegende()
         """
 
         if json_filename is None:
@@ -341,14 +328,17 @@ class SimulateurRetraites:
 
     def pilotageCOR(self):
         """
-        pilotage 1 : statu quo du COR
+        Pilotage 1 : statu quo du COR.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageCOR()
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageCOR()
         """
         S, RNV, REV, Depenses = self._calcule_S_RNV_REV(self.T, self.P, self.A)
         resultat = self._creerAnalyse(
@@ -359,6 +349,11 @@ class SimulateurRetraites:
     def _creerAnalyse(self, Ts, Ps, As, Ss, RNVs, REVs, Depenses):
         """
         Retourne une analyse en fonction des objets essentiels.
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
         """
         PIB = self._genereTrajectoirePIB()
         PensionBrut = self._calculePensionAnnuelleDroitDirect(PIB, As)
@@ -387,40 +382,56 @@ class SimulateurRetraites:
         self, Pcible=None, Acible=None, Tcible=None
     ):
         """
-        pilotage 1 : imposer 1) le niveau des pensions par rapport aux salaires
+        Pilotage 1 par les pensions, l'age et les cotisations.
+
+        Cela revient à imposer :
+
+        1) le niveau des pensions par rapport aux salaires
         2) l'âge de départ à la retraite
         3) le taux de cotisations
 
-        Paramètres :
-            Pcible : le niveau de pension des retraites par rapport aux actifs
-            Acible : l'âge de départ à la retraite
-            Tcible : le taux de cotisations
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise
-            par défaut la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise
-            la trajectoire du COR pour les années passées et cette
-            valeur pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParPensionAgeCotisations(Pcible=0.5)
-            simulateur.pilotageParPensionAgeCotisations(Acible=62.0)
-            simulateur.pilotageParPensionAgeCotisations(Tcible=0.28)
-            simulateur.pilotageParPensionAgeCotisations(Pcible=0.5,
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Pcible : float
+            Le niveau de pension des retraites par rapport aux actifs.
+        Acible : float
+            L'âge de départ à la retraite.
+        Tcible : float
+            Le taux de cotisations.
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParPensionAgeCotisations(Pcible=0.5)
+        >>> simulateur.pilotageParPensionAgeCotisations(Acible=62.0)
+        >>> simulateur.pilotageParPensionAgeCotisations(Tcible=0.28)
+        >>> simulateur.pilotageParPensionAgeCotisations(Pcible=0.5,
                                                         Acible=62.0)
-            simulateur.pilotageParPensionAgeCotisations(Pcible=0.5,
+        >>> simulateur.pilotageParPensionAgeCotisations(Pcible=0.5,
                                                         Acible=62.0,
                                                         Tcible=0.28)
-
-            # Conserve le niveau de pension actuel
-            s = 3 # Scénario central
-            Pcible = simulateur.P[s][2020]
-            simulateur.pilotageParPensionAgeCotisations(Pcible = Pcible)
+        >>> # Conserve le niveau de pension actuel
+        >>> s = 3 # Scénario central
+        >>> Pcible = simulateur.P[s][2020]
+        >>> simulateur.pilotageParPensionAgeCotisations(Pcible = Pcible)
         """
         # Génère les trajectoires en fonction des paramètres
         Ps = self.genereTrajectoire("P", Pcible)
@@ -435,28 +446,45 @@ class SimulateurRetraites:
         self, Scible=None, Pcible=None, Acible=None
     ):
         """
-        pilotage 2 : imposer 1) le bilan financer
+        Pilotage 2 : impose le solde, les pensions et l'âge.
+
+        Cela revient à imposer :
+
+        1) le bilan financer
         2) le niveau des pensions par rapport aux salaires
         3) l'âge de départ à la retraite
 
-        Paramètres :
-            Scible : la situation financière en % de PIB
-            Pcible : le niveau de pension des retraites par rapport aux actifs
-            Acible : l'âge de départ à la retraite
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-            trajectoire du COR pour les années passées et cette valeur
-            pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParSoldePensionAge(Scible = 0.0)
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Scible : float
+            La situation financière en % de PIB
+        Pcible : float
+            Le niveau de pension des retraites par rapport aux actifs
+        Acible : float
+            L'âge de départ à la retraite
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParSoldePensionAge(Scible = 0.0)
         """
         # Génère les trajectoires en fonction des paramètres
         Ss = self.genereTrajectoire("S", Scible)
@@ -473,28 +501,45 @@ class SimulateurRetraites:
         self, Scible=None, Pcible=None, Tcible=None
     ):
         """
-        pilotage 3 : imposer 1) le bilan financer
+        Pilotage 3 : impose le solde, les pensions et les cotisations.
+
+        Cela revient à imposer :
+
+        1) le bilan financer
         2) le niveau des pensions par rapport aux salaires
         3) le taux de cotisations
 
-        Paramètres :
-            Scible : la situation financière en % de PIB
-            Pcible : le niveau de pension des retraites par rapport aux actifs
-            Tcible : le taux de cotisations
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-            trajectoire du COR pour les années passées et cette valeur
-            pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParSoldePensionCotisations(Scible = 0.0)
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Scible : float
+            La situation financière en % de PIB
+        Pcible : float
+            Le niveau de pension des retraites par rapport aux actifs
+        Tcible : float
+            Le taux de cotisations
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParSoldePensionCotisations(Scible = 0.0)
         """
         # Génère les trajectoires en fonction des paramètres
         Ss = self.genereTrajectoire("S", Scible)
@@ -511,28 +556,45 @@ class SimulateurRetraites:
         self, Scible=None, Acible=None, Tcible=None
     ):
         """
-        pilotage 4 : imposer 1) le bilan financer
+        Pilotage 4 : impose le solde, l'âge et les cotisations.
+
+        Cela revient à imposer :
+
+        1) le bilan financer
         2) l'âge de départ à la retraite
         3) le taux de cotisations
 
-        Paramètres :
-            Scible : la situation financière en % de PIB
-            Acible : l'âge de départ à la retraite
-            Tcible : le taux de cotisations
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-            trajectoire du COR pour les années passées et cette valeur
-            pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParSoldeAgeCotisations(Scible = 0.0)
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Scible : float
+            La situation financière en % de PIB
+        Acible : float
+            L'âge de départ à la retraite
+        Tcible : float
+            Le taux de cotisations
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParSoldeAgeCotisations(Scible = 0.0)
         """
         # Génère les trajectoires en fonction des paramètres
         Ss = self.genereTrajectoire("S", Scible)
@@ -549,28 +611,45 @@ class SimulateurRetraites:
         self, Scible=None, Acible=None, Dcible=None
     ):
         """
-        pilotage 5 : imposer 1) le bilan financer
+        Pilotage 5 : impose le solde, l'âge et les dépenses.
+
+        Cela revient à imposer :
+
+        1) le bilan financer
         2) l'âge de départ à la retraite
         3) le niveau de dépenses
 
-        Paramètres :
-            Scible : la situation financière en % de PIB
-            Acible : l'âge de départ à la retraite
-            Dcible : le niveau de dépenses
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-            trajectoire du COR pour les années passées et cette valeur
-            pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParSoldeAgeDepenses(Scible = 0.0)
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Scible : float
+            La situation financière en % de PIB
+        Acible : float
+            L'âge de départ à la retraite
+        Dcible : float
+            Le niveau de dépenses
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParSoldeAgeDepenses(Scible = 0.0)
         """
         # Génère les trajectoires en fonction des paramètres
         Ss = self.genereTrajectoire("S", Scible)
@@ -587,28 +666,45 @@ class SimulateurRetraites:
         self, Scible=None, Pcible=None, Dcible=None
     ):
         """
-        pilotage 6 : imposer 1) le bilan financer
+        Pilotage 6 : impose le solde, les pensions et les dépenses.
+
+        Cela revient à imposer :
+
+        1) le bilan financer
         2) le niveau des pensions par rapport aux salaires
         3) le niveau de dépenses
 
-        Paramètres :
-            Scible : la situation financière en % de PIB
-            Pcible : le niveau de pension des retraites par rapport aux actifs
-            Dcible : le niveau de dépenses
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-            trajectoire du COR pour les années passées et cette valeur
-            pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParSoldePensionDepenses(Scible = 0.0)
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Scible : float
+            La situation financière en % de PIB
+        Pcible : float
+            Le niveau de pension des retraites par rapport aux actifs
+        Dcible : float
+            Le niveau de dépenses
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParSoldePensionDepenses(Scible = 0.0)
         """
         # Génère les trajectoires en fonction des paramètres
         Ss = self.genereTrajectoire("S", Scible)
@@ -625,28 +721,45 @@ class SimulateurRetraites:
         self, Pcible=None, Tcible=None, Dcible=None
     ):
         """
-        pilotage 7 : imposer 1) le niveau des pensions par rapport aux salaires
+        Pilotage 7 : impose les pensions, les cotisations et les dépenses.
+
+        Cela revient à imposer :
+
+        1) le niveau des pensions par rapport aux salaires
         2) le taux de cotisations
         3) le niveau de dépenses
 
-        Paramètres :
-            Pcible : le niveau de pension des retraites par rapport aux actifs
-            Tcible : le taux de cotisations
-            Dcible : le niveau de dépenses
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-            trajectoire du COR pour les années passées et cette valeur
-            pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParPensionCotisationsDepenses(Pcible = 0.5)
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Pcible : float
+            Le niveau de pension des retraites par rapport aux actifs
+        Tcible : float
+            Le taux de cotisations
+        Dcible : float
+            Le niveau de dépenses
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParPensionCotisationsDepenses(Pcible = 0.5)
         """
         # Génère les trajectoires en fonction des paramètres
         Ps = self.genereTrajectoire("P", Pcible)
@@ -663,28 +776,45 @@ class SimulateurRetraites:
         self, Acible=None, Tcible=None, Dcible=None
     ):
         """
-        pilotage 8 : imposer 1) l'âge de départ à la retraite
+        Pilotage 8 : impose l'âge, les cotisations et les dépenses.
+
+        Cela revient à imposer :
+
+        1) l'âge de départ à la retraite
         2) le taux de cotisations
         3) le niveau de dépenses
 
-        Paramètres :
-            Acible : l'âge de départ à la retraite
-            Tcible : le taux de cotisations
-            Dcible : le niveau de dépenses
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-            trajectoire du COR pour les années passées et cette valeur
-            pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParAgeCotisationsDepenses(Acible = 62.0)
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Acible : float
+            L'âge de départ à la retraite
+        Tcible : float
+            Le taux de cotisations
+        Dcible : float
+            Le niveau de dépenses
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParAgeCotisationsDepenses(Acible = 62.0)
         """
         # Génère les trajectoires en fonction des paramètres
         As = self.genereTrajectoire("A", Acible)
@@ -701,29 +831,46 @@ class SimulateurRetraites:
         self, Acible=None, RNVcible=None, Scible=None
     ):
         """
-        pilotage 9 : imposer 1) l'âge de départ à la retraite,
+        Pilotage 9 : impose l'âge, le niveau de vie et le solde.
+
+        Cela revient à imposer :
+
+        1) l'âge de départ à la retraite,
         2) le niveau de vie par rapport à l'ensemble de la population et
         3) le bilan financier
 
-        Paramètres :
-            Acible : un flottant, l'âge de départ imposé
-            RNVcible : un flottant positif, le niveau de vie des retraités par
-                rapport à l’ensemble de la population
-            Scible : la situation financière en % de PIB
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-            trajectoire du COR pour les années passées et cette valeur
-            pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParAgeEtNiveauDeVie(RNVcible = 1.0)
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Acible : float
+            L'âge de départ imposé
+        RNVcible : float
+            Le niveau de vie des retraités par
+            rapport à l’ensemble de la population
+        Scible : float
+            La situation financière en % de PIB
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParAgeEtNiveauDeVie(RNVcible = 1.0)
         """
         # Génère les trajectoires en fonction des paramètres
         As = self.genereTrajectoire("A", Acible)
@@ -740,29 +887,46 @@ class SimulateurRetraites:
         self, Tcible=None, RNVcible=None, Scible=None
     ):
         """
-        pilotage 10 : imposer 1) le taux de cotisations,
+        Pilotage 10 : impose le niveau de vie, les cotisations et le solde.
+
+        Cela revient à imposer :
+
+        1) le taux de cotisations,
         2) le niveau de vie par rapport à l'ensemble de la population et
         3) le bilan financier
 
-        Paramètres :
-            Tcible : le taux de cotisations
-            RNVcible : le niveau de vie des retraités par rapport à
-                l’ensemble de la population
-            Scible : la situation financière en % de PIB
+        La gestion des paramètres optionnels est fondée sur le principe
+        suivant.
 
-        Description :
-            Retourne un objet de type SimulateurAnalyse.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-            trajectoire du COR pour les années passées et cette valeur
-            pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire, considère
-            que c'est une trajectoire et utilise cette trajectoire.
+        * Si la valeur cible n'est pas donnée, utilise
+          par défaut la trajectoire du COR.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible = 1.0)
+        * Si la valeur cible donnée est un flottant, utilise
+          la trajectoire du COR pour les années passées et cette
+          valeur pour les années futures.
+
+        * Si la valeur cible donnée est un dictionnaire, considère
+          que c'est une trajectoire et utilise cette trajectoire.
+
+        Parameters
+        ----------
+        Tcible : float
+            Le taux de cotisations
+        RNVcible : float
+            Le niveau de vie des retraités par rapport à
+            l’ensemble de la population
+        Scible : float
+            La situation financière en % de PIB
+
+        Returns
+        -------
+        resultat : SimulateurAnalyse
+            Le résultat du pilotage.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible = 1.0)
         """
         # Génère les trajectoires en fonction des paramètres
         Ts = self.genereTrajectoire("T", Tcible)
@@ -779,13 +943,21 @@ class SimulateurRetraites:
         """
         Retourne une donnée du COR correspondant à un nom donné.
 
-        Paramètres :
-            var : une chaîne de caractère, la variable à extraire
-            v : un dictionnaire, v[s][a] est la valeur de la variable
+        Parameters
+        ----------
+        var : str
+            La variable à extraire
+
+        Returns
+        -------
+        v : dict
+            Une trajectoire : v[s][a] est la valeur de la variable
             pour le scénario s à l'année a
 
-        Exemple :
-            T = simulateur.get("T")
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> T = simulateur.get("T")
         """
         if var == "EV":
             an = self.annees_EV
@@ -803,15 +975,25 @@ class SimulateurRetraites:
 
     def _calcule_fixant_Ss_Ps_As(self, Ss, Ps, As):
         """
-        Calcul à solde, pension et âge définis
+        Calcul à solde, pension et âge définis.
 
-        Paramètres :
-            Ss : un dictionnaire, Ss[s][a] est le solde financier
-            du scénario s à l'année a
-            Ps : un dictionnaire, Ps[s][a] est le montant de la pension
-            par rapport aux salaires du scénario s à l'année a
-            As : un dictionnaire, As[s][a] est l'âge de départ à la retraite
-            du scénario s à l'année a
+        Parameters
+        ----------
+        Ss : dict
+            Le solde financier en % de PIB.
+        Ps : dict
+            Le montant des pensions par rapport aux salaires.
+        As : dict
+            L'âge de départ à la retraite.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule Ts
@@ -830,13 +1012,23 @@ class SimulateurRetraites:
         """
         Calcul à solde, pension et cotisations définis
 
-        Paramètres :
-            Ss : un dictionnaire, Ss[s][a] est le solde financier
-            du scénario s à l'année a
-            Ps : un dictionnaire, Ps[s][a] est le montant de la pension
-            par rapport aux salaires du scénario s à l'année a
-            Ts : un dictionnaire, Ts[s][a] est le taux de cotisations
-            du scénario s à l'année a
+        Parameters
+        ----------
+        Ss : dict
+            Le solde financier en % de PIB.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        Ts : dict
+            Le taux de cotisations.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule As
@@ -859,13 +1051,23 @@ class SimulateurRetraites:
         """
         Calcul à solde, âge et cotisations définis
 
-        Paramètres :
-            Ss : un dictionnaire, Ss[s][a] est le solde financier
-            du scénario s à l'année a
-            As : un dictionnaire, As[s][a] est l'âge de départ à la retraite
-            du scénario s à l'année a
-            Ts : un dictionnaire, Ts[s][a] est le taux de cotisations
-            du scénario s à l'année a
+        Parameters
+        ----------
+        Ss : dict
+            Le solde financier en % de PIB.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
+        Ts : dict
+            Le taux de cotisations.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule Ps
@@ -884,13 +1086,23 @@ class SimulateurRetraites:
         """
         Calcul à solde, âge et dépenses définis
 
-        Paramètres :
-            Ss : un dictionnaire, Ss[s][a] est le solde financier
-            du scénario s à l'année a
-            As : un dictionnaire, As[s][a] est l'âge de départ à la retraite
-            du scénario s à l'année a
-            Ds : un dictionnaire, Ds[s][a] est le niveau de dépenses
-            du scénario s à l'année a
+        Parameters
+        ----------
+        Ss : dict
+            Le solde financier en % de PIB.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
+        Ds : dict
+            Le montant des dépenses de retraites en % de PIB.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule Ps et Ts
@@ -910,13 +1122,23 @@ class SimulateurRetraites:
         """
         Calcul à solde, pension et dépenses définis
 
-        Paramètres :
-            Ss : un dictionnaire, Ss[s][a] est le solde financier
-            du scénario s à l'année a
-            Ps : un dictionnaire, Ps[s][a] est le montant de la pension
-            par rapport aux salaires du scénario s à l'année a
-            Ds : un dictionnaire, Ds[s][a] est le niveau de dépenses
-            du scénario s à l'année a
+        Parameters
+        ----------
+        Ss : dict
+            Le solde financier en % de PIB.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        Ds : dict
+            Le montant des dépenses de retraites en % de PIB.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le montant des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule As et Ts
@@ -938,13 +1160,23 @@ class SimulateurRetraites:
         """
         Calcul à pension, cotisations et dépenses définis
 
-        Paramètres :
-            Ps : un dictionnaire, Ps[s][a] est le montant de la pension
-            par rapport aux salaires du scénario s à l'année a
-            Ts : un dictionnaire, Ts[s][a] est le taux de cotisations
-            du scénario s à l'année a
-            Ds : un dictionnaire, Ds[s][a] est le niveau de dépenses
-            du scénario s à l'année a
+        Parameters
+        ----------
+        Ps : dict
+            Le montant des pensions par rapport aux salaires.
+        Ts : dict
+            Le taux de cotisations.
+        Ds : dict
+            Le montant des dépenses de retraites en % de PIB.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le montant des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule As
@@ -965,13 +1197,23 @@ class SimulateurRetraites:
         """
         Calcul à âge, cotisations et dépenses définis
 
-        Paramètres :
-            As : un dictionnaire, As[s][a] est l'âge de départ à la retraite
-            du scénario s à l'année a
-            Ts : un dictionnaire, Ts[s][a] est le taux de cotisations
-            du scénario s à l'année a
-            Ds : un dictionnaire, Ds[s][a] est le niveau de dépenses
-            du scénario s à l'année a
+        Parameters
+        ----------
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
+        Ts : dict
+            Le taux de cotisations.
+        Ds : dict
+            Le montant des dépenses de retraites en % de PIB.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule Ps
@@ -988,14 +1230,24 @@ class SimulateurRetraites:
         """
         Pilotage 1 : calcul à âge et niveau de vie défini
 
-        Paramètres :
-            As : un dictionnaire, As[s][a] est l'âge de départ à la retraite
-            du scénario s à l'année a
-            RNVs : un dictionnaire, RNVs[s][a] est le niveau de vie
-            par rapport à l'ensemble de la population
-            du scénario s à l'année a
-            Ss : un dictionnaire, Ss[s][a] est le solde financier
-            du scénario s à l'année a
+        Parameters
+        ----------
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
+        RNVs : dict
+            Le niveau de vie des retraités par rapport à l'ensemble
+            de la population
+        Ss : dict
+            Le solde financier en % de PIB.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule Ps et Ts
@@ -1016,14 +1268,24 @@ class SimulateurRetraites:
         """
         Pilotage 3 : calcul à cotisations et niveau de vie défini
 
-        Paramètres :
-            Ts : un dictionnaire, Ts[s][a] est le taux de cotisations
-            du scénario s à l'année a
-            RNVs : un dictionnaire, RNVs[s][a] est le niveau de vie
-            par rapport à l'ensemble de la population
-            du scénario s à l'année a
-            Ss : un dictionnaire, Ss[s][a] est le solde financier
-            du scénario s à l'année a
+        Parameters
+        ----------
+        Ts : dict
+            Le taux de cotisations.
+        RNVs : dict
+            Le niveau de vie des retraités par rapport à l'ensemble
+            de la population
+        Ss : dict
+            Le solde financier en % de PIB.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule Ps et As
@@ -1052,13 +1314,23 @@ class SimulateurRetraites:
         """
         Pilotage 4 : calcul à cotisations et âge définis
 
-        Paramètres :
-            As : un dictionnaire, As[s][a] est l'âge de départ à la retraite
-            du scénario s à l'année a
-            Ts : un dictionnaire, Ts[s][a] est le taux de cotisations
-            du scénario s à l'année a
-            Ss : un dictionnaire, Ss[s][a] est le solde financier
-            du scénario s à l'année a
+        Parameters
+        ----------
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
+        Ts : dict
+            Le taux de cotisations.
+        Ss : dict
+            Le solde financier en % de PIB.
+
+        Returns
+        -------
+        Ts : dict
+            Le taux de cotisations.
+        Ps : dict
+            Le niveau des pensions par rapport aux salaires.
+        As : dict
+            L'âge effectif moyen de départ à la retraite.
         """
 
         # Calcule Ps
@@ -1075,13 +1347,29 @@ class SimulateurRetraites:
 
     def _calcule_S_RNV_REV(self, Ts, Ps, As):
         """
-        pilotage 0 : statu quo du COR
+        Pilotage 0 : statu quo du COR.
+
         Calcule les sorties du modèle de retraite en fonction des leviers.
 
-        Paramètres :
-            Ts : le taux de cotisations
-            P : le niveau des pensions par rapport aux salaires
-            A : âge moyen de départ à la retraite
+        Parameters
+        ----------
+        Ts : dict
+            Le taux de cotisations
+        P : dict
+            Le niveau des pensions par rapport aux salaires
+        A : dict
+            L'âge moyen de départ à la retraite
+
+        Returns
+        -------
+        S : dict
+            Le solde financier en % de PIB.
+        RNV : dict
+            Le niveau de vie des retraités.
+        REV : dict
+            La proportion d'âge de vie en retraite.
+        Depenses : dict
+            Le montant des dépenses.
         """
 
         S, RNV, REV, Depenses = dict(), dict(), dict(), dict()
@@ -1116,33 +1404,38 @@ class SimulateurRetraites:
         """
         Crée une nouvelle trajectoire à partir de la valeur constante.
 
-        Paramètres :
-            nom : une chaîne de caratères, le nom de la variable
-            valeur : un flottant, la valeur numérique constante
+        * Si la valeur n'est pas donnée, utilise par défaut
+        la trajectoire du COR.
+        * Si la valeur donnée est un flottant, utilise la trajectoire du
+        COR pour les années passées et cette valeur pour les années
+        futures.
+        * Si la valeur donnée est un dictionnaire, considère que c'est
+        une trajectoire et utilise cette trajectoire.
 
-        Description :
-            Retourne un dictionnaire contenant une trajectoire
-            dans tous les scénarios et pour toutes les années :
+        Parameters
+        ----------
+        nom : str
+            Le nom de la variable
+        valeur : float
+            La valeur numérique constante
+
+        Returns
+        -------
+        trajectoire : dict
+            Une trajectoire dans tous les scénarios et pour toutes les années :
             trajectoire[s][a] est la valeur numérique du
             scénario s à l'année a
 
-            * Si la valeur n'est pas donnée, utilise par défaut
-            la trajectoire du COR.
-            * Si la valeur donnée est un flottant, utilise la trajectoire du
-            COR pour les années passées et cette valeur pour les années
-            futures.
-            * Si la valeur donnée est un dictionnaire, considère que c'est
-            une trajectoire et utilise cette trajectoire.
-
-        Exemples
-            simulateur = SimulateurRetraites()
-            # Départ à l'âge du COR
-            simulateur.genereTrajectoire(simulateur, "A")
-            # Départ à 62.0 ans
-            simulateur.genereTrajectoire(simulateur, "A", 62.0)
-            # Départ à l'âge du COR en 2020
-            simulateur.genereTrajectoire(simulateur, "A",
-                                         simulateur.A[1][2020])
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> # Départ à l'âge du COR
+        >>> simulateur.genereTrajectoire(simulateur, "A")
+        >>> # Départ à 62.0 ans
+        >>> simulateur.genereTrajectoire(simulateur, "A", 62.0)
+        >>> # Départ à l'âge du COR en 2020
+        >>> simulateur.genereTrajectoire(simulateur, "A",
+        >>>                              simulateur.A[1][2020])
         """
 
         if type(valeur) is dict:
@@ -1212,18 +1505,23 @@ class SimulateurRetraites:
         """
         Dessine les hypothèses de conjoncture.
 
-        Paramètres :
-            taille_fonte_titre : taille de la fonte du titre
-                (par défaut, fs=8)
-            dessine_legende : booleen, True si la légende doit être dessinée
-            scenarios_indices : une liste d'entiers, la liste des
-                indices des scénarios (par défaut,
-                scenarios_indices = range(1,7))
-            dessine_annees : la liste des années à dessiner
+        Parameters
+        ----------
+        taille_fonte_titre : int
+            taille de la fonte du titre
+            (par défaut, taille_fonte_titre=8)
+        dessine_legende : bool
+            True si la légende doit être dessinée
+        scenarios_indices : list of int
+            La liste des indices des scénarios (par défaut,
+            scenarios_indices = range(1,7))
+        dessine_annees : list of int
+            La liste des années à dessiner
 
-        Exemple:
-            simulateur = SimulateurRetraites()
-            simulateur.dessineConjoncture()
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.dessineConjoncture()
         """
         pl.figure(figsize=(10, 8))
         pl.suptitle(u"Projections du COR (hypothèses)", fontsize=16)
@@ -1251,31 +1549,37 @@ class SimulateurRetraites:
         dessine_annees=None,
     ):
         """
-        Dessine un graphique associé à une variable donnée
-        pour tous les scénarios.
+        Dessine une variable donnée pour tous les scénarios.
 
-        Paramètres :
-            nom : chaîne de caractère, nom de la variable
-            v : variable à dessiner (par défaut, en fonction du nom)
-            taille_fonte_titre : taille de la fonte du titre
-                (par défaut, taille_fonte_titre=8)
-            yaxis_lim : une liste de taille 2, les bornes inférieures
-                et supérieures de l'axe des ordonnées (par défaut,
-                utilise les paramètres de l'objet)
-            dessine_legende : booleen, True si la légende doit être dessinée
-            scenarios_indices : une liste d'entiers, la liste des
-                indices des scénarios (par défaut,
-                scenarios_indices = range(1,7))
-            dessine_annees : la liste des années à dessiner
+        Le nom peut être une égal à une des chaînes de caractères parmi
+        les chaînes suivantes : "B", "NR", "NR", "G", "dP", "TPR",
+        "TPS", "CNV", "EV".
 
-        Description :
-            Le nom peut être une égal à une des chaînes de caractères parmi
-            les chaînes suivantes : "B", "NR", "NR", "G", "dP", "TPR",
-            "TPS", "CNV", "EV".
+        Parameters
+        ----------
+        nom : str
+            Le nom de la variable
+        v : dict
+            La variable à dessiner (par défaut, en fonction du nom)
+        taille_fonte_titre : int
+            La taille de la fonte du titre
+            (par défaut, taille_fonte_titre=8)
+        yaxis_lim : list of int
+            Une liste de taille 2, les bornes inférieures
+            et supérieures de l'axe des ordonnées (par défaut,
+            utilise les paramètres de l'objet)
+        dessine_legende : bool
+            True si la légende doit être dessinée
+        scenarios_indices : list of int
+            La liste des indices des scénarios (par défaut,
+            scenarios_indices = range(1,7))
+        dessine_annees : list of int
+            La liste des années à dessiner
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.graphique("B")
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.graphique("B")
         """
         if v is None:
             if nom == "B":
@@ -1346,12 +1650,14 @@ class SimulateurRetraites:
         """
         Configure l'affichage d'un message quand on écrit un fichier
 
-        Paramètres :
-            affiche_quand_ecrit : un booléen (par défaut = True)
+        Parameters
+        ----------
+        affiche_quand_ecrit : un booléen (par défaut = True)
 
-        Exemple
-            simulateur = SimulateurRetraites()
-            simulateur.setAfficheMessageEcriture(False)
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.setAfficheMessageEcriture(False)
         """
         self.affiche_quand_ecrit = affiche_quand_ecrit
         return None
@@ -1360,13 +1666,15 @@ class SimulateurRetraites:
         """
         Configure le format de sauvegarde des images
 
-        Paramètres :
-            ext_image : une liste de chaînes de caractères
-                (par defaut, ext_image=["png","pdf"])
+        Parameters
+        ----------
+        ext_image : une liste de chaînes de caractères
+            (par defaut, ext_image=["png","pdf"])
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.setImageFormats(["jpg"])
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.setImageFormats(["jpg"])
         """
         self.ext_image = ext_image
         return None
@@ -1375,9 +1683,15 @@ class SimulateurRetraites:
         """
         Retourne la liste des formats de sauvegarde des images.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            ext_image = simulateur.getImageFormats()
+        Returns
+        -------
+        ext_image : str
+            La liste des formats de sauvegarde des images.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> ext_image = simulateur.getImageFormats()
         """
         return self.ext_image
 
@@ -1385,13 +1699,15 @@ class SimulateurRetraites:
         """
         Configure si la longueur des étiquettes est longue ou courte.
 
-        Paramètres :
-            labels_is_long : un booléen, True si les labels longs
-                sont utilisés (par défaut = True)
+        Parameters
+        ----------
+        labels_is_long : un booléen, True si les labels longs
+            sont utilisés (par défaut = True)
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.setLabelLongs(False)
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.setLabelLongs(False)
         """
         self.labels_is_long = labels_is_long
         return None
@@ -1400,9 +1716,15 @@ class SimulateurRetraites:
         """
         Retourne le booléen associé à la longueur des étiquette.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            labels_is_long = simulateur.getLabelLongs()
+        Returns
+        -------
+        labels_is_long : bool
+            True si les étiquettes sont longues.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> labels_is_long = simulateur.getLabelLongs()
         """
         return self.labels_is_long
 
@@ -1410,14 +1732,16 @@ class SimulateurRetraites:
         """
         Configure le répertoire contenant les images
 
-        Paramètres :
-            dir_image : une chaîne de caractères, le répertoire contenant
-                les images (par défaut, dir_image="fig")
+        Parameters
+        ----------
+        dir_image : str
+            Le répertoire contenant les images (par défaut, dir_image="fig")
             exportées par sauveFigure.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.setDirectoryImage("/tmp")
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.setDirectoryImage("/tmp")
         """
         self.dir_image = dir_image
         return None
@@ -1426,9 +1750,10 @@ class SimulateurRetraites:
         """
         Retourne le répertoire contenant les images
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            dir_image = simulateur.getDirectoryImage()
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> dir_image = simulateur.getDirectoryImage()
         """
         return self.dir_image
 
@@ -1436,15 +1761,17 @@ class SimulateurRetraites:
         """
         Sauvegarde l'image dans le répertoire
 
-        Paramètres :
-            f : une chaîne de caractères, le nom de base des fichiers à sauver
+        Sauvegarde l'image dans les formats définis.
 
-        Description :
-            Sauvegarde l'image dans les formats définis.
+        Parameters
+        ----------
+        f : str
+            Le nom de base des fichiers à sauver
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.sauveFigure("conjoncture")
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.sauveFigure("conjoncture")
         """
 
         for ext in self.ext_image:
@@ -1459,9 +1786,10 @@ class SimulateurRetraites:
         """
         Crée un graphique présentant les légendes des graphiques.
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            simulateur.dessineLegende()
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> simulateur.dessineLegende()
         """
         # Juste les légendes
         pl.figure(figsize=(6, 2))
@@ -1478,6 +1806,11 @@ class SimulateurRetraites:
 
         Source :
         https://fr.wikipedia.org/wiki/Produit_int%C3%A9rieur_brut_de_la_France
+
+        Returns
+        -------
+        PIB : dict
+            Une trajectoire de PIB.
         """
         # Historique de PIBs (Milliards EUR)
         PIB_constate = {
@@ -1514,9 +1847,17 @@ class SimulateurRetraites:
         """
         Calcule la pension annuelle de droit direct (brut) en kEUR.
 
-        Paramètres :
-            PIB : la trajectoire de PIB
-            As : l'âge de départ à la retraite modifié par l'utilisateur
+        Parameters
+        ----------
+        PIB : dict
+            La trajectoire de PIB
+        As : dict
+            L'âge de départ à la retraite modifié par l'utilisateur
+
+        Returns
+        -------
+        pensionBrut : dict
+            La trajectoire de pension brut.
         """
         pensionBrut = dict()
         for s in self.scenarios:
@@ -1534,38 +1875,43 @@ class SimulateurRetraites:
 
     def calculeAge(self, REVcible):
         """
-        Calcul de l'âge en fonction de la durée de vie à la retraite
+        Calcul de l'âge en fonction de la durée de vie à la retraite.
 
-        Paramètres :
-            REVcible : la durée de vie à la retraite
+        * Si la valeur cible n'est pas donnée, utilise par défaut
+            la trajectoire du COR.
+        * Si la valeur cible donnée est un flottant, utilise la
+            trajectoire du COR pour les années passées et cette
+            valeur pour les années futures.
+        * Si la valeur cible donnée est un dictionnaire,
+        considère que c'est une trajectoire et utilise cette trajectoire.
 
-        Description :
-            Retourne un dictionnaire représentant une trajectoire d'âge de
-            départ en retraite.
-            * Si la valeur cible n'est pas donnée, utilise par défaut
-                la trajectoire du COR.
-            * Si la valeur cible donnée est un flottant, utilise la
-                trajectoire du COR pour les années passées et cette
-                valeur pour les années futures.
-            * Si la valeur cible donnée est un dictionnaire,
-            considère que c'est une trajectoire et utilise cette trajectoire.
+        Le calcul est réalisé par inversion numérique du ratio de durée
+        de vie en retraite.
+        Pour cela, nous utilisons le module scipy.optimize.
 
-            Le calcul est réalisé par inversion numérique du ratio de durée
-            de vie en retraite.
-            Pour cela, nous utilisons le module scipy.optimize.
+        La trajectoire d'âge est uniquement déterminée par le ratio
+        de durée de vie en retraite.
+        C'est pourquoi on peut combiner la méthode calculeAge avec tout
+        pilotage prenant en entrée une trajectoire d'âge.
+        Par exemple, on peut combiner la méthode calculeAge avec la méthode
+        pilotageParPensionAgeCotisations.
 
-            La trajectoire d'âge est uniquement déterminée par le ratio
-            de durée de vie en retraite.
-            C'est pourquoi on peut combiner la méthode calculeAge avec tout
-            pilotage prenant en entrée une trajectoire d'âge.
-            Par exemple, on peut combiner la méthode calculeAge avec la méthode
-            pilotageParPensionAgeCotisations.
+        Parameters
+        ----------
+        REVcible : float
+            La durée de vie à la retraite
 
-        Exemple :
-            simulateur = SimulateurRetraites()
-            REVcible = 0.30
-            Acible = simulateur.calculeAge(REVcible = REVcible)
-            analyse = simulateur.pilotageParSoldePensionAge(Acible = Acible)
+        Returns
+        -------
+        As : dict
+            Une trajectoire d'âge de départ effectif moyen en retraite.
+
+        Examples
+        --------
+        >>> simulateur = SimulateurRetraites()
+        >>> REVcible = 0.30
+        >>> Acible = simulateur.calculeAge(REVcible = REVcible)
+        >>> analyse = simulateur.pilotageParSoldePensionAge(Acible = Acible)
         """
 
         def _EcartDeREV(As, args):
@@ -1575,21 +1921,29 @@ class SimulateurRetraites:
             une année donnée et la durée de vie à la retraite
             cible REVcible.
 
-            Paramètres :
-                As : un flottant, l'âge de départ à la retraite
-                args : une liste de quatre éléments [simulateur, annee,
-                    anneeReference, scenarioReference]
-                simulateur : un SimulateurRetraite
-                annee : un flottant, l'année du calcul de la durée de vie
-                    à la retraite
-                anneeReference : un flottant, l'année de référence du calcul
-                    de la durée de vie à la retraite
-                scenarioReference : un entier, le scénario de référence
-                deltaREV : un flottant, la différence entre les deux durées
-                    de vie à la retraite
+            Utilise implicitement les variables simulateur et annee.
 
-            Description :
-                Utilise implicitement les variables simulateur et annee.
+            Parameters
+            ----------
+            As : float
+                L'âge de départ à la retraite
+            args : list
+                Une liste de quatre éléments [simulateur, annee,
+                anneeReference, scenarioReference] que l'on décrit
+                ci-dessous.
+            simulateur : SimulateurRetraite
+                Le simulateur
+            annee : float
+                L'année du calcul de la durée de vie
+                à la retraite
+            anneeReference : float
+                L'année de référence du calcul
+                de la durée de vie à la retraite
+            scenarioReference : int
+                Le scénario de référence
+            deltaREV : float
+                La différence entre les deux durées
+                de vie à la retraite
             """
             simulateur, scenario, annee, REVcible = args
             annee_naissance = round(annee + 0.5 - As)

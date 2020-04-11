@@ -10,94 +10,79 @@ from copy import deepcopy
 class EtudeImpact:
     def __init__(self, simulateur):
         """
-        Créée un simulateur reproduisant l'étude d'impact.
+        Crée un simulateur reproduisant l'étude d'impact.
 
-        Paramètres :
-            simulateur: un SimulateurRetraites.
+        Parameters
+        ----------
+        simulateur: SimulateurRetraites
+            Un simulateur.
 
-        Exemple :
-            from retraites.SimulateurRetraites import SimulateurRetraites
-            from retraites.EtudeImpact import EtudeImpact
-            simulateur = SimulateurRetraites()
-            etudeImpact = EtudeImpact(simulateur)
-            etudeImpact.calcule()
-            Ds = etudeImpact.getDepenses()
-            Ss = etudeImpact.getSolde()
-            As = etudeImpact.getAge()
+        Examples
+        --------
+        from retraites.SimulateurRetraites import SimulateurRetraites
+        from retraites.EtudeImpact import EtudeImpact
+        simulateur = SimulateurRetraites()
+        etudeImpact = EtudeImpact(simulateur)
+        etudeImpact.calcule()
+        Ds = etudeImpact.getDepenses()
+        Ss = etudeImpact.getSolde()
+        As = etudeImpact.getAge()
 
-        Attributs :
-            simulateur :
-                un SimulateurRetraites
-            depenses_annee_transition :
-                un entier.
-                L'année de transition de l'étude d'impact.
-            depenses_annee_extrapolation :
-                un entier.
-                La première année d'extrapolation au delà des données
-                de l'étude d'imact.
-            depenses_annees :
-                une liste d'entiers.
-                La liste des années où le montant des dépenses est connu
-                dans l'étude d'impact.
-            depenses_valeurs :
-                une liste de flottants.
-                La liste des montants des dépenses d'après le tableau 39
-                de l'étude d'impact.
-            analyse :
-                un SimulateurAnalyse.
-                L'analyse du pilotage du COR.
-            Ds :
-                un dictionnaire.
-                Le montant des dépenses dans chaque scénario,
-                pour chaque année.
-            Ss :
-                un dictionnaire.
-                Le solde financier dans chaque scénario,
-                pour chaque année.
-            As :
-                un dictionnaire.
-                L'âge effectif moyen de départ en retraite dans chaque
-                scénario, pour chaque année.
-            premiere_generation :
-                Un entier.
-                L'année de naissance de la première génération affectée
-                par la transition.
-            age_premiere_generation :
-                Un flottant.
-                L'âge moyen de départ à la retraite de la première
-                génération affectée par la transition.
-            derniere_generation :
-                Un entier.
-                L'année de naissance la plus grande détaillée dans l'étude
-                d'impact relatif à l'âge effectif moyen de départ en retraite.
-            age_derniere_generation :
-                Un flottant.
-                L'âge effectif moyen de départ en retraite de la dernière
-                génération évoquée dans l'étude d'impact.
-            age_annee_transition :
-                un entier.
-                L'année où la première génération de la transition
-                part en retraite.
-            age_annee_extrapolation :
-                un entier.
-                L'année où la dernière génération évoquée dans l'étude d'impact
-                part en retraite.
-            solde_annee_transition :
-                Un entier.
-                La première année de transition pour le solde.
-            solde_annee_equilibre :
-                Un entier.
-                La première année d'équilibre pour le solde.
-            epaisseur_ligne :
-                Un entier.
-                L'épaisseur de la ligne pour reproduire graphiquement
-                l'étude d'impact.
-            couleur_HR :
-                Une chaîne de caractère.
-                La couleur d'une courbe "Hors réforme" ou "Avant réforme".
-            couleur_SUR :
-                Une chaîne de caractère.
-                La couleur d'une courbe "SUR" ou "Après réforme".
+        Attributes
+        ----------
+        simulateur : SimulateurRetraites
+            Le simulateur
+        depenses_annee_transition : int
+            L'année de transition de l'étude d'impact.
+        depenses_annee_extrapolation : int
+            La première année d'extrapolation au delà des données
+            de l'étude d'imact.
+        depenses_annees : list of int
+            La liste des années où le montant des dépenses est connu
+            dans l'étude d'impact.
+        depenses_valeurs : list of float
+            La liste des montants des dépenses d'après le tableau 39
+            de l'étude d'impact.
+        analyse : SimulateurAnalyse
+            L'analyse du pilotage du COR.
+        Ds : dict
+            Le montant des dépenses dans chaque scénario,
+            pour chaque année.
+        Ss : dict
+            Le solde financier dans chaque scénario,
+            pour chaque année.
+        As : dict
+            L'âge effectif moyen de départ en retraite dans chaque
+            scénario, pour chaque année.
+        premiere_generation : int
+            L'année de naissance de la première génération affectée
+            par la transition.
+        age_premiere_generation : float
+            L'âge moyen de départ à la retraite de la première
+            génération affectée par la transition.
+        derniere_generation : int
+            L'année de naissance la plus grande détaillée dans l'étude
+            d'impact relatif à l'âge effectif moyen de départ en retraite.
+        age_derniere_generation : float
+            L'âge effectif moyen de départ en retraite de la dernière
+            génération évoquée dans l'étude d'impact.
+        age_annee_transition : int
+            L'année où la première génération de la transition
+            part en retraite.
+        age_annee_extrapolation : int
+            L'année où la dernière génération évoquée dans l'étude d'impact
+            part en retraite.
+        solde_annee_transition : int
+            La première année de transition pour le solde.
+        solde_annee_equilibre : int
+            La première année d'équilibre pour le solde.
+        epaisseur_ligne : int
+            L'épaisseur de la ligne pour reproduire graphiquement
+            l'étude d'impact.
+        couleur_HR : str
+            La couleur d'une courbe "Hors réforme" ou "Avant réforme".
+        couleur_SUR : str
+            La couleur d'une courbe "SUR" ou "Après réforme".
 
         """
         # Liste des années dans le simulateur du COR
@@ -141,6 +126,7 @@ class EtudeImpact:
     def calcule(self):
         """
         Calcule la trajectoire dans l'étude d'impact.
+
         Le pilotage est réalisé à partir de l'âge moyen de départ en retraite,
         des dépenses et du solde financier.
         """
@@ -156,6 +142,7 @@ class EtudeImpact:
     def calculeDepenses(self):
         """
         Calcule la trajectoire des dépenses dans l'étude d'impact.
+
         Source : Tableau 39 de l'étude d'impact, page 176.
         Méthode interpolation quadratique dans les
         données de la table.
@@ -194,10 +181,16 @@ class EtudeImpact:
         """
         Calcule l'âge de départ pour une année de départ en retraite donnée.
 
-        Paramètres
-            a : année de départ en retraite
+        Retourne l'âge de départ en retraite.
 
-        Description :
+        Parameters
+        ----------
+        a : int
+            année de départ en retraite
+
+        Returns
+        -------
+        As : int
             Retourne l'âge de départ en retraite.
         """
         # Interpolation linéaire inverse
@@ -214,10 +207,14 @@ class EtudeImpact:
         """
         Calcule l'âge de départ pour une année de naissance donnée.
 
-        Paramètres :
-            an : année de naissance
+        Parameters
+        ----------
+        an : int
+            L'année de naissance.
 
-        Description :
+        Returns
+        -------
+        As : int
             Retourne l'âge de départ en retraite
         """
         # Interpolation linéaire inverse
