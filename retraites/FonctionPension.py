@@ -10,73 +10,72 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         """
         Crée un modèle de pension.
 
-        Paramètres :
-            simulateur : un SimulateurRetraite
-            annee : l'année de calcul de P
-            verbose : si vrai, affiche des variables intermédiaires durant
-                l'évaluation
+        Crée un modèle de pension permettant d'évaluer le
+        ratio (pension moyenne) / (salaire moyen) pour une année donnée.
 
-        Description :
-            Crée un modèle de pension permettant d'évaluer le
-            ratio (pension moyenne) / (salaire moyen) pour une année donnée.
+        Les entrées de la fonction sont "S", "D", "As", "F", "TauC"
+        et la sortie est "P".
 
-            Les entrées de la fonction sont "S", "D", "As", "F", "TauC"
-            et la sortie est "P".
+        * S : le solde financier du système de retraites (% PIB)
+        * D : le montant des dépenses (% PIB)
+        * As : l'âge moyen de départ à la retraite défini par l'utilisateur
+        * F  : facteur d'élasticité de report de l'âge de départ
+          (par exemple F=0.5)
+        * TauC : le taux de chômage (par exemple TauC = 4.5)
+        * P : le rapport entre le montant moyen des pensions et le
+          montant moyen des salaires
 
-            * S : le solde financier du système de retraites (% PIB)
-            * D : le montant des dépenses (% PIB)
-            * As : l'âge moyen de départ à la retraite défini par l'utilisateur
-            * F  : facteur d'élasticité de report de l'âge de départ
-                (par exemple F=0.5)
-            * TauC : le taux de chômage (par exemple TauC = 4.5)
-            * P : le rapport entre le montant moyen des pensions et le
-                 montant moyen des salaires
+        Les autres paramètres  sont ceux du simulateur,
+        dans le scénario central (i.e. s = 1) à l'année considérée.
 
-            Les autres paramètres  sont ceux du simulateur,
-            dans le scénario central (i.e. s = 1) à l'année considérée.
+        Le modèle calcule NC, dP, B, G, A, NR en fonction du taux
+        de chômage TauC par interpolation dans les données
+        du COR.
 
-            Le modèle calcule NC, dP, B, G, A, NR en fonction du taux
-            de chômage TauC par interpolation dans les données
-            du COR.
+        Parameters
+        ----------
+        simulateur : SimulateurRetraite
+            La simulation
+        annee : int
+            L'année de calcul de P
+        verbose : bool
+            Si vrai, affiche des variables intermédiaires durant
+            l'évaluation.
 
-        Attributs :
-            simulateur :
-                un SimulateurRetraites
-            annee :
-                un entier. L'année de calcul.
-            verbose :
-                un booléen. Si vrai, affiche les calculs intermédiaires.
-            interpolateur_NC :
-                une fonction.
-                L'interpolateur du nombre de cotisants.
-            interpolateur_dP :
-                une fonction.
-                L'interpolateur des autres dépenses de retraite.
-            interpolateur_B :
-                une fonction.
-                L'interpolateur de la part des revenus d'activités bruts
-                dans le PIB.
-            interpolateur_NR :
-                une fonction.
-                L'interpolateur du nombre de retraités.
-            interpolateur_G :
-                une fonction.
-                L'interpolateur de l'effectif moyen d'une génération
-                arrivant aux âges de la retraite.
-            interpolateur_A :
-                une fonction.
-                L'interpolateur de l'âge effectif moyen de départ en retraite.
+        Attributes
+        ----------
+        simulateur : SimulateurRetraites
+            Le simulateur.
+        annee : int
+            L'année de calcul.
+        verbose : bool
+            Si vrai, affiche les calculs intermédiaires.
+        interpolateur_NC : function
+            L'interpolateur du nombre de cotisants.
+        interpolateur_dP : function
+            L'interpolateur des autres dépenses de retraite.
+        interpolateur_B : function
+            L'interpolateur de la part des revenus d'activités bruts
+            dans le PIB.
+        interpolateur_NR : function
+            L'interpolateur du nombre de retraités.
+        interpolateur_G : function
+            L'interpolateur de l'effectif moyen d'une génération
+            arrivant aux âges de la retraite.
+        interpolateur_A : function
+            L'interpolateur de l'âge effectif moyen de départ en retraite.
 
-        Exemple :
-            from retraites.FonctionPension import FonctionPension
-            modele = FonctionPension(simulateur, 2050)
-            S = 0.0
-            D = 0.14
-            As = 63.0
-            F = 0.5
-            TauC = 7.0
-            X = ot.Point([S, D, As, F, TauC])
-            Y = modele(X)
+        Examples
+        --------
+        >>> from retraites.FonctionPension import FonctionPension
+        >>> modele = FonctionPension(simulateur, 2050)
+        >>> S = 0.0
+        >>> D = 0.14
+        >>> As = 63.0
+        >>> F = 0.5
+        >>> TauC = 7.0
+        >>> X = ot.Point([S, D, As, F, TauC])
+        >>> Y = modele(X)
         """
         super(FonctionPension, self).__init__(5, 1)
         # Attributs
@@ -145,16 +144,6 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         Calcule la pension en fonction du solde S,
         des dépenses D et de l'âge de départ en retraite As.
 
-        Paramètres
-        S : le solde financier
-        D : le montant des dépenses de retraite en part de PIB
-        As : l'âge de départ à la retraite de l'utilisateur
-        F : facteur d'élasticité (par défaut, F = 0.5)
-        TauC : taux de chômage (%)
-
-        Description
-        Retourne
-        P : niveau des pensions par rapport aux salaires
 
         Si l’utilisateur renseigne un âge effectif moyen de départ
         à la retraite plus élevé que celui
@@ -163,15 +152,36 @@ class FonctionPension(ot.OpenTURNSPythonFunction):
         retraités est donc diminué de G x (As – A) et le nombre
         de cotisants augmenté de F x G x (As – A).
 
-        Le calcul utilise la variable NC :
-        NC : Nombre de personnes en emploi (ou nombre de cotisants)
+        Le calcul utilise les variables suivantes :
 
-        B : part des revenus d'activités bruts dans le PIB
-        G : Effectif moyen d'une génération arrivant aux âges de la retraite
-        A : âge moyen de départ à la retraite du COR
-        NR : Nombre de retraités de droit direct (tous régimes confondus)
-        dP : Autres dépenses de retraite rapportées au nombre de retraités
-             de droit direct en % du revenu d'activités brut moyen
+        * NC : Nombre de personnes en emploi (ou nombre de cotisants)
+        * B : part des revenus d'activités bruts dans le PIB
+        * G : Effectif moyen d'une génération arrivant aux âges de la retraite
+        * A : âge moyen de départ à la retraite du COR
+        * NR : Nombre de retraités de droit direct (tous régimes confondus)
+        * dP : Autres dépenses de retraite rapportées au nombre de retraités
+          de droit direct en % du revenu d'activités brut moyen
+
+        Parameters
+        ----------
+        X : ot.Point
+            Les composantes de X sont [S, D, As, F, TauC].
+        S : float
+            Le solde financier en % de PIB.
+        D : float
+            Le montant des dépenses de retraite en part de PIB.
+        As : float
+            L'âge de départ à la retraite de l'utilisateur.
+        F : float
+            Le facteur d'élasticité (par défaut, F = 0.5).
+        TauC : float
+            Le taux de chômage (%).
+
+        Returns
+        -------
+        P : list of float
+            La liste contient [P] où
+            P est le niveau des pensions par rapport aux salaires.
         """
         S, D, As, F, TauC = X
         # Paramètres

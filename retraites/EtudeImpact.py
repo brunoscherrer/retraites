@@ -17,17 +17,6 @@ class EtudeImpact:
         simulateur: SimulateurRetraites
             Un simulateur.
 
-        Examples
-        --------
-        from retraites.SimulateurRetraites import SimulateurRetraites
-        from retraites.EtudeImpact import EtudeImpact
-        simulateur = SimulateurRetraites()
-        etudeImpact = EtudeImpact(simulateur)
-        etudeImpact.calcule()
-        Ds = etudeImpact.getDepenses()
-        Ss = etudeImpact.getSolde()
-        As = etudeImpact.getAge()
-
         Attributes
         ----------
         simulateur : SimulateurRetraites
@@ -84,6 +73,16 @@ class EtudeImpact:
         couleur_SUR : str
             La couleur d'une courbe "SUR" ou "Après réforme".
 
+        Examples
+        --------
+        >>> from retraites.SimulateurRetraites import SimulateurRetraites
+        >>> from retraites.EtudeImpact import EtudeImpact
+        >>> simulateur = SimulateurRetraites()
+        >>> etudeImpact = EtudeImpact(simulateur)
+        >>> etudeImpact.calcule()
+        >>> Ds = etudeImpact.getDepenses()
+        >>> Ss = etudeImpact.getSolde()
+        >>> As = etudeImpact.getAge()
         """
         # Liste des années dans le simulateur du COR
         self.simulateur = simulateur

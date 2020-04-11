@@ -94,89 +94,68 @@ class SimulateurAnalyse:
             La liste des scénarios considérés.
             Ces scénarios sont des indices dans les tables de scénarios de
             chomage, de croissance ainsi que les labels.
-
         annees_EV : list of int
             La liste des années de naissance pour lesquelles on a
             l'espérance de vie.
-
         annees : list of int
             La liste des années sur lesquelles on fait les calculs.
             Chaque année de cette liste est inférieure à l'année de
             l'horizon.
-
         annees_standard : list of int
             La liste d'une sélection des années futures standard dans
             les calculs simplifiés.
-
         T : dict
             Un dictionnaire représentant une trajectoire.
             Le taux de cotisations retraites.
-
         P : dict
             Un dictionnaire représentant une trajectoire.
             Le niveau moyen brut des pensions par rapport au
             niveau moyen brut des salaires.
-
         A : dict
             Un dictionnaire représentant une trajectoire.
             L'âge effectif moyen de départ en retraite.
-
         S : dict
             Un dictionnaire représentant une trajectoire.
             Le solde financier du système de retraites en part de PIB.
-
         RNV : dict
             Un dictionnaire représentant une trajectoire.
             Niveau de vie des retraités par rapport à l'ensemble
             de la population.
-
         REV : dict
             Un dictionnaire représentant une trajectoire.
             Durée de la vie passée à la retraite.
-
         Depenses : dict
             Un dictionnaire représentant une trajectoire.
             Le montant des dépenses de retraites en part de PIB.
-
         PIB : dict
             Un dictionnaire représentant une trajectoire.
             Le produit intérieur brut.
-
         PensionBrut : dict
             Un dictionnaire représentant une trajectoire.
             Le montant annuel moyen brut de pension de droit direct.
-
         scenarios_labels : list of str
             La liste de chaîne de caractère décrivant les
             scénarios pour chaque scénario
             de la liste retournée par getScenarios().
-
         scenarios_labels_courts : list of str
             La liste de chaîne de caractère courtes décrivant les
             scénarios pour chaque scénario
             de la liste retournée par getScenarios().
-
         labels_is_long : bool
             True, si on utilise les labels longs dans les graphiques
-
         dir_image : str
             Le répertoire de sauvegarde des images.
             Par défaut, la chaîne de caractère vide.
-
         ext_image : list of str
             Les types de fichier à générer par la méthode sauveFigure.
-
         affiche_quand_ecrit : bool
             Si True, alors affiche un message quand la méthode sauveFigure
             écrit un fichier.
-
         yaxis_lim : dict
             Les plages min et max pour l'axe des ordonnées
             des variables en sortie de l'analyse.
-
         liste_variables : list of str
             La liste des variables de l'analyse.
-
         liste_legendes : list of str
             La liste des légendes des variables de l'analyse.
 

@@ -25,6 +25,7 @@ jobs:
             sudo pip3 install openturns
             sudo pip3 install black
             sudo pip3 install flake8
+            sudo pip3 install black-nb
       - run:
           name: Install Python deps in a venv with pip
           command: |

@@ -55,141 +55,107 @@ class SimulateurRetraites:
         ----------
         annee_courante : int
             L'année correspondant à la date d'aujourd'hui.
-
         horizon : int
             La dernière année du calcul.
-
         annees : list of int
             La liste des années sur lesquelles on fait les calculs.
             Chaque année de cette liste est inférieure à l'année de
             l'horizon.
-
         annees_futures : list of int
             La liste des années sur lesquelles on peut changer
             quelque chose.
-
         annees_standard : list of int
             La liste d'une sélection des années futures standard dans
             les calculs simplifiés.
-
         annees_EV : list of int
             La liste des années de naissance pour lesquelles on a
             l'espérance de vie.
-
         scenarios : list of int
             la liste des scénarios considérés.
             Ces scénarios sont des indices dans les tables de scénarios de
             chomage, de croissance ainsi que les labels.
-
         scenario_central : int
             L'indice du scénario central,
             +1,3%/an, Chômage: 7%.
-
         scenario_pessimiste : int
             L'indice du scénario pessimiste +1%/an, Chômage: 10%.
-
         scenario_optimiste : int
             L'indice du scénario optimiste : +1,8%/an, Chômage: 4.5%.
-
         scenarios_croissance : list of float
             La liste des taux de croissance pour chaque scénario
             de la liste retournée par getScenarios().
-
         scenarios_chomage : list of float
             La liste des taux de chomage pour chaque scénario
             de la liste retournée par getScenarios().
-
         scenarios_labels : list of str
             Les scénarios pour chaque scénario
             de la liste retournée par getScenarios().
-
         scenarios_labels_courts : list of str
             Les scénarios pour chaque scénario
             de la liste retournée par getScenarios().
-
         T : dict
             Une trajectoire.
             Le taux de cotisations retraites
-
         P : dict
             Une trajectoire.
             Le niveau moyen brut des pensions par rapport au
             niveau moyen brut des salaires
-
         A : dict
             Une trajectoire.
             L'âge effectif moyen de départ en retraite
-
         G : dict
             Une trajectoire.
             Effectif moyen d'une génération arrivant aux âges
             de la retraite
-
         NR  : dict
             Une trajectoire.
             Nombre de retraités de droit direct (tous régimes confondus)
-
         NC : dict
             Une trajectoire.
             Nombre de personnes en emploi (ou nombre de cotisants)
-
         TCR : dict
             Une trajectoire.
             Taux des prélèvements sociaux sur les pensions de retraite
             Son nom est TPR dans le composant, TCR dans le fichier json
-
         TCS : dict
             Une trajectoire.
             Taux des prélèvements sociaux sur les salaires et
             revenus d'activité ;
             Son nom est TPR dans le composant, TCR dans le fichier json
-
         CNV : dict
             Une trajectoire.
             Coefficient pour passer du ratio "pensions/salaire moyen"
             au ratio "niveau de vie/salaire moyen"
-
         dP : dict
             Une trajectoire.
             Autres dépenses de retraite rapportées au nombre de
             retraités de droit direct en % du revenu d'activités brut moyen
-
         B : dict
             Une trajectoire.
             part des revenus d'activités bruts dans le PIB
-
         EV : dict
             Une trajectoire.
             Espérance de vie à 60 ans par génération
-
         liste_variables : list of str
             La liste des variables du modèle : B, NR, etc...
-
         liste_legendes : list of str
             La liste des légendes pour chaque variable dans liste_variables
-
         labels_is_long : bool
             True, si on utilise les labels longs dans les graphiques
-
         yaxis_lim : dict
             Les plages min et max pour l'axe des ordonnées
             des variables en sortie du simulateur.
-
         dir_image : str
             Le répertoire de sauvegarde des images.
             Par défaut, le répertoire courant.
-
         ext_image : list of str
             Les types de fichier à générer par la méthode sauveFigure.
-
         affiche_quand_ecrit : bool
             Si True, alors affiche un message quand la méthode sauveFigure
             écrit un fichier.
-
         rechercheAgeBornes : list of float
             Les bornes de recherches pour l'inversion de l'âge
             en fonction du ratio de durée de vie en retraite.
-
         rechercheAgeRTol : float
             La tolérance relative sur l'âge pour l'inversion de l'âge
             en fonction du ratio de durée de vie en retraite.
@@ -200,11 +166,6 @@ class SimulateurRetraites:
         >>> simulateur = SimulateurRetraites()
         >>> simulateur.dessineConjoncture()
         >>> simulateur.dessineLegende()
-
-        >>> simulateur = SimulateurRetraites()
-        >>> analyse = simulateur.pilotageCOR()
-        >>> analyse.dessineSimulation()
-        >>> analyse.dessineLegende()
         """
 
         if json_filename is None:
