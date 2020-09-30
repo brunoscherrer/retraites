@@ -45,17 +45,17 @@ Ce simulateur a été utile pour l'écriture de ces articles sur la réforme des
 
 ## Dépendances
 
-Les dépendances sont :
-
-- Python >= 3.4
-- [numpy](http://www.numpy.org) >= 0.10
-- [matplotlib](https://matplotlib.org) >= 1.5.3
-- [scipy](https://www.scipy.org/) >= 1.0.0
-- [openturns](https://openturns.github.io/openturns/latest/) >= 1.14
+Les dépendances sont indiquées dans le fichier requirements.txt.
 
 ## Installation
 
-L'installation se fait avec les commandes suivantes:
+L'installation de la dernière version se fait avec les commandes suivantes:
+
+```
+pip install retraites
+```
+
+L'installation du code source se fait avec les commandes suivantes:
 
 ```
 git clone https://github.com/brunoscherrer/retraites.git
@@ -156,6 +156,7 @@ La [Documentation de l'API] présente une version lisible de l'aide.
 [doc]: https://github.com/brunoscherrer/retraites/blob/master/doc
 [Simulations numériques]: https://github.com/brunoscherrer/retraites/blob/master/index.ipynb
 [Simulations numériques du rapport du COR de Juin 2019]: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-COR-juin-2019.ipynb
+[Simulations numériques du rapport du COR de Juin 2019 - Influence du taux de chômage]: https://github.com/brunoscherrer/retraites/blob/master/doc/simulation-COR-juin-2019-influence-chomage.ipynb.ipynb
 [Modèle du simulateur officiel du COR]: https://github.com/brunoscherrer/retraites/blob/master/doc/Description-du-composant-retraites.ipynb
 [Essai de détermination des réformes possibles à partir de l'étude d'impact]: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes.ipynb
 [Une autre réforme en augmentant légèrement la part du PIB]: https://github.com/brunoscherrer/retraites/blob/master/doc/reformes2.ipynb
@@ -175,6 +176,7 @@ Un exemple complet d'utilisation du simulateur est présenté dans [Simulations 
 D'autres exemples sont présentés dans le répertoire [doc] :
 
 - [Simulations numériques du rapport du COR de Juin 2019]
+- [Simulations numériques du rapport du COR de Juin 2019 - Influence du taux de chômage]
 - [Simulations numériques de tous les pilotages possibles]
 - [Essai de détermination des réformes possibles à partir de l'étude d'impact]
 - [Une autre réforme en augmentant légèrement la part du PIB]

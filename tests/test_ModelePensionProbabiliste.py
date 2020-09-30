@@ -9,8 +9,8 @@ from retraites.SimulateurRetraites import SimulateurRetraites
 from retraites.ModelePensionProbabiliste import ModelePensionProbabiliste
 import openturns as ot
 
-class CheckModelePensionProbabiliste(unittest.TestCase):
 
+class CheckModelePensionProbabiliste(unittest.TestCase):
     def test_Init(self):
         """
         Teste la création de l'objet ModelePensionProbabiliste.
@@ -43,7 +43,9 @@ class CheckModelePensionProbabiliste(unittest.TestCase):
         inputDistribution = modele.getInputDistribution()
         # Crée un vecteur aléatoire
         inputRandomVector = ot.RandomVector(inputDistribution)
-        outputRandomVector = ot.CompositeRandomVector(fonction, inputRandomVector)
+        outputRandomVector = ot.CompositeRandomVector(
+            fonction, inputRandomVector
+        )
         sampleSize = 100
         sample = outputRandomVector.getSample(sampleSize)
         # Vérifie l'échantillon
@@ -55,15 +57,16 @@ class CheckModelePensionProbabiliste(unittest.TestCase):
 
     def test_InitCOREI(self):
         """
-        Teste la création de l'objet ModelePensionProbabiliste lorsqu'on 
+        Teste la création de l'objet ModelePensionProbabiliste lorsqu'on
         utilise un âge qui dépend de l'année.
         """
         simulateur = SimulateurRetraites()
         S = 0.0
         D = 0.14
         annee = 2050
-        modele = ModelePensionProbabiliste(simulateur, annee, S, D, 
-                                           bornesAgeConstant = False)
+        modele = ModelePensionProbabiliste(
+            simulateur, annee, S, D, bornesAgeConstant=False
+        )
         # Vérifie la fonction
         fonction = modele.getFonction()
         dim = fonction.getInputDimension()
@@ -72,18 +75,19 @@ class CheckModelePensionProbabiliste(unittest.TestCase):
         inputDistribution = modele.getInputDistribution()
         dim = inputDistribution.getDimension()
         self.assertEqual(dim, 3)
-        
+
         # Idem en 2020 : l'âge min est égal à l'âge max
         # la distribution est un Dirac
         simulateur = SimulateurRetraites()
         S = 0.0
         D = 0.14
         annee = 2020
-        modele = ModelePensionProbabiliste(simulateur, annee, S, D, 
-                                           bornesAgeConstant = False)
+        modele = ModelePensionProbabiliste(
+            simulateur, annee, S, D, bornesAgeConstant=False
+        )
 
         return None
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     unittest.main()

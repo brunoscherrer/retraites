@@ -10,10 +10,11 @@ from retraites.FonctionPension import FonctionPension
 import numpy as np
 import openturns as ot
 
+
 def CalculePAvecModelePension(annee, scenario):
     """
-    Pour une annéee et un scenario, calcule P avec les paramètres 
-    du COR. 
+    Pour une annéee et un scenario, calcule P avec les paramètres
+    du COR.
     """
     simulateur = SimulateurRetraites()
     modele = FonctionPension(simulateur, annee)
@@ -28,6 +29,7 @@ def CalculePAvecModelePension(annee, scenario):
     Y = modele(X)
     return Y
 
+
 def LRE10(computed, exact):
     """
     Calcule la Log-Relative Error en base 10.
@@ -39,7 +41,6 @@ def LRE10(computed, exact):
 
 
 class CheckFonctionPension(unittest.TestCase):
-
     def test_Init(self):
         simulateur = SimulateurRetraites()
         # Initialisation
@@ -69,13 +70,16 @@ class CheckFonctionPension(unittest.TestCase):
         simulateur = SimulateurRetraites()
         analyse = simulateur.pilotageCOR()
         for annee in simulateur.annees:
-            for scenario in [simulateur.scenario_central, 
-                             simulateur.scenario_optimiste, 
-                             simulateur.scenario_pessimiste]:
+            for scenario in [
+                simulateur.scenario_central,
+                simulateur.scenario_optimiste,
+                simulateur.scenario_pessimiste,
+            ]:
                 Y = CalculePAvecModelePension(annee, scenario)[0]
                 Y_exact = analyse.P[scenario][annee]
                 np.testing.assert_allclose(Y, Y_exact)
         return None
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     unittest.main()

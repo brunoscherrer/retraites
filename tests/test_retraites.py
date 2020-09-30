@@ -14,13 +14,12 @@ import os
 
 
 class CheckSimulateur(unittest.TestCase):
-
     def test_Paquet_Defaut(self):
         # génération des graphes pour le statu quo (COR)
         simulateur = SimulateurRetraites()
 
         pl.figure(figsize=(6, 8))
-        pl.suptitle('Projections du COR', fontsize=16)
+        pl.suptitle("Projections du COR", fontsize=16)
 
         analyse = simulateur.pilotageCOR()
 
@@ -42,7 +41,7 @@ class CheckSimulateur(unittest.TestCase):
         simulateur = SimulateurRetraites(jsonfile)
 
         pl.figure(figsize=(6, 8))
-        pl.suptitle('Projections du COR', fontsize=16)
+        pl.suptitle("Projections du COR", fontsize=16)
 
         analyse = simulateur.pilotageCOR()
 
@@ -66,63 +65,63 @@ class CheckSimulateur(unittest.TestCase):
         analyse.setDirectoryImage(tempfile.gettempdir())
 
         pl.figure(figsize=(6, 8))
-        pl.suptitle('Projections du COR', fontsize=16)
+        pl.suptitle("Projections du COR", fontsize=16)
         analyse.dessineSimulation()
         pl.close()
 
         # Teste les options des graphiques
         pl.figure()
-        analyse.graphique("P")
+        analyse.dessineVariable("P")
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", analyse.P)
+        analyse.dessineVariable("P", analyse.P)
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", dessine_legende=True)
+        analyse.dessineVariable("P", dessine_legende=True)
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", scenarios_indices=range(1, 5))
+        analyse.dessineVariable("P", scenarios_indices=range(1, 5))
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", dessine_annees=range(2020, 2041))
+        analyse.dessineVariable("P", dessine_annees=range(2020, 2041))
         pl.close()
 
         pl.figure()
-        analyse.graphique("P", taille_fonte_titre=14)
+        analyse.dessineVariable("P", taille_fonte_titre=14)
         pl.close()
 
         pl.figure()
-        analyse.graphique("A")
+        analyse.dessineVariable("A")
         pl.close()
 
         pl.figure()
-        analyse.graphique("S")
+        analyse.dessineVariable("S")
         pl.close()
 
         pl.figure()
-        analyse.graphique("T")
+        analyse.dessineVariable("T")
         pl.close()
 
         pl.figure()
-        analyse.graphique("RNV")
+        analyse.dessineVariable("RNV")
         pl.close()
 
         pl.figure()
-        analyse.graphique("REV")
+        analyse.dessineVariable("REV")
         pl.close()
 
         pl.figure()
-        analyse.graphique("Depenses")
+        analyse.dessineVariable("Depenses")
         analyse.sauveFigure("Depenses")
         pl.close()
 
         # Configure des longs titres
         analyse.setLabelLongs(True)
-        analyse.graphique("P", analyse.P)
+        analyse.dessineVariable("P", analyse.P)
         pl.close()
 
         # Dessine la légende
@@ -141,63 +140,63 @@ class CheckSimulateur(unittest.TestCase):
         simulateur.setDirectoryImage(tempfile.gettempdir())
 
         pl.figure(figsize=(6, 8))
-        pl.suptitle('Projections du COR', fontsize=16)
+        pl.suptitle("Projections du COR", fontsize=16)
         simulateur.dessineConjoncture()
         pl.close()
 
         # Teste les options des graphiques
         pl.figure()
-        simulateur.graphique("B")
+        simulateur.dessineVariable("B")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", simulateur.B)
+        simulateur.dessineVariable("B", simulateur.B)
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", dessine_legende=True)
+        simulateur.dessineVariable("B", dessine_legende=True)
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", scenarios_indices=range(1, 5))
+        simulateur.dessineVariable("B", scenarios_indices=range(1, 5))
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", dessine_annees=range(2020, 2041))
+        simulateur.dessineVariable("B", dessine_annees=range(2020, 2041))
         pl.close()
 
         pl.figure()
-        simulateur.graphique("B", taille_fonte_titre=14)
+        simulateur.dessineVariable("B", taille_fonte_titre=14)
         pl.close()
 
         pl.figure()
-        simulateur.graphique("G")
+        simulateur.dessineVariable("G")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("NR")
+        simulateur.dessineVariable("NR")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("NC")
+        simulateur.dessineVariable("NC")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("dP")
+        simulateur.dessineVariable("dP")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("TPR")
+        simulateur.dessineVariable("TPR")
         pl.close()
 
         pl.figure()
-        simulateur.graphique("TPS")
+        simulateur.dessineVariable("TPS")
         simulateur.sauveFigure("TPS")
         pl.close()
 
         # Configure des longs titres
         simulateur.setLabelLongs(True)
-        simulateur.graphique("CNV")
+        simulateur.dessineVariable("CNV")
         pl.close()
 
         # Dessine la légende
@@ -228,17 +227,24 @@ class CheckSimulateur(unittest.TestCase):
         S = 0.0
         Age = 61.0
         RNV = 1.0
-        analyse = simulateur.pilotageParAgeEtNiveauDeVie(Acible=Age,
-                                                         RNVcible=RNV,
-                                                         Scible=S)
+        analyse = simulateur.pilotageParAgeEtNiveauDeVie(
+            Acible=Age, RNVcible=RNV, Scible=S
+        )
         analyse.setDirectoryImage(tempfile.gettempdir())
 
         pl.figure(figsize=(6, 8))
         if Age != 0:
-            pl.suptitle((u"Eq. financier, maintien du niveau de vie & départ à %d ans" % (Age)), fontsize=10)
+            pl.suptitle(
+                (
+                    u"Eq. financier, maintien du niveau"
+                    "de vie & départ à %d ans" % (Age)
+                ),
+                fontsize=10,
+            )
         else:
-            pl.suptitle(u"Equilibre financier & maintien du niveau de vie",
-                        fontsize=10)
+            pl.suptitle(
+                u"Equilibre financier & maintien du niveau de vie", fontsize=1
+            )
 
         analyse.dessineSimulation()
 
@@ -250,19 +256,23 @@ class CheckSimulateur(unittest.TestCase):
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
                     np.testing.assert_allclose(analyse.A[s][a], Age)
                     np.testing.assert_allclose(analyse.RNV[s][a], RNV)
-                    np.testing.assert_allclose(analyse.S[s][a], S,
-                                               atol=1.e-15)
+                    np.testing.assert_allclose(
+                        analyse.S[s][a], S, atol=1.0e-15
+                    )
 
         return None
 
@@ -273,13 +283,15 @@ class CheckSimulateur(unittest.TestCase):
         simulateur = SimulateurRetraites()
 
         RNV = 1.0
-        analyse = simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible=RNV,
-                                                                 Scible=0.0)
+        analyse = simulateur.pilotageParNiveauDeVieEtCotisations(
+            RNVcible=RNV, Scible=0.0
+        )
         analyse.setDirectoryImage(tempfile.gettempdir())
 
         pl.figure(figsize=(6, 8))
-        pl.suptitle(u'Equilibre financier & maintien du niveau de vie',
-                    fontsize=12)
+        pl.suptitle(
+            u"Equilibre financier & maintien du niveau de vie", fontsize=12
+        )
         analyse.dessineSimulation()
 
         print("Maintien du niveau de vie")
@@ -290,20 +302,23 @@ class CheckSimulateur(unittest.TestCase):
         # Vérifie les valeurs
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
-                    np.testing.assert_allclose(analyse.T[s][a], 0.3,
-                                               atol=0.3)
+                    np.testing.assert_allclose(analyse.T[s][a], 0.3, atol=0.3)
                     np.testing.assert_allclose(analyse.RNV[s][a], RNV)
-                    np.testing.assert_allclose(analyse.S[s][a], 0.0,
-                                               atol=1.e-15)
+                    np.testing.assert_allclose(
+                        analyse.S[s][a], 0.0, atol=1.0e-15
+                    )
 
         return None
 
@@ -315,12 +330,14 @@ class CheckSimulateur(unittest.TestCase):
 
         simulateur = SimulateurRetraites()
         pl.figure(figsize=(6, 8))
-        pl.suptitle(u'Equilibre financier & ratio pension/salaire fixe',
-                    fontsize=12)
+        pl.suptitle(
+            u"Equilibre financier & ratio pension/salaire fixe", fontsize=12
+        )
 
         Pcible = simulateur.P[1][2020]
-        analyse = simulateur.pilotageParSoldePensionCotisations(Scible=0.0,
-                                                                Pcible=Pcible)
+        analyse = simulateur.pilotageParSoldePensionCotisations(
+            Scible=0.0, Pcible=Pcible
+        )
         analyse.setDirectoryImage(tempfile.gettempdir())
 
         analyse.dessineSimulation()
@@ -332,21 +349,27 @@ class CheckSimulateur(unittest.TestCase):
         # Vérifie les valeurs
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][2020])
-                    np.testing.assert_allclose(analyse.S[s][a],
-                                               0.0, atol=1.e-15)
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][2020]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.S[s][a], 0.0, atol=1.0e-15
+                    )
         return None
 
     def test_article2(self):
@@ -354,19 +377,28 @@ class CheckSimulateur(unittest.TestCase):
         print("Données et figure pour article 2")
 
         simulateur = SimulateurRetraites()
-        analyse = simulateur.pilotageParNiveauDeVieEtCotisations(RNVcible=1.0,
-                                                                 Scible=0.0)
+        analyse = simulateur.pilotageParNiveauDeVieEtCotisations(
+            RNVcible=1.0, Scible=0.0
+        )
         analyse.setDirectoryImage(tempfile.gettempdir())
 
         pl.figure(figsize=(9, 6))
-        analyse.graphique("A")
-        pl.suptitle(u"Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)",fontsize=14)
+        analyse.dessineVariable("A")
+        pl.suptitle(
+            u"Modèle du COR: Réforme Macron (éq."
+            "financier & niveau de vie maintenu)",
+            fontsize=14,
+        )
         pl.legend(loc="best")
         analyse.sauveFigure("macron_68_ans")
 
         pl.figure(figsize=(9, 6))
-        analyse.graphique("A")
-        pl.suptitle(u"Modèle du COR: Réforme Macron (éq. financier & niveau de vie maintenu)",fontsize=14)
+        analyse.dessineVariable("A")
+        pl.suptitle(
+            u"Modèle du COR: Réforme Macron (éq."
+            "financier & niveau de vie maintenu)",
+            fontsize=14,
+        )
         pl.legend(loc="best")
         analyse.sauveFigure("macron_68_ans_tout")
 
@@ -376,20 +408,25 @@ class CheckSimulateur(unittest.TestCase):
         # Vérifie les valeurs
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
                     np.testing.assert_allclose(analyse.RNV[s][a], 1.0)
-                    np.testing.assert_allclose(analyse.S[s][a], 0.0,
-                                               atol=1.e-15)
+                    np.testing.assert_allclose(
+                        analyse.S[s][a], 0.0, atol=1.0e-15
+                    )
         return None
 
     def test_article3(self):
@@ -399,24 +436,27 @@ class CheckSimulateur(unittest.TestCase):
 
         simulateur = SimulateurRetraites()
         Age = 62.0
-        analyse = simulateur.pilotageParSoldeAgeCotisations(Scible=0.0,
-                                                            Acible=Age)
+        analyse = simulateur.pilotageParSoldeAgeCotisations(
+            Scible=0.0, Acible=Age
+        )
         analyse.setDirectoryImage(tempfile.gettempdir())
 
         pl.figure(figsize=(6, 8))
         pl.suptitle(u"Equilibre financier, cotisations et âge définis")
         analyse.dessineSimulation()
 
-        titre=u"Modèle du COR: Réforme Macron (éq. financier & départ à 62 ans)"
+        titre = (
+            u"Modèle du COR: Réforme Macron (éq. financier & départ à 62 ans)"
+        )
 
         pl.figure(figsize=(9, 6))
-        analyse.graphique("RNV")
+        analyse.dessineVariable("RNV")
         pl.suptitle(titre, fontsize=14)
         pl.legend(loc="best")
         analyse.sauveFigure("macron_62_ans_nv")
 
         pl.figure(figsize=(9, 6))
-        analyse.graphique("P")
+        analyse.dessineVariable("P")
         pl.suptitle(titre, fontsize=14)
         pl.legend(loc="best")
         analyse.sauveFigure("macron_62_ans_p")
@@ -431,21 +471,25 @@ class CheckSimulateur(unittest.TestCase):
         # Vérifie les valeurs
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               Age)
-                    np.testing.assert_allclose(analyse.S[s][a],
-                                               0.0, atol=1.e-15)
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(analyse.A[s][a], Age)
+                    np.testing.assert_allclose(
+                        analyse.S[s][a], 0.0, atol=1.0e-15
+                    )
         return None
 
     def test_pilotage5(self):
@@ -461,7 +505,7 @@ class CheckSimulateur(unittest.TestCase):
 
         pl.figure()
         analyse.setLabelLongs(False)
-        analyse.graphique("Depenses")
+        analyse.dessineVariable("Depenses")
 
         analyse.dessineLegende()
 
@@ -469,21 +513,27 @@ class CheckSimulateur(unittest.TestCase):
         analyse_COR = simulateur.pilotageCOR()
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
-                    np.testing.assert_allclose(analyse.Depenses[s][a],
-                                               analyse_COR.Depenses[s][a])
-                    np.testing.assert_allclose(analyse.S[s][a], 0.,
-                                               atol=1.e-15)
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.Depenses[s][a], analyse_COR.Depenses[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.S[s][a], 0.0, atol=1.0e-15
+                    )
 
         return None
 
@@ -493,8 +543,9 @@ class CheckSimulateur(unittest.TestCase):
 
         simulateur = SimulateurRetraites()
 
-        analyse = simulateur.pilotageParSoldeAgeDepenses(Acible=62.0,
-                                                         Scible=0.0)
+        analyse = simulateur.pilotageParSoldeAgeDepenses(
+            Acible=62.0, Scible=0.0
+        )
         analyse.setDirectoryImage(tempfile.gettempdir())
 
         pl.figure(figsize=(8, 10))
@@ -503,7 +554,7 @@ class CheckSimulateur(unittest.TestCase):
 
         pl.figure()
         analyse.setLabelLongs(False)
-        analyse.graphique("Depenses")
+        analyse.dessineVariable("Depenses")
 
         analyse.dessineLegende()
 
@@ -511,20 +562,25 @@ class CheckSimulateur(unittest.TestCase):
         analyse_COR = simulateur.pilotageCOR()
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
                     np.testing.assert_allclose(analyse.A[s][a], 62.0)
-                    np.testing.assert_allclose(analyse.Depenses[s][a],
-                                               analyse_COR.Depenses[s][a])
-                    np.testing.assert_allclose(analyse.S[s][a], 0.,
-                                               atol=1.e-15)
+                    np.testing.assert_allclose(
+                        analyse.Depenses[s][a], analyse_COR.Depenses[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.S[s][a], 0.0, atol=1.0e-15
+                    )
 
         return None
 
@@ -534,20 +590,23 @@ class CheckSimulateur(unittest.TestCase):
         Ps = 0.5
         As = 62.0
         Ts = 0.28
-        analyse = simulateur.pilotageParPensionAgeCotisations(Pcible=Ps,
-                                                              Acible=As,
-                                                              Tcible=Ts)
+        analyse = simulateur.pilotageParPensionAgeCotisations(
+            Pcible=Ps, Acible=As, Tcible=Ts
+        )
 
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
                     np.testing.assert_allclose(analyse.P[s][a], Ps)
@@ -562,20 +621,23 @@ class CheckSimulateur(unittest.TestCase):
         Ss = 0.0
         Ps = 0.5
         As = 62.0
-        analyse = simulateur.pilotageParSoldePensionAge(Scible=Ss,
-                                                        Pcible=Ps,
-                                                        Acible=As)
+        analyse = simulateur.pilotageParSoldePensionAge(
+            Scible=Ss, Pcible=Ps, Acible=As
+        )
 
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
                     np.testing.assert_allclose(analyse.S[s][a], Ss)
@@ -590,24 +652,26 @@ class CheckSimulateur(unittest.TestCase):
         Ss = 0.0
         Ps = 0.5
         Ts = 0.28
-        analyse = simulateur.pilotageParSoldePensionCotisations(Scible=Ss,
-                                                                Pcible=Ps,
-                                                                Tcible=Ts)
+        analyse = simulateur.pilotageParSoldePensionCotisations(
+            Scible=Ss, Pcible=Ps, Tcible=Ts
+        )
 
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
-                    np.testing.assert_allclose(analyse.S[s][a], Ss,
-                                               atol=1e-15)
+                    np.testing.assert_allclose(analyse.S[s][a], Ss, atol=1e-15)
                     np.testing.assert_allclose(analyse.P[s][a], Ps)
                     np.testing.assert_allclose(analyse.T[s][a], Ts)
 
@@ -619,24 +683,26 @@ class CheckSimulateur(unittest.TestCase):
         Ss = 0.0
         As = 62.0
         Ts = 0.28
-        analyse = simulateur.pilotageParSoldeAgeCotisations(Scible=Ss,
-                                                            Acible=As,
-                                                            Tcible=Ts)
+        analyse = simulateur.pilotageParSoldeAgeCotisations(
+            Scible=Ss, Acible=As, Tcible=Ts
+        )
 
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
-                    np.testing.assert_allclose(analyse.S[s][a], Ss,
-                                               atol=1e-15)
+                    np.testing.assert_allclose(analyse.S[s][a], Ss, atol=1e-15)
                     np.testing.assert_allclose(analyse.A[s][a], As)
                     np.testing.assert_allclose(analyse.T[s][a], Ts)
 
@@ -648,24 +714,26 @@ class CheckSimulateur(unittest.TestCase):
         Ss = 0.0
         As = 62.0
         Ds = 0.13
-        analyse = simulateur.pilotageParSoldeAgeDepenses(Scible=Ss,
-                                                         Acible=As,
-                                                         Dcible=Ds)
+        analyse = simulateur.pilotageParSoldeAgeDepenses(
+            Scible=Ss, Acible=As, Dcible=Ds
+        )
 
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
-                    np.testing.assert_allclose(analyse.S[s][a], Ss,
-                                               atol=1e-15)
+                    np.testing.assert_allclose(analyse.S[s][a], Ss, atol=1e-15)
                     np.testing.assert_allclose(analyse.A[s][a], As)
                     np.testing.assert_allclose(analyse.Depenses[s][a], Ds)
 
@@ -677,24 +745,26 @@ class CheckSimulateur(unittest.TestCase):
         Ss = 0.0
         Ps = 0.5
         Ds = 0.13
-        analyse = simulateur.pilotageParSoldePensionDepenses(Scible=Ss,
-                                                             Pcible=Ps,
-                                                             Dcible=Ds)
+        analyse = simulateur.pilotageParSoldePensionDepenses(
+            Scible=Ss, Pcible=Ps, Dcible=Ds
+        )
 
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
-                    np.testing.assert_allclose(analyse.S[s][a], Ss,
-                                               atol=1e-15)
+                    np.testing.assert_allclose(analyse.S[s][a], Ss, atol=1e-15)
                     np.testing.assert_allclose(analyse.P[s][a], Ps)
                     np.testing.assert_allclose(analyse.Depenses[s][a], Ds)
 
@@ -706,20 +776,23 @@ class CheckSimulateur(unittest.TestCase):
         Ps = 0.5
         Ts = 0.28
         Ds = 0.13
-        analyse = simulateur.pilotageParPensionCotisationsDepenses(Pcible=Ps,
-                                                                   Tcible=Ts,
-                                                                   Dcible=Ds)
+        analyse = simulateur.pilotageParPensionCotisationsDepenses(
+            Pcible=Ps, Tcible=Ts, Dcible=Ds
+        )
 
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
                     np.testing.assert_allclose(analyse.P[s][a], Ps)
@@ -734,20 +807,23 @@ class CheckSimulateur(unittest.TestCase):
         As = 62.0
         Ts = 0.28
         Ds = 0.13
-        analyse = simulateur.pilotageParAgeCotisationsDepenses(Acible=As,
-                                                               Tcible=Ts,
-                                                               Dcible=Ds)
+        analyse = simulateur.pilotageParAgeCotisationsDepenses(
+            Acible=As, Tcible=Ts, Dcible=Ds
+        )
 
         # Vérifie les valeurs imposées à partir de 2020
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                if (a < 2020):
-                    np.testing.assert_allclose(analyse.T[s][a],
-                                               simulateur.T[s][a])
-                    np.testing.assert_allclose(analyse.P[s][a],
-                                               simulateur.P[s][a])
-                    np.testing.assert_allclose(analyse.A[s][a],
-                                               simulateur.A[s][a])
+                if a < 2020:
+                    np.testing.assert_allclose(
+                        analyse.T[s][a], simulateur.T[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.P[s][a], simulateur.P[s][a]
+                    )
+                    np.testing.assert_allclose(
+                        analyse.A[s][a], simulateur.A[s][a]
+                    )
                 else:
                     # print("s=%s, a=%s, S=%s" % (s, a, analyse.S[s][a]))
                     np.testing.assert_allclose(analyse.A[s][a], As)
@@ -760,44 +836,53 @@ class CheckSimulateur(unittest.TestCase):
         # Calcul du PIB
         simulateur = SimulateurRetraites()
         analyse = simulateur.pilotageCOR()
-        analyse.graphique("PIB")
+        analyse.dessineVariable("PIB")
 
         # Vérifie quelques valeurs numériques observées
-        # Source : https://fr.wikipedia.org/wiki/Produit_int%C3%A9rieur_brut_de_la_France
+        # Source :
+        # https://fr.wikipedia.org/wiki/Produit_int%C3%A9rieur_brut_de_la_France
         for s in simulateur.scenarios:
             np.testing.assert_allclose(analyse.PIB[s][2005], 1772.0)
             np.testing.assert_allclose(analyse.PIB[s][2018], 2353.1)
         # Vérifie les ordres de grandeurs des calculs
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                np.testing.assert_allclose(analyse.PIB[s][a], 2300.0,
-                                           atol=4000.0)
+                np.testing.assert_allclose(
+                    analyse.PIB[s][a], 2300.0, atol=4000.0
+                )
         # Vérifie que la série est croissante dans le futur
         for s in simulateur.scenarios:
             for a in simulateur.annees_futures:
                 if a < simulateur.horizon:
-                    self.assertTrue(analyse.PIB[s][a] < analyse.PIB[s][a+1])
+                    self.assertTrue(analyse.PIB[s][a] < analyse.PIB[s][a + 1])
         return None
 
     def test_PensionBrutCOR(self):
         # Calcul de la pension annuelle (brut) de droit direct
         simulateur = SimulateurRetraites()
         analyse = simulateur.pilotageCOR()
-        analyse.graphique("PensionBrut")
+        analyse.dessineVariable("PensionBrut")
 
         # Vérifie quelques valeurs numériques observées
         # Source : Les retraités et les retraites, Edition 2017,
         # Panoramas de la DREES
         for s in simulateur.scenarios:
-            np.testing.assert_allclose(analyse.PensionBrut[s][2005],
-                                       1224.0 * 12.0 / 1000.0, rtol=5.e-2)
-            np.testing.assert_allclose(analyse.PensionBrut[s][2015],
-                                       1520.0 * 12.0 / 1000.0, rtol=5.e-2)
+            np.testing.assert_allclose(
+                analyse.PensionBrut[s][2005],
+                1224.0 * 12.0 / 1000.0,
+                rtol=5.0e-2,
+            )
+            np.testing.assert_allclose(
+                analyse.PensionBrut[s][2015],
+                1520.0 * 12.0 / 1000.0,
+                rtol=5.0e-2,
+            )
         # Vérifie les ordres de grandeurs des calculs
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                np.testing.assert_allclose(analyse.PensionBrut[s][a],
-                                           20.0, atol=8.0)
+                np.testing.assert_allclose(
+                    analyse.PensionBrut[s][a], 20.0, atol=8.0
+                )
         return None
 
     def test_PilotageParSoldePensionDuree(self):
@@ -806,13 +891,14 @@ class CheckSimulateur(unittest.TestCase):
         REVcible = 0.30
         Acible = simulateur.calculeAge(REVcible=REVcible)
         analyse = simulateur.pilotageParSoldePensionAge(Acible=Acible)
-        analyse.graphique("REV")
+        analyse.dessineVariable("REV")
 
         # Vérifie la durée de vie en retraite
         for s in simulateur.scenarios:
             for a in simulateur.annees_futures:
-                np.testing.assert_allclose(analyse.REV[s][a], REVcible,
-                                           rtol=1.e-2)
+                np.testing.assert_allclose(
+                    analyse.REV[s][a], REVcible, rtol=1.0e-2
+                )
         return None
 
 

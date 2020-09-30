@@ -29,26 +29,29 @@ class CheckEtudeImpact(unittest.TestCase):
         # Vérifie la cohérence interne de l'objet
         for s in simulateur.scenarios:
             for a in simulateur.annees:
-                np.testing.assert_allclose(analyse.A[s][a],
-                                           etudeImpact.As[s][a])
-                np.testing.assert_allclose(analyse.S[s][a],
-                                           etudeImpact.Ss[s][a], atol=1.e-7)
-                np.testing.assert_allclose(analyse.Depenses[s][a],
-                                           etudeImpact.Ds[s][a])
+                np.testing.assert_allclose(
+                    analyse.A[s][a], etudeImpact.As[s][a]
+                )
+                np.testing.assert_allclose(
+                    analyse.S[s][a], etudeImpact.Ss[s][a], atol=1.0e-7
+                )
+                np.testing.assert_allclose(
+                    analyse.Depenses[s][a], etudeImpact.Ds[s][a]
+                )
 
         # Vérifie précisément certaines valeurs numériques
         s = 2  # on se concentre sur le scenario 1,3% croissance
         a = 2030
         np.testing.assert_allclose(etudeImpact.As[s][a], 63.0, atol=0.1)
-        np.testing.assert_allclose(etudeImpact.Ss[s][a], 0.0, atol=1.e-7)
+        np.testing.assert_allclose(etudeImpact.Ss[s][a], 0.0, atol=1.0e-7)
         np.testing.assert_allclose(etudeImpact.Ds[s][a], 0.135, atol=0.001)
         a = 2050
         np.testing.assert_allclose(etudeImpact.As[s][a], 64.3, atol=0.1)
-        np.testing.assert_allclose(etudeImpact.Ss[s][a], 0.0, atol=1.e-7)
+        np.testing.assert_allclose(etudeImpact.Ss[s][a], 0.0, atol=1.0e-7)
         np.testing.assert_allclose(etudeImpact.Ds[s][a], 0.129, atol=0.001)
         a = 2070
         np.testing.assert_allclose(etudeImpact.As[s][a], 65.5, atol=0.1)
-        np.testing.assert_allclose(etudeImpact.Ss[s][a], 0.0, atol=1.e-7)
+        np.testing.assert_allclose(etudeImpact.Ss[s][a], 0.0, atol=1.0e-7)
         np.testing.assert_allclose(etudeImpact.Ds[s][a], 0.126, atol=0.001)
         return None
 

@@ -23,6 +23,9 @@ jobs:
             sudo pip3 install matplotlib
             sudo pip3 install jupyter
             sudo pip3 install openturns
+            sudo pip3 install black
+            sudo pip3 install flake8
+            sudo pip3 install black-nb
       - run:
           name: Install Python deps in a venv with pip
           command: |
@@ -51,6 +54,18 @@ jobs:
             source venv/bin/activate
             python setup.py sdist
             rm -r venv
+      - run:
+          name: Check style of Python Scripts with black
+          command: |
+            black --check retraites
+      - run:
+          name: Check style of Python Scripts with flake8
+          command: |
+            flake8 retraites
+      - run:
+          name: Check style of Notebooks with black-nb
+          command: |
+            black-nb --check .
       - run:
           name: Build and test - global
           command: ./.circleci/run_docker_linux.sh
